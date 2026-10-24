@@ -39,7 +39,8 @@ const state = () => ev(`({ title: document.querySelector(".level-head h2")?.text
 const wait = async (cond, ms = 9000) => { for (let t = 0; t < ms; t += 200) { if (await ev(cond)) return true; await sleep(200); } return false; };
 
 // 1. 首页目录：那一周
-check(await clickText("button", "章节目录"), "首页有「章节目录」按钮");
+check(await ev(`(() => { const c = [...document.querySelectorAll(".story-card")].find(c => c.textContent.includes("那一周")); const b = c && [...c.querySelectorAll("button")].find(b => b.textContent.includes("章节目录")); if (b) b.click(); return !!b; })()`), "首页《那一周》卡片有「章节目录」按钮");
+check(await ev(`document.querySelector(".story-card h2")?.textContent.includes("汇演前三天")`), "校园篇排在第一个");
 await sleep(300); await shot("home-toc");
 check((await state()).toc, "首页点开目录");
 check(await ev(`document.querySelectorAll(".toc-row").length`) === 5, "那一周目录列出 5 章");

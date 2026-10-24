@@ -734,7 +734,7 @@ window.Story = (function () {
 
   return {
     setHome(fn) { onExit = fn; },
-    list() { return Object.values(window.STORIES); },
+    list() { return Object.values(window.STORIES).sort((a, b) => (a.order || 99) - (b.order || 99)); },
     saved(id) { const s = load(window.STORIES[id]); return s && !s.ended ? s : null; },
     cards() { return Object.values(window.STORIES).flatMap(st => ((load(st) || {}).cards || []).map(c => ({ ...c, story: st.title, P: st.POV[c.pov] }))); },
     start(id, pov) { AU.unlock(); use(id); G = fresh(pov || ST.defaultStart || "A"); save(); loop(); },

@@ -71,8 +71,11 @@
     });
     screen(
       el("div", { class: "hero" },
+        el("div", { class: "hero-kicker" }, "Overself · AI 游戏化性格成长"),
         el("h1", {}, "补全 · ", el("span", {}, "另一面")),
-        el("p", {}, "不是要改变你是谁，", el("br"), "而是给你多一种看世界的方式。")),
+        el("p", { class: "hero-lead" }, "在故事里，长出你性格的另一面。"),
+        el("p", {}, "先用你习惯的方式做一遍，再从对方的眼睛里看回来，然后倒带重来。", el("br"),
+          "理性的人学会读懂情绪，敏感的人学会冷静解题——不是变成别人，是多一种选择。")),
       el("div", { class: "row", style: "justify-content:center;margin:18px 0" },
         el("button", { class: "btn", onclick: quiz }, "先测一测我的倾向"),
         el("button", { class: "btn ghost", onclick: collection }, `我的技能卡（${cardCount}）`)),
@@ -124,9 +127,10 @@
           : "你对人和情绪很敏锐。可以练一练的是：情绪上头时，先停一下，把事实和感受分开。"),
         el("p", { class: "muted small" }, "这不是性格诊断，只反映你在这 8 个情境里的习惯。主线里，你会先从和你相像的那个人开始——先用你习惯的方式做一遍，再从另一个人的眼睛里看回来。"),
         el("div", { class: "row" },
-          t >= f ? el("button", { class: "btn", onclick: () => window.Story.start("week", "A") }, "推荐：从弟弟林朗开始《那一周》")
+          t >= f ? el("button", { class: "btn", onclick: () => window.Story.start("campus", "A") }, "推荐：从班长陈屿开始《汇演前三天》")
             : el("button", { class: "btn", onclick: () => window.Story.start("campus", "B") }, "推荐：从苏小满开始《汇演前三天》"),
-          t >= f ? null : el("button", { class: "btn ghost", onclick: () => window.Story.start("work", "B") }, "或：从许诺开始《第一次带项目》"),
+          t >= f ? el("button", { class: "btn ghost", onclick: () => window.Story.start("week", "A") }, "或：从弟弟林朗开始《那一周》")
+            : el("button", { class: "btn ghost", onclick: () => window.Story.start("work", "B") }, "或：从许诺开始《第一次带项目》"),
           el("button", { class: "btn plain", style: `color:${rec.color}`, onclick: () => routeScreen(rec.id) }, `日常练习：${rec.title}`),
           el("button", { class: "btn plain", onclick: home }, "回首页"))));
   }

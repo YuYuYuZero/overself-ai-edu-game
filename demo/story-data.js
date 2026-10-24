@@ -475,7 +475,7 @@
   window.STORIES.week = {
     id: "week", title: "那一周", key: "complement.story.v1",
     blurb: "妈妈摔倒骨折，一对性格相反的姐弟在医院里的七天。同一件事，你先当说的人，再当听的人。",
-    minutes: 60, tag: "主线 · 家庭 · T↔F", relLabel: "姐弟关系", cover: "hospital_corridor",
+    minutes: 60, tag: "家庭 · T↔F 互学", order: 2, relLabel: "姐弟关系", cover: "hospital_corridor",
     POV: {
       A: { name: "林朗", short: "弟弟", tag: "T", color: "#4a8fe0", bgm: "cool", char: "linlang" },
       B: { name: "林晚", short: "姐姐", tag: "F", color: "#f07c5a", bgm: "warm", char: "linwan" }
