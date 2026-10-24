@@ -1,4 +1,4 @@
-# 补全 · 另一面（Overself）—— AI 教育游戏
+# Overself —— AI 游戏化性格成长
 
 **在线试玩**：https://yuyuyuzero.github.io/overself-ai-edu-game/
 
@@ -29,6 +29,8 @@
 | 文档 | 内容 |
 |---|---|
 | [docs/07-体验介绍.md](docs/07-体验介绍.md) | **先读这篇**：你会经历什么、为什么这样设计、AI 的角色 |
+| [docs/08-剧本与选项全表.md](docs/08-剧本与选项全表.md) | 三个故事 + 练习关的每个节点、每个选项 → 结果 / 数值 / 标记 / 结局条件，附设计思路；按推荐顺序；由 `node tools/export-script.mjs` 从游戏数据生成 |
+| [pitch/Overself-路演.pptx](pitch/Overself-路演.pptx) | 路演 PPT（19 页，游戏实机截图）；`node pitch/build.js` 重新生成，截图用 `node tools/pitch-shots.mjs` |
 | [docs/00-设计思路与决策记录.md](docs/00-设计思路与决策记录.md) | 为什么这么做；每轮反馈改了什么 |
 | [docs/01-策划案.md](docs/01-策划案.md) | 本质洞察、设计原则、核心循环与五个机制、视听设计、教育落地与效果评估、AI 方案、其他维度扩展、路线图 |
 | [docs/02-主线剧情脚本.md](docs/02-主线剧情脚本.md) | 人物小传 + 逐节点剧本（台词、信号、选项、解码、分支、音效提示、复盘、讨论题） |

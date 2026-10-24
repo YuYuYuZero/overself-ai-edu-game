@@ -1,4 +1,4 @@
-// 补全 · 性格的另一面 —— 游戏引擎（数据在 scenarios.js）
+// Overself —— 游戏引擎（数据在 scenarios.js）
 (function () {
   const app = document.getElementById("app");
   // 练习关的角色立绘（art.js）与默认背景
@@ -71,8 +71,8 @@
     });
     screen(
       el("div", { class: "hero" },
-        el("div", { class: "hero-kicker" }, "Overself · AI 游戏化性格成长"),
-        el("h1", {}, "补全 · ", el("span", {}, "另一面")),
+        el("div", { class: "hero-kicker" }, "AI 游戏化性格成长"),
+        el("h1", {}, "Over", el("span", {}, "self")),
         el("p", { class: "hero-lead" }, "在故事里，长出你性格的另一面。"),
         el("p", {}, "先用你习惯的方式做一遍，再从对方的眼睛里看回来，然后倒带重来。", el("br"),
           "理性的人学会读懂情绪，敏感的人学会冷静解题——不是变成别人，是多一种选择。")),
