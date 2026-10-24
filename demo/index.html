@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>补全 · 性格的另一面</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app"></div>
+  <button id="mute" title="声音开关">🔊</button>
+  <script src="audio.js"></script>
+  <script src="art.js"></script>
+  <script src="vn.js"></script>
+  <script src="scenarios.js"></script>
+  <script src="story-data.js"></script>
+  <script src="story-campus.js"></script>
+  <script src="story-work.js"></script>
+  <script src="story.js"></script>
+  <script src="game.js"></script>
+  <script>
+    // 浏览器要求用户交互后才能出声
+    document.addEventListener("pointerdown", () => AU.unlock());
+    const mute = document.getElementById("mute");
+    const paint = () => mute.textContent = AU.isMuted() ? "🔇" : "🔊";
+    mute.onclick = () => { AU.setMuted(!AU.isMuted()); paint(); };
+    paint();
+  </script>
+</body>
+</html>

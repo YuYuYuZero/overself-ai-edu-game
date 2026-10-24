@@ -1,0 +1,11 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>.mo{display:none}.ec{display:none}
+body{margin:0;background:#556;font-family:sans-serif;color:#fff}
+.g{display:flex;flex-wrap:wrap;gap:4px;padding:6px}.c{width:180px;height:350px;background:#cdd;position:relative}.c svg{width:100%;height:100%}
+.c b{position:absolute;left:4px;top:2px;color:#333;font-size:12px}.b{width:400px;height:225px;position:relative}.b b{position:absolute;left:4px;top:2px;background:#0008;font-size:12px}
+</style></head><body><div class="g" id="g"></div><script src="../demo/art.js"></script><script>
+const q=new URLSearchParams(location.search), mode=q.get("m")||"chars", g=document.getElementById("g");
+if(mode==="chars"){ for(const id of ART.list()) g.insertAdjacentHTML("beforeend",`<div class="c">${ART.char(id,q.get("e")||"normal")}<b>${id}</b></div>`); }
+else if(mode==="expr"){ const id=q.get("id")||"xiaoman"; for(const e of ["normal","smile","sad","angry","surprise","worry","cry","think","shy"]) g.insertAdjacentHTML("beforeend",`<div class="c">${ART.char(id,e)}<b>${e}</b></div>`); }
+else if(mode==="big"){ g.innerHTML=`<div style="width:600px;height:1200px;background:#cdd">${ART.char(q.get("id")||"xiaoman",q.get("e")||"normal")}</div>`; g.querySelector("svg").style.cssText="width:100%;height:100%"; }
+else { for(const id of ART.bgs()) g.insertAdjacentHTML("beforeend",`<div class="b">${ART.bg(id)}<b>${id}</b></div>`); }
+</script></body></html>
