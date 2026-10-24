@@ -92,306 +92,178 @@ const darkS = () => { const s = pres.addSlide(); s.background = { color: C.night
 {
   const s = light();
   head(s, "我们要解决的问题", "道理人人都懂，可到了那一刻，人只会用习惯的那一面");
-  shot(s, "c-filter.png", 0.5, 1.55, 5.2, { cap: "游戏截图：领舞说「不跳了」——情绪最高时，前半句（原因）被情绪滤镜模糊掉了" });
   const rows = [
     [C.T, "偏理性的人", "知道\"要共情\"。可同学说\"我不跳了\"，脱口而出的是：「那就换人吧。」"],
     [C.F, "偏感性的人", "知道\"要冷静\"。可只听见\"不跳了\"四个字，掏出手机就要往 48 人的班群发长文。"],
   ];
   rows.forEach(([c, t, d], i) => {
-    const y = 1.55 + i * 1.32;
-    s.addShape(pres.shapes.RECTANGLE, { x: 6.0, y, w: 3.5, h: 1.15, fill: { color: C.card }, line: { color: C.line, width: 1 } });
-    s.addShape(pres.shapes.RECTANGLE, { x: 6.0, y, w: 0.08, h: 1.15, fill: { color: c }, line: { color: c, width: 0 } });
-    s.addText(t, { x: 6.22, y: y + 0.1, w: 3.2, h: 0.3, fontFace: FONT, fontSize: 13, bold: true, color: c, margin: 0 });
-    s.addText(d, { x: 6.22, y: y + 0.42, w: 3.2, h: 0.68, fontFace: FONT, fontSize: 11, color: C.ink, margin: 0, valign: "top" });
+    const x = 0.5 + i * 4.6;
+    s.addShape(pres.shapes.RECTANGLE, { x, y: 1.55, w: 4.4, h: 1.5, fill: { color: C.card }, line: { color: C.line, width: 1 } });
+    s.addShape(pres.shapes.RECTANGLE, { x, y: 1.55, w: 0.08, h: 1.5, fill: { color: c }, line: { color: c, width: 0 } });
+    s.addText(t, { x: x + 0.25, y: 1.7, w: 4, h: 0.35, fontFace: FONT, fontSize: 15, bold: true, color: c, margin: 0 });
+    s.addText(d, { x: x + 0.25, y: 2.1, w: 4, h: 0.85, fontFace: FONT, fontSize: 13, color: C.ink, margin: 0, valign: "top" });
   });
-  s.addText("卡住人的从来不是知识，而是「那一刻的视角」。", { x: 6.0, y: 4.25, w: 3.5, h: 0.6, fontFace: FONT, fontSize: 14, bold: true, color: C.violet, margin: 0 });
+  s.addText("卡住人的从来不是知识，而是「那一刻的视角」。", { x: 0.5, y: 3.45, w: 9, h: 0.5, fontFace: FONT, fontSize: 20, bold: true, color: C.violet, margin: 0 });
+  s.addText("所以我们不出题、不讲道理，而是把人放回那一刻：同一句话，你先当说的人，再当听的人。", { x: 0.5, y: 4.0, w: 9, h: 0.5, fontFace: FONT, fontSize: 14, color: C.muted, margin: 0 });
 }
 
-// 3 一句话方案 + 核心循环 ------------------------------------------------
+// 4 解法：核心循环 ------------------------------------------------------
 {
   const s = darkS();
-  head(s, "我们的解法", "同一句话，你先当说的人，再当听的人", true);
+  head(s, "我们的解法", "每一章都是同一个循环", true);
   const steps = [
-    ["① 经历", "用你习惯的方式做选择", "c-impulse.png", C.F],
-    ["② 镜面", "切进对方身体，听见「对方听到的」", "c-decode.png", C.violet],
-    ["③ 倒带", "回到那一刻，换一种做法", "c-replay.png", C.T],
-    ["④ 复盘", "第一次 vs 倒带后，收技能卡", "c-review.png", C.gold],
+    ["1", "经历", "以和你相像的那个人进入故事，用你习惯的方式做选择", C.F],
+    ["2", "镜面", "切到对方身上重走一遍。你说的每句话，屏幕上都会浮出「对方听到的」", C.violet],
+    ["3", "倒带", "时间回到关键那一刻，换一种做法", C.T],
+    ["4", "复盘", "并排看「第一次」与「倒带后」，收技能卡，领本周小任务", C.gold],
   ];
-  steps.forEach(([t, d, img, c], i) => {
+  steps.forEach(([n, t, d, c], i) => {
     const x = 0.5 + i * 2.3, w = 2.1;
-    shot(s, img, x, 1.6, w, { border: c, bw: 2 });
-    s.addText(t, { x, y: 2.9, w, h: 0.4, fontFace: FONT, fontSize: 16, bold: true, color: c, margin: 0 });
-    s.addText(d, { x, y: 3.3, w, h: 0.6, fontFace: FONT, fontSize: 11, color: "E6E3F3", margin: 0, valign: "top" });
-    if (i < 3) s.addText("›", { x: x + w, y: 2.0, w: 0.2, h: 0.4, fontFace: FONT, fontSize: 22, color: "8C88A8", align: "center", margin: 0 });
+    s.addShape(pres.shapes.OVAL, { x, y: 1.6, w: 0.7, h: 0.7, fill: { color: c }, line: { color: c, width: 0 } });
+    s.addText(n, { x, y: 1.6, w: 0.7, h: 0.7, fontFace: FONT, fontSize: 22, bold: true, color: "FFFFFF", align: "center", valign: "middle", margin: 0 });
+    if (i < 3) s.addShape(pres.shapes.LINE, { x: x + 0.85, y: 1.95, w: 1.3, h: 0, line: { color: "4A4770", width: 1.5, dashType: "dash" } });
+    s.addText(t, { x, y: 2.5, w, h: 0.45, fontFace: FONT, fontSize: 20, bold: true, color: c, margin: 0 });
+    s.addText(d, { x, y: 3.0, w, h: 1.0, fontFace: FONT, fontSize: 12, color: "E6E3F3", margin: 0, valign: "top" });
   });
-  s.addShape(pres.shapes.RECTANGLE, { x: 0.5, y: 4.25, w: 9, h: 0.75, fill: { color: "2C2A4A" }, line: { color: "2C2A4A", width: 0 } });
+  s.addShape(pres.shapes.RECTANGLE, { x: 0.5, y: 4.3, w: 9, h: 0.75, fill: { color: "2C2A4A" }, line: { color: "2C2A4A", width: 0 } });
   s.addText([
     { text: "倒带不扣分。", options: { bold: true, color: C.gold } },
-    { text: "第一次的自然反应只用来复盘\"你的习惯\"；倒带后的那个选择，是你多出来的一种。不是把一种人变成另一种人，而是多一种选择。" },
-  ], { x: 0.7, y: 4.25, w: 8.6, h: 0.75, fontFace: FONT, fontSize: 12, color: "FFFFFF", valign: "middle", margin: 0 });
+    { text: "第一次的自然反应只用来看见\"你的习惯\"；倒带后的那个选择，是你多出来的一种。" },
+  ], { x: 0.7, y: 4.3, w: 8.6, h: 0.75, fontFace: FONT, fontSize: 13, color: "FFFFFF", valign: "middle", margin: 0 });
 }
 
-// 4 章节页：一段真实体验 -------------------------------------------------
-{
-  const s = pres.addSlide(); N++;
-  s.background = { color: "000000" };
-  duo(s, 0.7, 1.9, 1.2, 0.1);
-  s.addText("一段真实体验", { x: 0.7, y: 2.1, w: 8, h: 0.7, fontFace: FONT, fontSize: 34, bold: true, color: "FFFFFF", margin: 0 });
-  s.addText("校园篇《汇演前三天》第一章 · 约 15 分钟（推荐首玩）", { x: 0.7, y: 2.85, w: 8, h: 0.4, fontFace: FONT, fontSize: 15, color: C.gold, margin: 0 });
-  s.addText("元旦汇演前三天，领舞林可突然说不跳了。文艺委员苏小满（偏感性），班长陈屿（偏理性）。\n以下画面全部是游戏实机截图。", { x: 0.7, y: 3.4, w: 8.5, h: 0.8, fontFace: FONT, fontSize: 13, color: "C9C4E6", margin: 0, valign: "top" });
-  page(s, N, true);
-}
-
-// 5 情绪滤镜 ----------------------------------------------------------------
+// 5 一段真实体验（唯一的实机流程页） --------------------------------------------
 {
   const s = light();
-  head(s, "时刻 1 · 情绪滤镜", "情绪最高的时候，你听不见事实");
-  shot(s, "c-filter.png", 0.5, 1.5, 5.6);
-  s.addShape(pres.shapes.RECTANGLE, { x: 6.4, y: 1.5, w: 3.1, h: 1.25, fill: { color: C.card }, line: { color: C.line, width: 1 } });
-  s.addText([
-    { text: "林可的原话", options: { bold: true, color: C.muted, fontSize: 10, breakLine: true } },
-    { text: "小满……我每天六点前得去接我弟，排练老拖到七点……汇演我" },
-    { text: "不跳了", options: { bold: true, color: "D9381E" } },
-    { text: "。你们" },
-    { text: "找别人吧", options: { bold: true, color: "D9381E" } },
-    { text: "。" },
-  ], { x: 6.55, y: 1.58, w: 2.85, h: 1.1, fontFace: FONT, fontSize: 11, color: C.ink, margin: 0, valign: "top" });
-  bullets(s, [
-    "情绪温度 ≥ 60 时，句子里的事实（原因）变模糊，只剩情绪词放大变红",
-    "黑屏白字：「她走了。还剩三天。」",
-    [{ text: "设计意图：", options: { bold: true, color: C.violet } }, "让偏感性的玩家亲身体验\"我只听见了一半\"，而不是被告知"],
-  ], 6.4, 2.95, 3.1, 2.2, { size: 12 });
-}
-
-// 6 冲动与后果 ----------------------------------------------------------
-{
-  const s = light();
-  head(s, "时刻 2 · 冲动与后果", "6 秒倒计时。「先停一下」就混在选项里，并不显眼");
-  shot(s, "c-impulse.png", 0.5, 1.5, 4.4, { cap: "限时冲动选项：班群长文 / 去办公室撂挑子 / 私聊骂人 / 先停一下" });
-  shot(s, "c-consequence.png", 5.1, 1.5, 4.4, { cap: "选了冲动选项，你会看到「后来……」，然后被倒回那一刻" });
-  s.addShape(pres.shapes.RECTANGLE, { x: 0.5, y: 4.35, w: 9, h: 0.75, fill: { color: "FFF1EC" }, line: { color: C.F, width: 1 } });
-  s.addText([
-    { text: "后来……", options: { bold: true, color: C.F } },
-    { text: "消息发出去一分钟，十七个人看了。八点零三分，群里弹出一行灰字：「林可 退出了群聊」。九点，周老师私聊你：「明天上午来办公室一趟。」" },
-  ], { x: 0.7, y: 4.35, w: 8.6, h: 0.75, fontFace: FONT, fontSize: 11.5, color: C.ink, valign: "middle", margin: 0 });
-}
-
-// 7 暂停 · 回听 · 分类 -------------------------------------------------
-{
-  const s = light();
-  head(s, "时刻 3 · 暂停、回听、分类", "停下来，再听一遍——「她第一句就说了原因」");
-  shot(s, "c-breathe.png", 0.5, 1.5, 2.9, { cap: "暂停：世界沉入水下，跟着呼吸两轮" });
-  shot(s, "c-replay.png", 0.5, 3.3, 2.9, { cap: "回听：前半句清清楚楚地回来了" });
-  shot(s, "c-sort.png", 3.65, 1.5, 3.4, { cap: "分类：事实 / 评判 / 读心术 / 灾难化" });
-  bullets(s, [
-    [{ text: "事实只有四条", options: { bold: true } }, "，其中两条（接弟弟的时间、那条视频）是可以被解决的问题"],
-    [{ text: "「她太自私了」", options: { bold: true, color: C.F } }, "是评判；「全班都会觉得我不行」是灾难化"],
-    [{ text: "剧本只能被相信，问题才能被解决。", options: { bold: true, color: C.violet } }],
-  ], 7.3, 1.5, 2.2, 3.5, { size: 12, gap: 12 });
-}
-
-// 8 提问 ---------------------------------------------------------------
-{
-  const s = light();
-  head(s, "时刻 4 · 提问", "车还有三分钟到，你只能问两个问题");
-  shot(s, "c-qa.png", 0.5, 1.5, 5.2);
-  const qa = [
-    ["你说要接弟弟，是从什么时候开始的？", "上周。我奶奶住院了……我弟五点五十放学，没人接。", C.T],
-    ["是因为大刘那个视频吗？", "……转了四百多次。我一想到要在台上转那个身，就喘不上气。", C.T],
-    ["你为什么不早说？", "……说了有用吗。", C.F],
+  head(s, "一段真实体验 · 校园篇《汇演前三天》", "领舞说「不跳了」——同一个傍晚，两个人各自卡住");
+  shot(s, "c-filter.png", 0.5, 1.5, 4.6, { cap: "情绪滤镜：情绪最高时，原因（前半句）被模糊掉了" });
+  const flow = [
+    ["情绪滤镜", "小满只听见「不跳了、找别人吧」"],
+    ["冲动 6 秒", "班群长文 / 撂挑子 / 私聊骂人；选了就看见后果，再被倒回"],
+    ["暂停 · 回听", "「她第一句就说了原因」"],
+    ["分类 · 提问", "分开事实和剧本；车来前只能问两个问题"],
+    ["镜面", "换成陈屿：「换人吧」被听成「你那三个星期也不重要」"],
+    ["排序 · 拼句", "按「卡住了谁」排先后；给班群发一条只有事实和安排的消息"],
   ];
-  qa.forEach(([q, a, c], i) => {
-    const y = 1.5 + i * 1.0;
-    s.addShape(pres.shapes.RECTANGLE, { x: 6.0, y, w: 3.5, h: 0.88, fill: { color: C.card }, line: { color: C.line, width: 1 } });
-    s.addShape(pres.shapes.RECTANGLE, { x: 6.0, y, w: 0.07, h: 0.88, fill: { color: c }, line: { color: c, width: 0 } });
-    s.addText([{ text: "问：" + q, options: { bold: true, breakLine: true } }, { text: "答：" + a, options: { color: C.muted } }],
-      { x: 6.17, y: y + 0.05, w: 3.28, h: 0.8, fontFace: FONT, fontSize: 10.5, color: C.ink, margin: 0, valign: "middle" });
+  flow.forEach(([t, d], i) => {
+    const y = 1.5 + i * 0.6;
+    s.addShape(pres.shapes.OVAL, { x: 5.4, y: y + 0.08, w: 0.32, h: 0.32, fill: { color: i === 4 ? C.violet : i % 2 ? C.F : C.T }, line: { color: "FFFFFF", width: 0 } });
+    s.addText(String(i + 1), { x: 5.4, y: y + 0.08, w: 0.32, h: 0.32, fontFace: FONT, fontSize: 11, bold: true, color: "FFFFFF", align: "center", valign: "middle", margin: 0 });
+    s.addText([{ text: t + "　", options: { bold: true } }, { text: d, options: { color: C.muted } }], { x: 5.85, y, w: 3.65, h: 0.5, fontFace: FONT, fontSize: 11, color: C.ink, margin: 0, valign: "middle" });
   });
-  s.addText("问对了，原因就浮出来；问成指责，她只想快点走。问到的事实会解锁后面的选项。", { x: 6.0, y: 4.55, w: 3.5, h: 0.6, fontFace: FONT, fontSize: 11, color: C.violet, bold: true, margin: 0 });
 }
 
-// 9 镜面 ---------------------------------------------------------------
+// 6 镜面 ---------------------------------------------------------------
 {
   const s = light();
-  head(s, "时刻 5 · 镜面", "现在你是陈屿。你说的每一句，小满都会「听到」");
-  shot(s, "c-decode.png", 0.5, 1.5, 4.9, { cap: "镜面解码：陈屿说「换人吧」，小满听到「你那三个星期也不重要」" });
+  head(s, "核心时刻 · 镜面", "同一个意思，换一种说法，对方听到的完全不同");
   const rows = [
     [{ text: "陈屿说的", options: { bold: true, color: "FFFFFF", fill: { color: C.T } } }, { text: "小满听到的", options: { bold: true, color: "FFFFFF", fill: { color: C.F } } }],
     ["换人吧，赵婷是替补，三天够了。", "林可不重要。你那三个星期也不重要。"],
     ["她早退本来就影响排练，走了反而省事。", "是你选错了人。"],
     ["先别急着定，会不会是排练时间的问题？", "这件事可能有解。"],
-    ["你先坐会儿。三个星期白练谁都难受。", "我看见你了，你不是一个人。"],
+    ["你先坐会儿。三个星期白练谁都难受。我们一起想办法。", "我看见你了，你不是一个人。"],
   ];
-  s.addTable(rows, { x: 5.65, y: 1.5, w: 3.85, colW: [1.95, 1.9], fontFace: FONT, fontSize: 10, color: C.ink, border: { pt: 0.75, color: C.line }, fill: { color: C.card }, rowH: 0.52, valign: "middle" });
-  s.addText("同一个意思，换一种说法，对方听到的是完全不同的东西。", { x: 5.65, y: 4.35, w: 3.85, h: 0.6, fontFace: FONT, fontSize: 12, bold: true, color: C.violet, margin: 0 });
-}
-
-// 10 「啊」的那一声 --------------------------------------------------------
-{
-  const s = darkS();
-  duo(s, 0.7, 1.2, 1.2, 0.1);
-  s.addText("镜面结束时的旁白", { x: 0.7, y: 1.4, w: 8, h: 0.4, fontFace: FONT, fontSize: 13, color: "B9B4D6", margin: 0 });
+  s.addTable(rows, { x: 0.5, y: 1.5, w: 5.0, colW: [2.6, 2.4], fontFace: FONT, fontSize: 11.5, color: C.ink, border: { pt: 0.75, color: C.line }, fill: { color: C.card }, rowH: 0.6, valign: "middle" });
+  s.addShape(pres.shapes.RECTANGLE, { x: 5.8, y: 1.5, w: 3.7, h: 3.0, fill: { color: C.night }, line: { color: C.night, width: 0 } });
   s.addText([
-    { text: "你在核对节目单的时候，她在心里已经把节目撤了三次。", options: { breakLine: true } },
+    { text: "镜面结束时的旁白", options: { color: "B9B4D6", fontSize: 10, breakLine: true } },
     { text: "她其实想说的是——「我好慌。三个星期的心血要没了，我需要有人跟我站在一起。」", options: { breakLine: true } },
     { text: "你给了她一个方案。她那时候要的，是一个同伴。", options: { bold: true, color: C.gold } },
-  ], { x: 0.7, y: 1.95, w: 8.6, h: 2.2, fontFace: FONT, fontSize: 20, color: "FFFFFF", margin: 0, valign: "top", paraSpaceAfter: 14 });
-  s.addText("这就是这个游戏最想制造的那一声「啊」。", { x: 0.7, y: 4.5, w: 8, h: 0.4, fontFace: FONT, fontSize: 14, color: "C9C4E6", margin: 0 });
+  ], { x: 6.0, y: 1.65, w: 3.3, h: 2.7, fontFace: FONT, fontSize: 14, color: "FFFFFF", margin: 0, valign: "top", paraSpaceAfter: 10 });
+  s.addText("这就是这个游戏最想制造的那一声「啊」。", { x: 5.8, y: 4.65, w: 3.7, h: 0.4, fontFace: FONT, fontSize: 12, bold: true, color: C.violet, margin: 0 });
 }
 
-// 11 第二章：解题 --------------------------------------------------------
+// 7 两个方向各学什么 ------------------------------------------------------
 {
   const s = light();
-  head(s, "时刻 6 · 偏感性的人学冷静解题", "冷静不是忍住，是把问题解决掉");
-  shot(s, "c-rank.png", 0.5, 1.5, 4.4, { cap: "排序：按「卡住了谁」排，不按「哪件最难受」排" });
-  shot(s, "c-compose.png", 5.1, 1.5, 4.4, { cap: "拼句：在班群发一条只有事实、安排和请求的消息" });
-  s.addShape(pres.shapes.RECTANGLE, { x: 0.5, y: 4.35, w: 9, h: 0.75, fill: { color: C.card }, line: { color: C.line, width: 1 } });
-  s.addText([
-    { text: "一整套解题动作：", options: { bold: true, color: C.F } },
-    { text: "先听全原话 → 情绪最高时不做决定 → 分开事实和猜测 → 问清楚 → 排出先后 → 对事不对人 → 发一条结构化的消息" },
-  ], { x: 0.7, y: 4.35, w: 8.6, h: 0.75, fontFace: FONT, fontSize: 12, color: C.ink, valign: "middle", margin: 0 });
+  head(s, "学到什么", "冷静不是忍住，共情不是附和");
+  const col = (x, c, t, items) => {
+    s.addShape(pres.shapes.RECTANGLE, { x, y: 1.5, w: 4.4, h: 3.55, fill: { color: C.card }, line: { color: C.line, width: 1 } });
+    s.addShape(pres.shapes.RECTANGLE, { x, y: 1.5, w: 4.4, h: 0.08, fill: { color: c }, line: { color: c, width: 0 } });
+    s.addText(t, { x: x + 0.25, y: 1.7, w: 4, h: 0.4, fontFace: FONT, fontSize: 16, bold: true, color: c, margin: 0 });
+    s.addText(items.map((it, i) => ({ text: it, options: { bullet: true, breakLine: i < items.length - 1 } })),
+      { x: x + 0.25, y: 2.2, w: 3.95, h: 2.75, fontFace: FONT, fontSize: 12.5, color: C.ink, margin: 0, valign: "top", paraSpaceAfter: 8 });
+  };
+  col(0.5, C.T, "偏理性的人 → 学会读懂人心", ["看见信号：低头、攥紧的手、躲开的视线", "先接住情绪，再说事", "知道自己那句话会被听成什么", "情绪也是事实，也是要处理的问题"]);
+  col(5.1, C.F, "偏感性的人 → 学会稳住情绪", ["先听全原话，情绪最高时不做决定", "分开事实、评判、读心术、灾难化", "先问清楚，再下判断", "按「卡住了谁」排先后，对事不对人", "发一条事实 + 安排 + 请求的消息"]);
 }
 
-// 12 偏理性的人也在学 ----------------------------------------------------------
-{
-  const s = light();
-  head(s, "时刻 7 · 偏理性的人学先看见人", "捕捉到的信号，会解锁原本没有的选项");
-  shot(s, "c-signal.png", 0.5, 1.5, 4.4, { cap: "信号一闪就消失：林可低头看手机、攥紧的手" });
-  shot(s, "c-signal-unlocked.png", 5.1, 1.5, 4.4, { cap: "看见了，才有「🔍 你先坐会儿……我们一起想办法」" });
-  s.addShape(pres.shapes.RECTANGLE, { x: 0.5, y: 4.35, w: 9, h: 0.75, fill: { color: "EEF4FD" }, line: { color: C.T, width: 1 } });
-  s.addText([
-    { text: "设计意图：", options: { bold: true, color: C.T } },
-    { text: "觉察要主动。没看见的人，连共情的选项都没有——这正是偏理性的人在现实里的处境。" },
-  ], { x: 0.7, y: 4.35, w: 8.6, h: 0.75, fontFace: FONT, fontSize: 12, color: C.ink, valign: "middle", margin: 0 });
-}
-
-// 13 三个故事 ------------------------------------------------------------
+// 8 三个故事 ------------------------------------------------------------
 {
   const s = light();
   head(s, "内容", "三个故事，都是理性与感性互相学（按推荐顺序）");
   const st = [
-    ["c-stage.png", "校园《汇演前三天》", "推荐首玩 · 30 分钟", "陈屿（偏理性）：先看见人，再排人", "苏小满（偏感性）：情绪是警报不是导航；先排序、问清楚", "陈屿的方案给了节目退路，小满问出的原因给了林可回来的理由"],
-    ["w-decode2.png", "家庭《那一周》", "60 分钟", "弟弟林朗（偏理性）：先接情绪，再说事", "姐姐林晚（偏感性）：把害怕变成问题", "一起替妈妈做手术决定，听见\"选便宜的\"背后的\"我怕躺着\""],
-    ["k-filter.png", "职场《第一次带项目》", "30 分钟", "赵总监（偏理性）：知道自己那句话被听成了什么", "许诺（偏感性）：把批评当信息，交出能执行的方案", "总监的直接 + 许诺问出客户真正要的东西"],
+    ["校园《汇演前三天》", "推荐首玩 · 30 分钟", "元旦汇演前三天，领舞突然说不跳了。", "陈屿（偏理性）：先看见人，再排人", "苏小满（偏感性）：情绪是警报不是导航", C.violet],
+    ["家庭《那一周》", "60 分钟", "妈妈摔倒骨折，一对性格相反的姐弟在医院的七天。", "弟弟林朗（偏理性）：先接情绪，再说事", "姐姐林晚（偏感性）：把害怕变成问题", C.T],
+    ["职场《第一次带项目》", "30 分钟", "上线前一周客户改需求，总监当众问：「这个排期是谁拍的脑袋？」", "赵总监（偏理性）：知道自己那句话被听成了什么", "许诺（偏感性）：把批评当信息，交出能执行的方案", C.F],
   ];
-  st.forEach(([img, t, sub, a, b, both], i) => {
+  st.forEach(([t, sub, plot, a, b, c], i) => {
     const x = 0.5 + i * 3.05, w = 2.85;
-    s.addShape(pres.shapes.RECTANGLE, { x, y: 1.45, w, h: 3.75, fill: { color: C.card }, line: { color: C.line, width: 1 }, shadow: shadow() });
-    s.addImage({ path: A(img), x, y: 1.45, w, h: w * 9 / 16 });
-    s.addText(t, { x: x + 0.15, y: 3.12, w: w - 0.3, h: 0.32, fontFace: FONT, fontSize: 13, bold: true, color: C.ink, margin: 0 });
-    s.addText(sub, { x: x + 0.15, y: 3.43, w: w - 0.3, h: 0.22, fontFace: FONT, fontSize: 9.5, color: C.muted, margin: 0 });
+    s.addShape(pres.shapes.RECTANGLE, { x, y: 1.5, w, h: 3.55, fill: { color: C.card }, line: { color: C.line, width: 1 } });
+    s.addShape(pres.shapes.RECTANGLE, { x, y: 1.5, w, h: 0.08, fill: { color: c }, line: { color: c, width: 0 } });
+    s.addText(String(i + 1), { x: x + 0.2, y: 1.7, w: 0.6, h: 0.6, fontFace: FONT, fontSize: 30, bold: true, color: c, margin: 0 });
+    s.addText(t, { x: x + 0.2, y: 2.3, w: w - 0.4, h: 0.35, fontFace: FONT, fontSize: 14, bold: true, color: C.ink, margin: 0 });
+    s.addText(sub, { x: x + 0.2, y: 2.65, w: w - 0.4, h: 0.25, fontFace: FONT, fontSize: 10, color: C.muted, margin: 0 });
     s.addText([
+      { text: plot, options: { breakLine: true } },
       { text: a, options: { color: C.T, breakLine: true } },
-      { text: b, options: { color: "D2603F", breakLine: true } },
-      { text: "合力：" + both, options: { color: C.ink } },
-    ], { x: x + 0.15, y: 3.7, w: w - 0.3, h: 1.45, fontFace: FONT, fontSize: 9.5, margin: 0, valign: "top", paraSpaceAfter: 4 });
+      { text: b, options: { color: "D2603F" } },
+    ], { x: x + 0.2, y: 3.0, w: w - 0.4, h: 1.95, fontFace: FONT, fontSize: 11, color: C.ink, margin: 0, valign: "top", paraSpaceAfter: 6 });
   });
 }
 
-// 14 机制 ---------------------------------------------------------------
+// 9 产品画面 -------------------------------------------------------------
 {
   const s = light();
-  head(s, "机制", "每个机制本身就是一个隐喻");
-  const m = [
-    ["信号捕捉", "觉察要主动", "c-signal.png"],
-    ["情绪滤镜 + 回听", "感受不等于事实", "w-filter.png"],
-    ["冲动 + 暂停", "刺激和反应之间有空隙", "c-impulse.png"],
-    ["镜面解码", "你给的，她听到的", "k-decode.png"],
-    ["身体信号", "先命名，才能处理", "w-body.png"],
-    ["分类 · 提问 · 排序 · 拼句", "冷静是为了解决问题", "k-rank.png"],
-  ];
-  m.forEach(([t, d, img], i) => {
-    const col = i % 3, row = Math.floor(i / 3);
-    const x = 0.5 + col * 3.05, y = 1.45 + row * 1.9, w = 1.55;
-    s.addShape(pres.shapes.RECTANGLE, { x, y, w: 2.85, h: 1.7, fill: { color: C.card }, line: { color: C.line, width: 1 } });
-    s.addImage({ path: A(img), x: x + 0.1, y: y + 0.12, w, h: w * 9 / 16 });
-    s.addText(t, { x: x + 1.75, y: y + 0.12, w: 1.05, h: 0.9, fontFace: FONT, fontSize: 11.5, bold: true, color: C.ink, margin: 0, valign: "top" });
-    s.addText(d, { x: x + 0.12, y: y + 1.07, w: 2.65, h: 0.5, fontFace: FONT, fontSize: 11, color: C.violet, margin: 0, valign: "middle" });
-  });
+  head(s, "产品", "浏览器即玩：漫画幻灯片式的视觉小说");
+  shot(s, "home.png", 0.5, 1.45, 4.5, { cap: "首页：两个成长方向、三个故事、日常练习" });
+  shot(s, "c-decode.png", 5.2, 1.45, 4.3, { cap: "镜面解码：「对方听到的」浮在画面上" });
+  s.addText("21 个按年龄与人设设计的角色 × 9 种表情 · 21 张场景 · 程序化音乐音效 · 全局进度条与目录，课堂可直接跳到某一刻", { x: 0.5, y: 4.55, w: 9, h: 0.5, fontFace: FONT, fontSize: 12, color: C.ink, margin: 0 });
 }
 
-// 15 画面与人物 -----------------------------------------------------------
-{
-  const s = light();
-  head(s, "视听", "漫画幻灯片式的视觉小说：按年龄与人设设计的人物");
-  s.addShape(pres.shapes.RECTANGLE, { x: 0.5, y: 1.45, w: 5.6, h: 5.6 * 708 / 1472, fill: { color: "CFDCDD" }, line: { color: "FFFFFF", width: 2 }, shadow: shadow() });
-  s.addImage({ path: A("chars-main.png"), x: 0.5, y: 1.45, w: 5.6, h: 5.6 * 708 / 1472 });
-  s.addText("16 岁高中生、二三十岁职场人、四十多岁的班主任和总监、六十岁的父母：头身比、眼睛、脸型、发型、服装都不同。21 个角色 × 9 种表情。", { x: 0.5, y: 4.25, w: 5.6, h: 0.8, fontFace: FONT, fontSize: 11, color: C.muted, margin: 0, valign: "top" });
-  shot(s, "w-car.png", 6.55, 1.45, 2.95);
-  shot(s, "c-black.png", 6.55, 3.28, 2.95, { cap: "上：场景 + 立绘 + 对话框　下：关键转折切黑屏白字" });
-}
-
-// 16 AI 路线图 -----------------------------------------------------------
+// 10 AI ---------------------------------------------------------------
 {
   const s = darkS();
-  head(s, "AI 的角色", "从「选择题」到「真实表达」", true);
-  const p = [
-    ["现在 · P0", "剧情、镜面解码、复盘全部人工精写，离线可玩、对学生安全", "8C88A8"],
-    ["P1 自由表达", "玩家自己写一句回应，AI 按评分表打分，并以角色口吻回你——能自己说出来才算学会", C.gold],
-    ["P2 动态镜面", "对玩家自己写的那句话，生成「对方听到的」", C.F],
-    ["P3 自由对话关", "和带隐藏情绪状态的 AI 角色自由对话一整个场景，结束后复盘", C.T],
-    ["P4 你自己的场景", "描述生活里的一件事，AI 生成一个对应的练习", C.violet],
-  ];
-  p.forEach(([t, d, c], i) => {
-    const y = 1.5 + i * 0.66;
-    s.addShape(pres.shapes.OVAL, { x: 0.55, y: y + 0.1, w: 0.26, h: 0.26, fill: { color: c }, line: { color: c, width: 0 } });
-    if (i < p.length - 1) s.addShape(pres.shapes.LINE, { x: 0.68, y: y + 0.36, w: 0, h: 0.4, line: { color: "4A4770", width: 1.5 } });
-    s.addText(t, { x: 1.0, y, w: 2.0, h: 0.46, fontFace: FONT, fontSize: 13, bold: true, color: c, margin: 0, valign: "middle" });
-    s.addText(d, { x: 3.0, y, w: 6.5, h: 0.46, fontFace: FONT, fontSize: 11.5, color: "E6E3F3", margin: 0, valign: "middle" });
-  });
-  s.addText("边界：不做心理咨询、不做诊断；高风险内容固定话术引导求助；青少年内容安全过滤。", { x: 0.55, y: 4.85, w: 9, h: 0.35, fontFace: FONT, fontSize: 10.5, color: "B9B4D6", margin: 0 });
+  head(s, "AI 的角色", "从「选择题」到「自己说出口」", true);
+  s.addText("真实生活里没有选项。AI 让玩家用自己的话回应，并立刻看到对方会听到什么。", { x: 0.5, y: 1.4, w: 9, h: 0.4, fontFace: FONT, fontSize: 13, color: "E6E3F3", margin: 0 });
+  const card = (x, c, t, where, what) => {
+    s.addShape(pres.shapes.RECTANGLE, { x, y: 1.95, w: 4.4, h: 1.9, fill: { color: "2C2A4A" }, line: { color: c, width: 1.5 } });
+    s.addText(t, { x: x + 0.2, y: 2.05, w: 4, h: 0.4, fontFace: FONT, fontSize: 15, bold: true, color: c, margin: 0 });
+    s.addText([{ text: "接在哪：", options: { bold: true, color: "B9B4D6" } }, { text: where, options: { breakLine: true } }, { text: "AI 做什么：", options: { bold: true, color: "B9B4D6" } }, { text: what }],
+      { x: x + 0.2, y: 2.5, w: 4, h: 1.3, fontFace: FONT, fontSize: 11.5, color: "FFFFFF", margin: 0, valign: "top", paraSpaceAfter: 6 });
+  };
+  card(0.5, C.gold, "① 自由表达（先做）", "拼句节点，如小满给 48 人班群发的澄清消息", "按评分维度（事实 / 安排 / 请求）打分，以角色口吻回应，给一句点评；分数接入原剧情分支");
+  card(5.1, C.F, "② 动态镜面", "关键回应，如陈屿面对快哭的小满说的第一句话", "对玩家自己写的话，生成「对方听到的」「对方心里」和情绪变化");
+  s.addText([
+    { text: "之后：", options: { bold: true, color: C.T } },
+    { text: "③ 与带隐藏情绪的 AI 角色自由对话一整个场景　④ 描述你生活里的一件事，AI 生成对应练习" },
+  ], { x: 0.5, y: 4.05, w: 9, h: 0.4, fontFace: FONT, fontSize: 12, color: "E6E3F3", margin: 0 });
+  s.addText("边界：不做心理咨询和诊断；高风险内容固定话术引导求助；青少年内容安全过滤；接口不可用时自动退回选项模式。", { x: 0.5, y: 4.6, w: 9, h: 0.4, fontFace: FONT, fontSize: 10.5, color: "B9B4D6", margin: 0 });
 }
 
-// 17 适合谁 -------------------------------------------------------------
+// 11 落地 + 现状 ---------------------------------------------------------
 {
   const s = light();
-  head(s, "落地", "适合谁、怎么用");
-  const u = [
-    ["个人", "8 题倾向测验 → 推荐从哪个角色开始；一章约 15 分钟", C.violet],
-    ["课堂 / 班会", "45 分钟一章 + 讨论；按测验分组选视角，玩完交换\"你听到的那一句\"", C.T],
-    ["学生干部 / 职场新人", "校园篇、职场篇各对应真实岗位：文艺委员、班长、项目负责人与主管", C.F],
-    ["日常练习", "6 关 × 3 分钟：给偏理性的人「读懂人心」，给偏感性的人「冷静解题」", C.gold],
-  ];
-  u.forEach(([t, d, c], i) => {
-    const y = 1.5 + i * 0.9;
-    s.addShape(pres.shapes.RECTANGLE, { x: 0.5, y, w: 4.7, h: 0.75, fill: { color: C.card }, line: { color: C.line, width: 1 } });
-    s.addShape(pres.shapes.RECTANGLE, { x: 0.5, y, w: 0.08, h: 0.75, fill: { color: c }, line: { color: c, width: 0 } });
-    s.addText([{ text: t, options: { bold: true, breakLine: true, fontSize: 12.5 } }, { text: d, options: { color: C.muted } }],
-      { x: 0.72, y, w: 4.4, h: 0.75, fontFace: FONT, fontSize: 10.5, color: C.ink, margin: 0, valign: "middle" });
-  });
-  shot(s, "toc.png", 5.5, 1.5, 4.0, { cap: "全局进度条 + 目录：可直接跳到任意章的经历 / 镜面 / 倒带，方便课堂重看某一刻" });
-}
-
-// 18 现状与下一步 ----------------------------------------------------------
-{
-  const s = light();
-  head(s, "现状", "可玩 Demo 已上线，下一步是验证效果");
-  const stats = [["3", "个完整故事"], ["6", "个练习关"], ["21", "个角色 × 9 表情"], ["0", "安装，浏览器即玩"]];
+  head(s, "落地与现状", "可玩 Demo 已上线，下一步是验证效果");
+  const stats = [["3", "个完整故事"], ["6", "个练习关"], ["21", "个角色"], ["0", "安装，浏览器即玩"]];
   stats.forEach(([n, l], i) => {
     const x = 0.5 + i * 2.3;
-    s.addText(n, { x, y: 1.45, w: 2.1, h: 0.85, fontFace: FONT, fontSize: 44, bold: true, color: [C.violet, C.T, C.F, C.ink][i], margin: 0 });
-    s.addText(l, { x, y: 2.3, w: 2.1, h: 0.3, fontFace: FONT, fontSize: 11.5, color: C.muted, margin: 0 });
+    s.addText(n, { x, y: 1.4, w: 2.1, h: 0.8, fontFace: FONT, fontSize: 40, bold: true, color: [C.violet, C.T, C.F, C.ink][i], margin: 0 });
+    s.addText(l, { x, y: 2.2, w: 2.1, h: 0.3, fontFace: FONT, fontSize: 11.5, color: C.muted, margin: 0 });
   });
-  s.addText("我们在验证", { x: 0.5, y: 2.95, w: 4.3, h: 0.35, fontFace: FONT, fontSize: 14, bold: true, color: C.ink, margin: 0 });
-  bullets(s, [
-    "镜面那一刻，玩家有没有\"啊\"的一声？（开放问卷）",
-    "偏感性的玩家会不会觉得\"先停一下\"是说教？（看暂停后的解题环节能否接住）",
-    "一周后，玩家在现实里用上\"本周小任务\"了吗？",
-  ], 0.5, 3.35, 4.3, 1.8, { size: 11.5 });
-  s.addText("下一步", { x: 5.2, y: 2.95, w: 4.3, h: 0.35, fontFace: FONT, fontSize: 14, bold: true, color: C.ink, margin: 0 });
-  bullets(s, [
-    "AI 自由表达（P1）：从选择题到自己说出口",
-    "小范围试玩：学校班会 + 职场新人培训",
-    "正式插画与配乐（接口已留，可逐张替换）",
-    "扩展维度：P↔J、I↔E",
-  ], 5.2, 3.35, 4.3, 1.8, { size: 11.5 });
+  const block = (x, t, items) => {
+    s.addText(t, { x, y: 2.75, w: 2.85, h: 0.35, fontFace: FONT, fontSize: 14, bold: true, color: C.ink, margin: 0 });
+    s.addText(items.map((it, i) => ({ text: it, options: { bullet: true, breakLine: i < items.length - 1 } })), { x, y: 3.15, w: 2.85, h: 2.0, fontFace: FONT, fontSize: 11, color: C.ink, margin: 0, valign: "top", paraSpaceAfter: 6 });
+  };
+  block(0.5, "怎么用", ["个人：8 题测验推荐起点，一章约 15 分钟", "班会：45 分钟一章 + 讨论，交换「你听到的那一句」", "学生干部 / 职场新人培训"]);
+  block(3.55, "在验证", ["镜面那一刻，有没有那一声「啊」", "「先停一下」会不会被觉得是说教", "一周后，有没有用上「本周小任务」"]);
+  block(6.6, "下一步", ["AI 自由表达与动态镜面", "学校与新人培训小范围试玩", "更多方向：计划与弹性、表达与倾听"]);
 }
 
-// 19 结尾 ---------------------------------------------------------------
+// 12 结尾 ---------------------------------------------------------------
 {
-  const s = pres.addSlide(); N++;
-  s.background = { path: A("c-ending.png") };
-  s.addShape(pres.shapes.RECTANGLE, { x: 0, y: 0, w: 10, h: 5.625, fill: { color: C.night, transparency: 5 }, line: { color: C.night, width: 0 } });
+  const s = darkS();
   duo(s, 0.7, 1.6, 1.2, 0.1);
   s.addText("你学会了另一面。\n不是变成对方——是你们之间，多了一种语言。", { x: 0.7, y: 1.85, w: 8.6, h: 1.4, fontFace: FONT, fontSize: 24, bold: true, color: "FFFFFF", margin: 0, valign: "top" });
   s.addText("——校园篇结局「追光」", { x: 0.7, y: 3.25, w: 8, h: 0.35, fontFace: FONT, fontSize: 12, color: C.gold, margin: 0 });

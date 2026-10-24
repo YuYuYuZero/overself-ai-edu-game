@@ -28,6 +28,7 @@ await send("Runtime.enable"); await send("Page.enable");
 await send("Emulation.setDeviceMetricsOverride", { width: W, height: Hh, deviceScaleFactor: 1, mobile: W < 800 });
 await send("Page.navigate", { url: `file://${root}/demo/index.html` }); await sleep(800);
 await ev("localStorage.clear(); location.reload()"); await sleep(800);
+for (let i = 0; i < 40 && !(await ev(`!!(window.Story && document.querySelector(".hero"))`)); i++) await sleep(250);
 await ev(`window.Story.start("${SID}", "${POV}")`);
 
 // 驱动器：每次做一个动作。经历阶段选默认（第一个），镜面/倒带优先选信号解锁的选项
