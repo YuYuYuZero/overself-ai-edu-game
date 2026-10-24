@@ -11,11 +11,11 @@ const C = {
 const FONT = "PingFang SC";
 const pres = new pptxgen();
 pres.layout = "LAYOUT_16x9"; // 10 × 5.625
-pres.title = "Overself —— AI 游戏化性格成长";
+pres.title = "Overself —— AI for 人格成长";
 pres.author = "Overself";
 
 const shadow = () => ({ type: "outer", color: "000000", blur: 8, offset: 3, angle: 135, opacity: 0.22 });
-// 视觉母题：蓝 | 珊瑚 两段色条（T 与 F，两面）
+// 视觉母题：蓝 | 珊瑚 两段色条（偏理性与偏感性，两面）
 function duo(s, x, y, w = 0.9, h = 0.08) {
   s.addShape(pres.shapes.RECTANGLE, { x, y, w: w / 2, h, fill: { color: C.T }, line: { color: C.T, width: 0 } });
   s.addShape(pres.shapes.RECTANGLE, { x: x + w / 2, y, w: w / 2, h, fill: { color: C.F }, line: { color: C.F, width: 0 } });
@@ -56,19 +56,46 @@ const darkS = () => { const s = pres.addSlide(); s.background = { color: C.night
   s.addShape(pres.shapes.RECTANGLE, { x: 0, y: 0, w: 10, h: 5.625, fill: { color: C.night, transparency: 8 }, line: { color: C.night, width: 0 } });
   duo(s, 0.7, 1.35, 1.2, 0.1);
   s.addText("Overself", { x: 0.7, y: 1.55, w: 7, h: 1.1, fontFace: FONT, fontSize: 60, bold: true, color: "FFFFFF", margin: 0, charSpacing: 2 });
-  s.addText("AI 游戏化性格成长", { x: 0.7, y: 2.75, w: 7, h: 0.5, fontFace: FONT, fontSize: 24, bold: true, color: C.gold, margin: 0 });
-  s.addText("在故事里，长出你性格的另一面。", { x: 0.7, y: 3.3, w: 7, h: 0.4, fontFace: FONT, fontSize: 15, color: "FFFFFF", margin: 0 });
+  s.addText("AI for 人格成长 · 不做应试，做成长", { x: 0.7, y: 2.75, w: 7, h: 0.5, fontFace: FONT, fontSize: 24, bold: true, color: C.gold, margin: 0 });
+  s.addText("分数之外，也要长成更好的人。", { x: 0.7, y: 3.3, w: 7, h: 0.4, fontFace: FONT, fontSize: 15, color: "FFFFFF", margin: 0 });
   s.addText("yuyuyuzero.github.io/overself-ai-edu-game", { x: 0.7, y: 4.85, w: 6, h: 0.3, fontFace: FONT, fontSize: 11, color: "B9B4D6", margin: 0 });
 }
 
-// 2 问题 ---------------------------------------------------------------
+// 2 背景：分数之外 ----------------------------------------------------------
+{
+  const s = darkS();
+  head(s, "为什么做", "分数之外，人格的成长常常被搁在一边", true);
+  s.addText([
+    { text: "十几年围着分数转。可走出考场以后，真正决定一个人过得好不好的，常常是另一些能力：", options: { breakLine: true } },
+    { text: "能不能读懂身边的人；能不能在情绪上头时稳住自己；能不能把一件砸过来的事拆开、解决掉。", options: { bold: true, color: C.gold, breakLine: true } },
+    { text: "这些能力没有考纲，也很少有人系统地教。我们不做应试产品——AI for 人格成长。" },
+  ], { x: 0.5, y: 1.45, w: 4.3, h: 3.2, fontFace: FONT, fontSize: 13.5, color: "E6E3F3", margin: 0, valign: "top", paraSpaceAfter: 12, lineSpacingMultiple: 1.2 });
+  const col = (x, c, who, good, stuck, learn) => {
+    s.addShape(pres.shapes.RECTANGLE, { x, y: 1.45, w: 2.2, h: 3.6, fill: { color: "2C2A4A" }, line: { color: c, width: 1.5 } });
+    s.addShape(pres.shapes.RECTANGLE, { x, y: 1.45, w: 2.2, h: 0.08, fill: { color: c }, line: { color: c, width: 0 } });
+    s.addText([
+      { text: who, options: { bold: true, color: c, fontSize: 15, breakLine: true } },
+      { text: "长处", options: { color: "8C88A8", fontSize: 9.5, breakLine: true } },
+      { text: good, options: { breakLine: true } },
+      { text: "容易卡住", options: { color: "8C88A8", fontSize: 9.5, breakLine: true } },
+      { text: stuck, options: { breakLine: true } },
+      { text: "在这里学", options: { color: "8C88A8", fontSize: 9.5, breakLine: true } },
+      { text: learn, options: { bold: true, color: c } },
+    ], { x: x + 0.15, y: 1.65, w: 1.9, h: 3.3, fontFace: FONT, fontSize: 11, color: "FFFFFF", margin: 0, valign: "top", paraSpaceAfter: 5 });
+  };
+  col(5.05, C.T, "偏理性的人", "冷静、讲道理、会解决问题", "道理都对，却读不懂人心；方案给早了，被听成冷漠", "读懂人心");
+  col(7.3, C.F, "偏感性的人", "敏锐、体贴、懂别人的感受", "感受很深，却被情绪带着走；情绪最高时做了收不回的决定", "稳住情绪，冷静解题");
+  s.addText("不用 MBTI 字母、不贴标签：每个人都有两面，只是压力下更习惯用其中一面。", { x: 0.5, y: 4.85, w: 4.3, h: 0.4, fontFace: FONT, fontSize: 10.5, color: "B9B4D6", margin: 0 });
+}
+
+// 3 问题 ---------------------------------------------------------------
 {
   const s = light();
   head(s, "我们要解决的问题", "道理人人都懂，可到了那一刻，人只会用习惯的那一面");
   shot(s, "c-filter.png", 0.5, 1.55, 5.2, { cap: "游戏截图：领舞说「不跳了」——情绪最高时，前半句（原因）被情绪滤镜模糊掉了" });
   const rows = [
-    [C.T, "理性的人（T）", "知道\"要共情\"。可同学说\"我不跳了\"，脱口而出的是：「那就换人吧。」"],
-    [C.F, "敏感的人（F）", "知道\"要冷静\"。可只听见\"不跳了\"四个字，掏出手机就要往 48 人的班群发长文。"],
+    [C.T, "偏理性的人", "知道\"要共情\"。可同学说\"我不跳了\"，脱口而出的是：「那就换人吧。」"],
+    [C.F, "偏感性的人", "知道\"要冷静\"。可只听见\"不跳了\"四个字，掏出手机就要往 48 人的班群发长文。"],
   ];
   rows.forEach(([c, t, d], i) => {
     const y = 1.55 + i * 1.32;
@@ -100,7 +127,7 @@ const darkS = () => { const s = pres.addSlide(); s.background = { color: C.night
   s.addShape(pres.shapes.RECTANGLE, { x: 0.5, y: 4.25, w: 9, h: 0.75, fill: { color: "2C2A4A" }, line: { color: "2C2A4A", width: 0 } });
   s.addText([
     { text: "倒带不扣分。", options: { bold: true, color: C.gold } },
-    { text: "第一次的自然反应只用来复盘\"你的习惯\"；倒带后的那个选择，是你多出来的一种。不是把 T 变成 F，而是多一种选择。" },
+    { text: "第一次的自然反应只用来复盘\"你的习惯\"；倒带后的那个选择，是你多出来的一种。不是把一种人变成另一种人，而是多一种选择。" },
   ], { x: 0.7, y: 4.25, w: 8.6, h: 0.75, fontFace: FONT, fontSize: 12, color: "FFFFFF", valign: "middle", margin: 0 });
 }
 
@@ -111,7 +138,7 @@ const darkS = () => { const s = pres.addSlide(); s.background = { color: C.night
   duo(s, 0.7, 1.9, 1.2, 0.1);
   s.addText("一段真实体验", { x: 0.7, y: 2.1, w: 8, h: 0.7, fontFace: FONT, fontSize: 34, bold: true, color: "FFFFFF", margin: 0 });
   s.addText("校园篇《汇演前三天》第一章 · 约 15 分钟（推荐首玩）", { x: 0.7, y: 2.85, w: 8, h: 0.4, fontFace: FONT, fontSize: 15, color: C.gold, margin: 0 });
-  s.addText("元旦汇演前三天，领舞林可突然说不跳了。文艺委员苏小满（F），班长陈屿（T）。\n以下画面全部是游戏实机截图。", { x: 0.7, y: 3.4, w: 8.5, h: 0.8, fontFace: FONT, fontSize: 13, color: "C9C4E6", margin: 0, valign: "top" });
+  s.addText("元旦汇演前三天，领舞林可突然说不跳了。文艺委员苏小满（偏感性），班长陈屿（偏理性）。\n以下画面全部是游戏实机截图。", { x: 0.7, y: 3.4, w: 8.5, h: 0.8, fontFace: FONT, fontSize: 13, color: "C9C4E6", margin: 0, valign: "top" });
   page(s, N, true);
 }
 
@@ -132,7 +159,7 @@ const darkS = () => { const s = pres.addSlide(); s.background = { color: C.night
   bullets(s, [
     "情绪温度 ≥ 60 时，句子里的事实（原因）变模糊，只剩情绪词放大变红",
     "黑屏白字：「她走了。还剩三天。」",
-    [{ text: "设计意图：", options: { bold: true, color: C.violet } }, "让 F 玩家亲身体验\"我只听见了一半\"，而不是被告知"],
+    [{ text: "设计意图：", options: { bold: true, color: C.violet } }, "让偏感性的玩家亲身体验\"我只听见了一半\"，而不是被告知"],
   ], 6.4, 2.95, 3.1, 2.2, { size: 12 });
 }
 
@@ -215,7 +242,7 @@ const darkS = () => { const s = pres.addSlide(); s.background = { color: C.night
 // 11 第二章：解题 --------------------------------------------------------
 {
   const s = light();
-  head(s, "时刻 6 · F 学冷静解题", "冷静不是忍住，是把问题解决掉");
+  head(s, "时刻 6 · 偏感性的人学冷静解题", "冷静不是忍住，是把问题解决掉");
   shot(s, "c-rank.png", 0.5, 1.5, 4.4, { cap: "排序：按「卡住了谁」排，不按「哪件最难受」排" });
   shot(s, "c-compose.png", 5.1, 1.5, 4.4, { cap: "拼句：在班群发一条只有事实、安排和请求的消息" });
   s.addShape(pres.shapes.RECTANGLE, { x: 0.5, y: 4.35, w: 9, h: 0.75, fill: { color: C.card }, line: { color: C.line, width: 1 } });
@@ -225,27 +252,27 @@ const darkS = () => { const s = pres.addSlide(); s.background = { color: C.night
   ], { x: 0.7, y: 4.35, w: 8.6, h: 0.75, fontFace: FONT, fontSize: 12, color: C.ink, valign: "middle", margin: 0 });
 }
 
-// 12 T 也在学 ----------------------------------------------------------
+// 12 偏理性的人也在学 ----------------------------------------------------------
 {
   const s = light();
-  head(s, "时刻 7 · T 学先看见人", "捕捉到的信号，会解锁原本没有的选项");
+  head(s, "时刻 7 · 偏理性的人学先看见人", "捕捉到的信号，会解锁原本没有的选项");
   shot(s, "c-signal.png", 0.5, 1.5, 4.4, { cap: "信号一闪就消失：林可低头看手机、攥紧的手" });
   shot(s, "c-signal-unlocked.png", 5.1, 1.5, 4.4, { cap: "看见了，才有「🔍 你先坐会儿……我们一起想办法」" });
   s.addShape(pres.shapes.RECTANGLE, { x: 0.5, y: 4.35, w: 9, h: 0.75, fill: { color: "EEF4FD" }, line: { color: C.T, width: 1 } });
   s.addText([
     { text: "设计意图：", options: { bold: true, color: C.T } },
-    { text: "觉察要主动。没看见的人，连共情的选项都没有——这正是 T 在现实里的处境。" },
+    { text: "觉察要主动。没看见的人，连共情的选项都没有——这正是偏理性的人在现实里的处境。" },
   ], { x: 0.7, y: 4.35, w: 8.6, h: 0.75, fontFace: FONT, fontSize: 12, color: C.ink, valign: "middle", margin: 0 });
 }
 
 // 13 三个故事 ------------------------------------------------------------
 {
   const s = light();
-  head(s, "内容", "三个故事，都是 T 和 F 互相学（按推荐顺序）");
+  head(s, "内容", "三个故事，都是理性与感性互相学（按推荐顺序）");
   const st = [
-    ["c-stage.png", "校园《汇演前三天》", "推荐首玩 · 30 分钟", "陈屿 T：先看见人，再排人", "苏小满 F：情绪是警报不是导航；先排序、问清楚", "陈屿的方案给了节目退路，小满问出的原因给了林可回来的理由"],
-    ["w-decode2.png", "家庭《那一周》", "60 分钟", "弟弟林朗 T：先接情绪，再说事", "姐姐林晚 F：把害怕变成问题", "一起替妈妈做手术决定，听见\"选便宜的\"背后的\"我怕躺着\""],
-    ["k-filter.png", "职场《第一次带项目》", "30 分钟", "赵总监 T：知道自己那句话被听成了什么", "许诺 F：把批评当信息，交出能执行的方案", "总监的直接 + 许诺问出客户真正要的东西"],
+    ["c-stage.png", "校园《汇演前三天》", "推荐首玩 · 30 分钟", "陈屿（偏理性）：先看见人，再排人", "苏小满（偏感性）：情绪是警报不是导航；先排序、问清楚", "陈屿的方案给了节目退路，小满问出的原因给了林可回来的理由"],
+    ["w-decode2.png", "家庭《那一周》", "60 分钟", "弟弟林朗（偏理性）：先接情绪，再说事", "姐姐林晚（偏感性）：把害怕变成问题", "一起替妈妈做手术决定，听见\"选便宜的\"背后的\"我怕躺着\""],
+    ["k-filter.png", "职场《第一次带项目》", "30 分钟", "赵总监（偏理性）：知道自己那句话被听成了什么", "许诺（偏感性）：把批评当信息，交出能执行的方案", "总监的直接 + 许诺问出客户真正要的东西"],
   ];
   st.forEach(([img, t, sub, a, b, both], i) => {
     const x = 0.5 + i * 3.05, w = 2.85;
@@ -323,7 +350,7 @@ const darkS = () => { const s = pres.addSlide(); s.background = { color: C.night
     ["个人", "8 题倾向测验 → 推荐从哪个角色开始；一章约 15 分钟", C.violet],
     ["课堂 / 班会", "45 分钟一章 + 讨论；按测验分组选视角，玩完交换\"你听到的那一句\"", C.T],
     ["学生干部 / 职场新人", "校园篇、职场篇各对应真实岗位：文艺委员、班长、项目负责人与主管", C.F],
-    ["日常练习", "6 关 × 3 分钟：T→F「读懂人心」，F→T「冷静解题」", C.gold],
+    ["日常练习", "6 关 × 3 分钟：给偏理性的人「读懂人心」，给偏感性的人「冷静解题」", C.gold],
   ];
   u.forEach(([t, d, c], i) => {
     const y = 1.5 + i * 0.9;
@@ -348,7 +375,7 @@ const darkS = () => { const s = pres.addSlide(); s.background = { color: C.night
   s.addText("我们在验证", { x: 0.5, y: 2.95, w: 4.3, h: 0.35, fontFace: FONT, fontSize: 14, bold: true, color: C.ink, margin: 0 });
   bullets(s, [
     "镜面那一刻，玩家有没有\"啊\"的一声？（开放问卷）",
-    "F 玩家会不会觉得\"先停一下\"是说教？（看暂停后的解题环节能否接住）",
+    "偏感性的玩家会不会觉得\"先停一下\"是说教？（看暂停后的解题环节能否接住）",
     "一周后，玩家在现实里用上\"本周小任务\"了吗？",
   ], 0.5, 3.35, 4.3, 1.8, { size: 11.5 });
   s.addText("下一步", { x: 5.2, y: 2.95, w: 4.3, h: 0.35, fontFace: FONT, fontSize: 14, bold: true, color: C.ink, margin: 0 });
@@ -368,7 +395,7 @@ const darkS = () => { const s = pres.addSlide(); s.background = { color: C.night
   duo(s, 0.7, 1.6, 1.2, 0.1);
   s.addText("你学会了另一面。\n不是变成对方——是你们之间，多了一种语言。", { x: 0.7, y: 1.85, w: 8.6, h: 1.4, fontFace: FONT, fontSize: 24, bold: true, color: "FFFFFF", margin: 0, valign: "top" });
   s.addText("——校园篇结局「追光」", { x: 0.7, y: 3.25, w: 8, h: 0.35, fontFace: FONT, fontSize: 12, color: C.gold, margin: 0 });
-  s.addText("Overself · AI 游戏化性格成长", { x: 0.7, y: 4.3, w: 8, h: 0.35, fontFace: FONT, fontSize: 14, bold: true, color: "FFFFFF", margin: 0 });
+  s.addText("Overself · AI for 人格成长", { x: 0.7, y: 4.3, w: 8, h: 0.35, fontFace: FONT, fontSize: 14, bold: true, color: "FFFFFF", margin: 0 });
   s.addText("在线试玩：yuyuyuzero.github.io/overself-ai-edu-game", { x: 0.7, y: 4.68, w: 8, h: 0.3, fontFace: FONT, fontSize: 11, color: "C9C4E6", margin: 0 });
 }
 

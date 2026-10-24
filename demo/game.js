@@ -28,7 +28,7 @@
     for (const c of kids.flat()) if (c != null && c !== false) n.append(c.nodeType ? c : document.createTextNode(c));
     return n;
   }
-  function screen(...kids) { clearTimers(); AU.heart(0); app.innerHTML = ""; app.append(...kids); window.scrollTo(0, 0); }
+  function screen(...kids) { clearTimers(); AU.heart(0); document.body.classList.remove("home"); app.innerHTML = ""; app.append(...kids); window.scrollTo(0, 0); }
   function starsEl(n, size) {
     const s = el("span", { class: "stars", style: size ? `font-size:${size}px` : "" });
     for (let i = 0; i < 3; i++) s.append(el("span", { class: i < n ? "" : "off" }, "★"));
@@ -42,52 +42,83 @@
   // ---------- 首页 ----------
   function home() {
     setRouteColor();
+    const ART = window.ART;
     const routes = Object.values(window.ROUTES).map(r => {
       const done = r.levels.filter(l => progress.stars[l.id]).length;
       return el("button", { class: "card route-card", style: `--c:${r.color}`, onclick: () => routeScreen(r.id) },
-        el("div", { class: "tag" }, `${r.from} → ${r.to}`),
+        el("div", { class: "tag" }, r.dir),
         el("h2", {}, r.title),
         el("div", { class: "muted" }, r.subtitle),
-        el("div", { class: "progress-dots" }, `已完成 ${done} / ${r.levels.length} 关`));
+        el("div", { class: "progress-dots" }, `${r.levels.length} 关 · 每关 3 分钟 · 已完成 ${done}`));
     });
-    const coming = [["P → J", "学会做计划"], ["J → P", "拥抱计划外"], ["I → E", "迈出第一句"], ["E → I", "安静地听"]]
-      .map(([t, s]) => el("div", { class: "card coming" }, el("b", {}, t), "　", el("span", { class: "muted" }, s + " · 敬请期待")));
+    const coming = [["学会做计划", "给随性、爱拖延的你"], ["拥抱计划外", "给凡事都要按计划来的你"], ["迈出第一句", "给不敢开口的你"], ["安静地听", "给急着表达的你"]]
+      .map(([t, s]) => el("div", { class: "coming-chip" }, el("b", {}, t), el("span", {}, s)));
     AU.bgm("home"); AU.amb(null); AU.heart(0);
     const cardCount = Object.keys(progress.cards).length + window.Story.cards().length;
     const stories = window.Story.list().map(st => {
       const saved = window.Story.saved(st.id), P = st.POV;
       const firstBg = st.cover || (st.chapters[0].seq || st.chapters[0][st.defaultStart || "A"] || []).find(n => n.bg)?.bg;
       return el("div", { class: "card story-card" },
-        el("div", { class: "story-cover", html: window.ART.bg(firstBg) },
-          el("div", { class: "cover-chars" }, ["A", "B"].map(p => el("div", { class: "cover-char", html: window.ART.char(P[p].char, "normal") })))),
+        el("div", { class: "story-cover", html: ART.bg(firstBg) },
+          el("div", { class: "cover-chars" }, ["A", "B"].map(p => el("div", { class: "cover-char", html: ART.char(P[p].char, "normal") }))),
+          st.order === 1 ? el("div", { class: "cover-badge" }, "推荐首玩") : null),
         el("div", { class: "story-info" },
-          el("div", { class: "tag", style: "color:var(--accent)" }, `${st.tag} · 约 ${st.minutes} 分钟`),
-          el("h2", { style: "margin:4px 0" }, `《${st.title}》`),
-          el("p", { class: "muted", style: "line-height:1.7;margin:6px 0 12px" }, st.blurb),
-          el("div", { class: "row" },
+          el("div", { class: "tag" }, `${st.tag} · 约 ${st.minutes} 分钟`),
+          el("h2", {}, `《${st.title}》`),
+          el("p", { class: "muted blurb" }, st.blurb),
+          el("div", { class: "story-actions" },
             saved ? el("button", { class: "btn", onclick: () => window.Story.resume(st.id) }, `继续：${st.chapters[saved.ch]?.title || ""}`) : null,
-            ...["A", "B"].map(p => el("button", { class: "btn ghost", style: `border-color:${P[p].color};color:${P[p].color}`, onclick: () => window.Story.start(st.id, p) }, `从${P[p].name}开始（偏 ${P[p].tag}）`)),
+            ...["A", "B"].map(p => el("button", { class: "btn ghost", style: `border-color:${P[p].color};color:${P[p].color}`, onclick: () => window.Story.start(st.id, p) }, `从${P[p].name}开始（${P[p].tag}）`)),
             el("button", { class: "btn plain", onclick: () => window.Story.toc(st.id) }, "☰ 章节目录"))));
     });
+    const side = (cls, char, who, pain, grow, how) => el("div", { class: "side-card " + cls },
+      el("div", { class: "side-av", html: ART.char(char, "think", { crop: "head" }) }),
+      el("div", {},
+        el("div", { class: "side-who" }, who),
+        el("div", { class: "side-pain" }, pain),
+        el("div", { class: "side-grow" }, "→ ", grow),
+        el("div", { class: "muted small" }, how)));
+    const step = (n, t, d) => el("div", { class: "loop-step" }, el("div", { class: "loop-n" }, n), el("b", {}, t), el("div", { class: "muted small" }, d));
     screen(
-      el("div", { class: "hero" },
-        el("div", { class: "hero-kicker" }, "AI 游戏化性格成长"),
-        el("h1", {}, "Over", el("span", {}, "self")),
-        el("p", { class: "hero-lead" }, "在故事里，长出你性格的另一面。"),
-        el("p", {}, "先用你习惯的方式做一遍，再从对方的眼睛里看回来，然后倒带重来。", el("br"),
-          "理性的人学会读懂情绪，敏感的人学会冷静解题——不是变成别人，是多一种选择。")),
-      el("div", { class: "row", style: "justify-content:center;margin:18px 0" },
-        el("button", { class: "btn", onclick: quiz }, "先测一测我的倾向"),
-        el("button", { class: "btn ghost", onclick: collection }, `我的技能卡（${cardCount}）`)),
-      el("div", { class: "muted small", style: "margin:18px 0 6px" }, "故事"),
-      ...stories,
-      el("div", { class: "muted small", style: "margin:18px 0 6px" }, "日常练习关（每关 3 分钟）"),
-      ...routes,
-      el("div", { class: "muted small", style: "margin:18px 0 6px" }, "更多维度"),
-      ...coming,
-      el("p", { class: "muted small", style: "margin-top:24px;line-height:1.7" },
-        "说明：T/F 等字母只是帮助理解的通俗说法，不是诊断。每个人都同时拥有两面，只是习惯用其中一面更多。")
+      el("section", { class: "hero" },
+        el("div", { class: "hero-bg", html: ART.bg("classroom_evening") }),
+        el("div", { class: "hero-shade" }),
+        el("div", { class: "hero-chars" }, ["chenyu", "xiaoman"].map(c => el("div", { class: "hero-char", html: ART.char(c, c === "xiaoman" ? "smile" : "normal") }))),
+        el("div", { class: "hero-text" },
+          el("div", { class: "hero-kicker" }, "AI for 人格成长 · 不做应试，做成长"),
+          el("h1", {}, "Over", el("span", {}, "self")),
+          el("p", { class: "hero-lead" }, "分数之外，也要长成更好的人。"),
+          el("p", { class: "hero-sub" }, "高考和刷题之间，人格的成长常常被搁在一边。我们把那些真实的「那一刻」做成互动故事：先用你习惯的方式做一遍，再从对方的眼睛里看回来，然后倒带重来。"),
+          el("div", { class: "row hero-cta" },
+            el("button", { class: "btn", onclick: quiz }, "先测一测我的倾向"),
+            el("button", { class: "btn light", onclick: () => window.Story.start("campus", "B") }, "直接开始《汇演前三天》"),
+            el("button", { class: "btn link", onclick: collection }, `我的技能卡（${cardCount}）`)))),
+      el("section", { class: "home-sec" },
+        el("h3", { class: "sec-title" }, "两种人，两个方向"),
+        el("div", { class: "side-grid" },
+          side("rational", "chenyu", "偏理性的你", "道理都对，却常常读不懂人心", "学会读懂人心", "在讲道理之前，先看见对方的情绪、接住对方"),
+          side("emotional", "xiaoman", "偏感性的你", "感受很深，却容易被情绪带着走", "学会稳住情绪", "情绪是警报不是导航：先停一下，再把问题拆开解决")),
+        el("p", { class: "muted small center" }, "不是把一种人变成另一种人。每个人都有两面，我们只是帮你把不常用的那一面，也长出来。")),
+      el("section", { class: "home-sec" },
+        el("h3", { class: "sec-title" }, "每一章，都是同一个循环"),
+        el("div", { class: "loop-grid" },
+          step("1", "经历", "用你习惯的方式做选择"),
+          step("2", "镜面", "切到对方身上，听见「对方听到的」"),
+          step("3", "倒带", "回到那一刻，换一种做法"),
+          step("4", "复盘", "看见自己的习惯，带走一个小任务"))),
+      el("section", { class: "home-sec" },
+        el("h3", { class: "sec-title" }, "故事"),
+        el("div", { class: "story-grid" }, stories)),
+      el("section", { class: "home-sec" },
+        el("h3", { class: "sec-title" }, "日常练习"),
+        el("div", { class: "route-grid" }, routes)),
+      el("section", { class: "home-sec" },
+        el("h3", { class: "sec-title" }, "更多成长方向 · 敬请期待"),
+        el("div", { class: "coming-grid" }, coming)),
+      el("p", { class: "muted small center foot" },
+        "「偏理性 / 偏感性」只是帮助理解的说法，不是性格诊断。每个人都同时拥有两面，只是习惯用其中一面更多。")
     );
+    document.body.classList.add("home");
   }
 
   // ---------- 倾向测验 ----------
@@ -112,7 +143,7 @@
   function quizResult(t, n) {
     const f = n - t;
     const rec = t >= f ? window.ROUTES.t2f : window.ROUTES.f2t;
-    const lean = t === f ? "两种视角都挺常用" : t > f ? "更常用 T（思考）视角" : "更常用 F（情感）视角";
+    const lean = t === f ? "理性和感受两种方式都挺常用" : t > f ? "更习惯用道理看问题（偏理性）" : "更习惯用感受看问题（偏感性）";
     screen(
       el("div", { class: "topbar" }, el("button", { class: "back", onclick: home }, "‹ 返回")),
       el("div", { class: "card" },
@@ -121,7 +152,7 @@
           el("div", { style: `width:${t / n * 100}%;background:#4a8fe0` }),
           el("div", { style: `width:${f / n * 100}%;background:#f07c5a` })),
         el("div", { class: "row muted small", style: "justify-content:space-between" },
-          el("span", {}, `T 思考 ${t}`), el("span", {}, `F 情感 ${f}`)),
+          el("span", {}, `偏理性 ${t}`), el("span", {}, `偏感性 ${f}`)),
         el("p", { style: "line-height:1.7" }, t >= f
           ? "你擅长分析和解决问题。可以练一练的是：在讲道理之前，先读懂并接住对方的情绪。"
           : "你对人和情绪很敏锐。可以练一练的是：情绪上头时，先停一下，把事实和感受分开。"),
@@ -163,7 +194,7 @@
     const r = window.ROUTES[id]; setRouteColor(r.color);
     screen(
       el("div", { class: "topbar" }, el("button", { class: "back", onclick: home }, "‹ 首页")),
-      el("div", { class: "level-head" }, el("div", { class: "skill" }, `${r.from} → ${r.to}`), el("h2", {}, r.title)),
+      el("div", { class: "level-head" }, el("div", { class: "skill" }, r.dir), el("h2", {}, r.title)),
       el("p", { class: "muted" }, r.subtitle),
       ...r.levels.map((l, i) => el("button", { class: "card level-item", onclick: () => playLevel(r, i) },
         el("div", {}, el("div", { class: "muted small" }, `第 ${i + 1} 关`), el("h3", {}, l.title),

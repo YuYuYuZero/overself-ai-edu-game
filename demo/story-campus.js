@@ -375,11 +375,11 @@
   window.STORIES.campus = {
     id: "campus", title: "汇演前三天", key: "complement.campus.v1",
     blurb: "元旦汇演前三天，领舞突然说不跳了。文艺委员和班长，一个慌，一个冷静——节目能不能活下来，看他们能不能学会对方那一面。",
-    minutes: 30, tag: "校园 · T↔F 互学 · 推荐首玩", order: 1,
+    minutes: 30, tag: "校园 · 理性与感性互学", order: 1,
     relLabel: "两人关系",
     POV: {
-      A: { name: "陈屿", short: "陈屿", tag: "T", color: "#4a8fe0", bgm: "cool", char: "chenyu" },
-      B: { name: "苏小满", short: "小满", tag: "F", color: "#f07c5a", bgm: "warm", char: "xiaoman" }
+      A: { name: "陈屿", short: "陈屿", tag: "偏理性", color: "#4a8fe0", bgm: "cool", char: "chenyu" },
+      B: { name: "苏小满", short: "小满", tag: "偏感性", color: "#f07c5a", bgm: "warm", char: "xiaoman" }
     },
     defaultStart: "B",
     cast: { "林可": "linke", "周老师": "teacher_zhou", "大刘": "daliu", "陈屿": "chenyu", "苏小满": "xiaoman" },

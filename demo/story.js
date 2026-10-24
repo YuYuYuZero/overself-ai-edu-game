@@ -662,7 +662,7 @@ window.Story = (function () {
           el("button", { class: "btn plain", onclick: close }, "关闭")),
         el("div", { class: "toc-pov" }, el("span", { class: "muted small" }, "视角"),
           ["A", "B"].map(p => el("button", { class: "toc-pov-btn" + (p === pov ? " on" : ""), style: `--c:${POV[p].color}`, onclick: () => { pov = p; render(); } },
-            el("span", { class: "pav", html: window.ART.char(POV[p].char, "normal", { crop: "head" }) }), `${POV[p].name}（偏 ${POV[p].tag}）`))),
+            el("span", { class: "pav", html: window.ART.char(POV[p].char, "normal", { crop: "head" }) }), `${POV[p].name}（${POV[p].tag}）`))),
         el("div", { class: "toc-list" }, ST.chapters.map((c, k) => {
           const done = (c.noMirror || c.seq ? ["live"] : PHASES.map(p => p[0])).filter(ph => G.seen[`${pov}:${k}:${ph}`]).length;
           const cur = !fromHome && pov === G.start && k === G.ch;
