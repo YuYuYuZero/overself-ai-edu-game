@@ -1,5 +1,7 @@
 # 补全 · 另一面（Overself）—— AI 教育游戏
 
+**在线试玩**：https://yuyuyuzero.github.io/overself-ai-edu-game/
+
 一款帮人补全性格另一面的叙事游戏，面向教育场景。首个模块：**T 人学共情，F 人学冷静**。
 
 > **同一句话，你先当说的人，再当听的人。**
