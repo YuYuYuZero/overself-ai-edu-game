@@ -288,7 +288,7 @@
   window.STORIES.work = {
     id: "work", title: "第一次带项目", key: "complement.work.v1",
     blurb: "上线前一周客户改需求，周会上总监当众问：「这个排期是谁拍的脑袋？」她有两天时间，交一个可以执行的方案。",
-    minutes: 30, tag: "职场 · T 与 F 互相补全", order: 3,
+    minutes: 30, tag: "职场 · T 与 F 互相解锁", order: 3,
     relLabel: "信任度",
     POV: {
       A: { name: "赵总监", short: "赵总监", tag: "ENTJ", color: "#4a8fe0", bgm: "cool", char: "zhao" },

@@ -375,7 +375,7 @@
   window.STORIES.campus = {
     id: "campus", title: "汇演前三天", key: "complement.campus.v1",
     blurb: "元旦汇演前三天，领舞突然说不跳了。文艺委员和班长，一个慌，一个冷静——节目能不能活下来，看他们能不能学会对方那一面。",
-    minutes: 30, tag: "校园 · T 与 F 互相补全", order: 1,
+    minutes: 30, tag: "校园 · T 与 F 互相解锁", order: 1,
     relLabel: "两人关系",
     POV: {
       A: { name: "陈屿", short: "陈屿", tag: "ISTJ", color: "#4a8fe0", bgm: "cool", char: "chenyu" },

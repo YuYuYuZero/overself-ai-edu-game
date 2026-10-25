@@ -55,7 +55,7 @@
     });
     const coming = ["E", "I", "S", "N", "J", "P"].map(k => {
       const c = M.complement[k];
-      return el("div", { class: "coming-chip" }, el("b", {}, `${k} 补全 ${c.to} · ${c.title}`), el("span", {}, c.desc.split(" → ")[0]));
+      return el("div", { class: "coming-chip" }, el("b", {}, `${k} 解锁 ${c.to} · ${c.title}`), el("span", {}, c.desc.split(" → ")[0]));
     });
     AU.bgm("home"); AU.amb(null); AU.heart(0);
     const cardCount = Object.keys(progress.cards).length + window.Story.cards().length;
@@ -89,28 +89,28 @@
         el("div", { class: "hero-shade" }),
         el("div", { class: "hero-chars" }, ["chenyu", "xiaoman"].map(c => el("div", { class: "hero-char", html: ART.char(c, c === "xiaoman" ? "smile" : "normal") }))),
         el("div", { class: "hero-text" },
-          el("div", { class: "hero-kicker" }, "MBTI 性格补全游戏"),
+          el("div", { class: "hero-kicker" }, "MBTI 性格解锁游戏"),
           el("h1", {}, "Over", el("span", {}, "self")),
-          el("p", { class: "hero-lead" }, "测出你的 MBTI，", el("br"), "体验另一面，补全你自己。"),
+          el("p", { class: "hero-lead" }, "测出你的 MBTI，", el("br"), "体验另一面，解锁另一个你。"),
           el("p", { class: "hero-sub" }, "测试告诉你「你是哪一型」。在 Overself 里，你先以同型的角色走进一个真实故事，再切到相反类型的人身上，把同一件事重新经历一遍。"),
           mine ? el("div", { class: "hero-type" }, "你的类型：", el("b", {}, mine.type), ` · ${M.names[mine.type]}`) : null,
           el("div", { class: "row hero-cta" },
             el("button", { class: "btn", onclick: quiz }, mine ? "重新测一次" : "测我的 MBTI（22 题 · 约 3 分钟）"),
-            mine ? el("button", { class: "btn light", onclick: () => quizResult(mine) }, "查看我的补全方向")
+            mine ? el("button", { class: "btn light", onclick: () => quizResult(mine) }, "查看我的解锁方向")
               : el("button", { class: "btn light", onclick: () => window.Story.start("campus", "B") }, "直接开始《汇演前三天》"),
             el("button", { class: "btn link", onclick: collection }, `我的技能卡（${cardCount}）`)))),
       el("section", { class: "home-sec" },
-        el("h3", { class: "sec-title" }, "三步：测 → 体验 → 补全"),
+        el("h3", { class: "sec-title" }, "三步：测 → 体验 → 解锁"),
         el("div", { class: "loop-grid three" },
           step("测", "测出你的类型", "22 道情境题，得到你的四个字母，以及每个维度偏向多少"),
           step("验", "体验另一面", "在故事里先用你习惯的方式做选择，再切到相反类型的人身上，听见「对方听到的」"),
-          step("补", "补全你自己", "倒带重来，换一种做法；带走技能卡和本周小任务，把另一面也练出来"))),
+          step("解", "解锁另一个你", "倒带重来，换一种做法；带走技能卡和本周小任务，把另一面也练出来"))),
       el("section", { class: "home-sec" },
-        el("h3", { class: "sec-title" }, "第一组补全：T 与 F"),
+        el("h3", { class: "sec-title" }, "第一组解锁：T 与 F"),
         el("div", { class: "side-grid" },
-          side("rational", "chenyu", "T 型（思考）的你", "道理都对，却常常读不懂人心", "补全 F：读懂人心", "在讲道理之前，先看见对方的情绪、接住对方"),
-          side("emotional", "xiaoman", "F 型（情感）的你", "感受很深，却容易被情绪带着走", "补全 T：冷静解题", "情绪是警报不是导航：先停一下，再把问题拆开解决")),
-        el("p", { class: "muted small center" }, "字母只说明你更常用哪一面。T 型的人也有感受，F 型的人也会讲道理——补全，是把不常用的那一面也练出来。")),
+          side("rational", "chenyu", "T 型（思考）的你", "道理都对，却常常读不懂人心", "解锁 F：读懂人心", "在讲道理之前，先看见对方的情绪、接住对方"),
+          side("emotional", "xiaoman", "F 型（情感）的你", "感受很深，却容易被情绪带着走", "解锁 T：冷静解题", "情绪是警报不是导航：先停一下，再把问题拆开解决")),
+        el("p", { class: "muted small center" }, "字母只说明你更常用哪一面。T 型的人也有感受，F 型的人也会讲道理——解锁，是把不常用的那一面也练出来。")),
       el("section", { class: "home-sec" },
         el("h3", { class: "sec-title" }, "每一章，都是同一个循环"),
         el("div", { class: "loop-grid" },
@@ -125,7 +125,7 @@
         el("h3", { class: "sec-title" }, "日常练习"),
         el("div", { class: "route-grid" }, routes)),
       el("section", { class: "home-sec" },
-        el("h3", { class: "sec-title" }, "更多维度的补全 · 即将上线"),
+        el("h3", { class: "sec-title" }, "更多维度的解锁 · 即将上线"),
         el("div", { class: "coming-grid" }, coming)),
       el("p", { class: "muted small center foot" },
         "MBTI 是理解自己的一种语言，不是给人定性的标签，也不是心理诊断。每个人都同时拥有两面，只是习惯用其中一面更多。")
@@ -184,7 +184,7 @@
     const best = cands[0], campus = cands.find(c => c.st.id === "campus");
     const others = ["EI", "SN", "JP"].map(d => {
       const k = type["EI SN TF JP".split(" ").indexOf(d)], c = M.complement[k];
-      return el("div", { class: "coming-chip" }, el("b", {}, `${k} 补全 ${c.to} · ${c.title}`), el("span", {}, c.desc), el("span", { class: "soon" }, "即将上线"));
+      return el("div", { class: "coming-chip" }, el("b", {}, `${k} 解锁 ${c.to} · ${c.title}`), el("span", {}, c.desc), el("span", { class: "soon" }, "即将上线"));
     });
     screen(
       el("div", { class: "topbar" }, el("button", { class: "back", onclick: home }, "‹ 返回")),
@@ -195,8 +195,8 @@
         ["EI", "SN", "TF", "JP"].map(dimRow),
         el("p", { class: "muted small" }, "这不是心理诊断，只反映你在这 22 个情境里的第一反应。字母说明你更常用哪一面，另一面一样可以练。")),
       el("div", { class: "card", style: `border-left:5px solid ${rec.color}` },
-        el("div", { class: "tag" }, `现在就能玩 · ${tf} 补全 ${main.to}`),
-        el("h2", { style: "margin:6px 0" }, `你的补全方向：${main.title}`),
+        el("div", { class: "tag" }, `现在就能玩 · ${tf} 解锁 ${main.to}`),
+        el("h2", { style: "margin:6px 0" }, `你的解锁方向：${main.title}`),
         el("p", { style: "line-height:1.7" }, main.desc),
         best ? el("p", { class: "muted small" }, `和你最像的角色是 ${best.st.POV[best.p].name}（${best.t}），和你有 ${best.same} 个字母相同。你会先以 TA 的身份经历，再切到相反类型的那个人身上。`) : null,
         el("div", { class: "row" },

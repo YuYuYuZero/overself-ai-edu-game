@@ -11,7 +11,7 @@ const C = {
 const FONT = "PingFang SC";
 const pres = new pptxgen();
 pres.layout = "LAYOUT_16x9"; // 10 × 5.625
-pres.title = "Overself —— MBTI 性格补全游戏";
+pres.title = "Overself —— MBTI 性格解锁游戏";
 pres.author = "Overself";
 
 const shadow = () => ({ type: "outer", color: "000000", blur: 8, offset: 3, angle: 135, opacity: 0.22 });
@@ -56,8 +56,8 @@ const darkS = () => { const s = pres.addSlide(); s.background = { color: C.night
   s.addShape(pres.shapes.RECTANGLE, { x: 0, y: 0, w: 10, h: 5.625, fill: { color: C.night, transparency: 8 }, line: { color: C.night, width: 0 } });
   duo(s, 0.7, 1.35, 1.2, 0.1);
   s.addText("Overself", { x: 0.7, y: 1.55, w: 7, h: 1.1, fontFace: FONT, fontSize: 60, bold: true, color: "FFFFFF", margin: 0, charSpacing: 2 });
-  s.addText("MBTI 性格补全游戏", { x: 0.7, y: 2.75, w: 7, h: 0.5, fontFace: FONT, fontSize: 26, bold: true, color: C.gold, margin: 0 });
-  s.addText("测出你的 MBTI，体验另一面，补全你自己。", { x: 0.7, y: 3.3, w: 7, h: 0.4, fontFace: FONT, fontSize: 15, color: "FFFFFF", margin: 0 });
+  s.addText("MBTI 性格解锁游戏", { x: 0.7, y: 2.75, w: 7, h: 0.5, fontFace: FONT, fontSize: 26, bold: true, color: C.gold, margin: 0 });
+  s.addText("测出你的 MBTI，体验另一面，解锁另一个你。", { x: 0.7, y: 3.3, w: 7, h: 0.4, fontFace: FONT, fontSize: 15, color: "FFFFFF", margin: 0 });
   s.addText("yuyuyuzero.github.io/overself-ai-edu-game", { x: 0.7, y: 4.85, w: 6, h: 0.3, fontFace: FONT, fontSize: 11, color: "B9B4D6", margin: 0 });
 }
 
@@ -77,14 +77,14 @@ const darkS = () => { const s = pres.addSlide(); s.background = { color: C.night
     { x: 5.05, y: 1.5, w: 4.45, colW: [1.35, 1.35, 1.75], fontFace: FONT, fontSize: 11.5, border: { pt: 0.75, color: "4A4770" }, fill: { color: "2C2A4A" }, rowH: 0.62, valign: "middle" });
 }
 
-// 3 产品概念：测 → 体验 → 补全 ---------------------------------------------
+// 3 产品概念：测 → 体验 → 解锁 ---------------------------------------------
 {
   const s = light();
-  head(s, "产品概念", "三步：测 → 体验 → 补全");
+  head(s, "产品概念", "三步：测 → 体验 → 解锁");
   const steps = [
-    ["测", "测出你的类型", "22 道情境题，得到四个字母、每一维的偏向，以及你的补全方向和最像你的角色", C.violet],
+    ["测", "测出你的类型", "22 道情境题，得到四个字母、每一维的偏向，以及你的解锁方向和最像你的角色", C.violet],
     ["验", "体验另一面", "以和你同型的角色走进真实故事，再切到相反类型的人身上。同一句话，你先当说的人，再当听的人", C.F],
-    ["补", "补全你自己", "倒带回到那一刻换一种做法；带走技能卡和本周小任务，把不常用的那一面也练出来", C.T],
+    ["解", "解锁另一个你", "倒带回到那一刻换一种做法；带走技能卡和本周小任务，把不常用的那一面也练出来", C.T],
   ];
   steps.forEach(([n, t, d, c], i) => {
     const x = 0.5 + i * 3.05, w = 2.85;
@@ -95,27 +95,27 @@ const darkS = () => { const s = pres.addSlide(); s.background = { color: C.night
     s.addText(t, { x: x + 0.25, y: 2.7, w: w - 0.5, h: 0.4, fontFace: FONT, fontSize: 17, bold: true, color: c, margin: 0 });
     s.addText(d, { x: x + 0.25, y: 3.15, w: w - 0.5, h: 1.25, fontFace: FONT, fontSize: 11.5, color: C.ink, margin: 0, valign: "top" });
   });
-  s.addText("补全不是把 T 变成 F，而是让你在需要的时候，也能用上另一面。Overself = 越过习惯的自己。", { x: 0.5, y: 4.7, w: 9, h: 0.4, fontFace: FONT, fontSize: 13, bold: true, color: C.violet, margin: 0 });
+  s.addText("解锁不是把 T 变成 F：另一面本来就在你身上，只是还没打开。Overself = 越过习惯的自己。", { x: 0.5, y: 4.7, w: 9, h: 0.4, fontFace: FONT, fontSize: 13, bold: true, color: C.violet, margin: 0 });
 }
 
 // 4 测：22 题 + 结果页 ----------------------------------------------------
 {
   const s = light();
-  head(s, "第一步 · 测", "测完不是结束，而是给你一个补全方向");
+  head(s, "第一步 · 测", "测完不是结束，而是给你一个解锁方向");
   bullets(s, [
     [{ text: "22 道情境题", options: { bold: true } }, "：E/I、S/N、J/P 各 5 题，T/F 7 题；每维奇数题，不会打平"],
     [{ text: "四个字母 + 维度条形图", options: { bold: true } }, "：两边很接近时，提示「两种方式你都常用」"],
-    [{ text: "你的补全方向", options: { bold: true } }, "：T → 补全 F「读懂人心」；F → 补全 T「冷静解题」"],
+    [{ text: "你的解锁方向", options: { bold: true } }, "：T → 解锁 F「读懂人心」；F → 解锁 T「冷静解题」"],
     [{ text: "最像你的角色", options: { bold: true } }, "：六个主角各有 MBTI，按字母重合度推荐你从谁开始"],
-    [{ text: "另外三维", options: { bold: true } }, "：E/I、S/N、J/P 的补全方向一并给出（即将上线）"],
+    [{ text: "另外三维", options: { bold: true } }, "：E/I、S/N、J/P 的解锁方向一并给出（即将上线）"],
   ], 0.5, 1.5, 4.1, 3.6, { size: 12.5, gap: 10 });
-  shot(s, "result.png", 4.9, 1.5, 4.6, { cap: "测试结果页：类型、维度、补全方向、推荐角色" });
+  shot(s, "result.png", 4.9, 1.5, 4.6, { cap: "测试结果页：类型、维度、解锁方向、推荐角色" });
 }
 
-// 5 第一组补全：T 与 F -----------------------------------------------------
+// 5 第一组解锁：T 与 F -----------------------------------------------------
 {
   const s = light();
-  head(s, "第一组补全", "T 与 F：道理都懂，那一刻只会用习惯的一面");
+  head(s, "第一组解锁", "T 与 F：道理都懂，那一刻只会用习惯的一面");
   const col = (x, c, who, good, stuck, moment, learn) => {
     s.addShape(pres.shapes.RECTANGLE, { x, y: 1.5, w: 4.4, h: 3.55, fill: { color: C.card }, line: { color: C.line, width: 1 } });
     s.addShape(pres.shapes.RECTANGLE, { x, y: 1.5, w: 4.4, h: 0.08, fill: { color: c }, line: { color: c, width: 0 } });
@@ -127,8 +127,8 @@ const darkS = () => { const s = pres.addSlide(); s.background = { color: C.night
       { text: learn, options: { bold: true, color: c, fontSize: 14 } },
     ], { x: x + 0.25, y: 1.7, w: 3.95, h: 3.25, fontFace: FONT, fontSize: 12, color: C.ink, margin: 0, valign: "top", paraSpaceAfter: 9 });
   };
-  col(0.5, C.T, "T 型（思考）", "冷静、讲道理、会解决问题", "道理都对，却读不懂人心；方案给早了，被听成冷漠", "同学说「我不跳了」，ISTJ 的班长脱口而出：「那就换人吧。」", "→ 补全 F · 读懂人心");
-  col(5.1, C.F, "F 型（情感）", "敏锐、体贴、懂别人的感受", "感受很深，却被情绪带着走；情绪最高时做了收不回的决定", "ENFP 的文艺委员只听见「不跳了」，掏出手机就要往 48 人的班群发长文。", "→ 补全 T · 冷静解题");
+  col(0.5, C.T, "T 型（思考）", "冷静、讲道理、会解决问题", "道理都对，却读不懂人心；方案给早了，被听成冷漠", "同学说「我不跳了」，ISTJ 的班长脱口而出：「那就换人吧。」", "→ 解锁 F · 读懂人心");
+  col(5.1, C.F, "F 型（情感）", "敏锐、体贴、懂别人的感受", "感受很深，却被情绪带着走；情绪最高时做了收不回的决定", "ENFP 的文艺委员只听见「不跳了」，掏出手机就要往 48 人的班群发长文。", "→ 解锁 T · 冷静解题");
 }
 
 // 6 体验：每一章的循环 -----------------------------------------------------
@@ -152,7 +152,7 @@ const darkS = () => { const s = pres.addSlide(); s.background = { color: C.night
   s.addShape(pres.shapes.RECTANGLE, { x: 0.5, y: 4.3, w: 9, h: 0.75, fill: { color: "2C2A4A" }, line: { color: "2C2A4A", width: 0 } });
   s.addText([
     { text: "倒带不扣分。", options: { bold: true, color: C.gold } },
-    { text: "第一次的自然反应只用来看见\"你这一型的习惯\"；倒带后的那个选择，是你补全出来的一种。" },
+    { text: "第一次的自然反应只用来看见\"你这一型的习惯\"；倒带后的那个选择，是你解锁出来的一种。" },
   ], { x: 0.7, y: 4.3, w: 8.6, h: 0.75, fontFace: FONT, fontSize: 13, color: "FFFFFF", valign: "middle", margin: 0 });
 }
 
@@ -198,10 +198,10 @@ const darkS = () => { const s = pres.addSlide(); s.background = { color: C.night
   s.addText("这就是这个游戏最想制造的那一声「啊」。", { x: 5.8, y: 4.65, w: 3.7, h: 0.4, fontFace: FONT, fontSize: 12, bold: true, color: C.violet, margin: 0 });
 }
 
-// 9 补全了什么 ------------------------------------------------------
+// 9 解锁了什么 ------------------------------------------------------
 {
   const s = light();
-  head(s, "第三步 · 补全", "冷静不是忍住，共情不是附和");
+  head(s, "第三步 · 解锁", "冷静不是忍住，共情不是附和");
   const col = (x, c, t, items) => {
     s.addShape(pres.shapes.RECTANGLE, { x, y: 1.5, w: 4.4, h: 3.55, fill: { color: C.card }, line: { color: C.line, width: 1 } });
     s.addShape(pres.shapes.RECTANGLE, { x, y: 1.5, w: 4.4, h: 0.08, fill: { color: c }, line: { color: c, width: 0 } });
@@ -209,8 +209,8 @@ const darkS = () => { const s = pres.addSlide(); s.background = { color: C.night
     s.addText(items.map((it, i) => ({ text: it, options: { bullet: true, breakLine: i < items.length - 1 } })),
       { x: x + 0.25, y: 2.2, w: 3.95, h: 2.75, fontFace: FONT, fontSize: 12.5, color: C.ink, margin: 0, valign: "top", paraSpaceAfter: 8 });
   };
-  col(0.5, C.T, "T 补全 F · 读懂人心", ["看见信号：低头、攥紧的手、躲开的视线", "先接住情绪，再说事", "知道自己那句话会被听成什么", "情绪也是事实，也是要处理的问题"]);
-  col(5.1, C.F, "F 补全 T · 冷静解题", ["先听全原话，情绪最高时不做决定", "分开事实、评判、读心术、灾难化", "先问清楚，再下判断", "按「卡住了谁」排先后，对事不对人", "发一条事实 + 安排 + 请求的消息"]);
+  col(0.5, C.T, "T 解锁 F · 读懂人心", ["看见信号：低头、攥紧的手、躲开的视线", "先接住情绪，再说事", "知道自己那句话会被听成什么", "情绪也是事实，也是要处理的问题"]);
+  col(5.1, C.F, "F 解锁 T · 冷静解题", ["先听全原话，情绪最高时不做决定", "分开事实、评判、读心术、灾难化", "先问清楚，再下判断", "按「卡住了谁」排先后，对事不对人", "发一条事实 + 安排 + 请求的消息"]);
 }
 
 // 10 三个故事 ------------------------------------------------------------
@@ -241,26 +241,26 @@ const darkS = () => { const s = pres.addSlide(); s.background = { color: C.night
 {
   const s = light();
   head(s, "产品", "浏览器即玩：漫画幻灯片式的视觉小说");
-  shot(s, "home.png", 0.5, 1.45, 4.5, { cap: "首页：测 → 体验 → 补全、T 与 F、三个故事" });
+  shot(s, "home.png", 0.5, 1.45, 4.5, { cap: "首页：测 → 体验 → 解锁、T 与 F、三个故事" });
   shot(s, "c-decode.png", 5.2, 1.45, 4.3, { cap: "镜面解码：「对方听到的」浮在画面上" });
   s.addText("21 个按年龄与人设设计的角色 × 9 种表情 · 21 张场景 · 程序化音乐音效 · 全局进度条与目录，课堂可直接跳到某一刻", { x: 0.5, y: 4.55, w: 9, h: 0.5, fontFace: FONT, fontSize: 12, color: C.ink, margin: 0 });
 }
 
-// 12 补全路线图 -----------------------------------------------------------
+// 12 解锁路线图 -----------------------------------------------------------
 {
   const s = darkS();
-  head(s, "补全路线图", "T/F 只是第一组，四个维度都要补全", true);
+  head(s, "解锁路线图", "T/F 只是第一组，四个维度都要解锁", true);
   const rows = [
-    ["T / F", "T 补全 F · 读懂人心", "F 补全 T · 冷静解题", "✅ 已上线"],
-    ["E / I", "E 补全 I · 安静地听", "I 补全 E · 迈出第一句", "下一组"],
-    ["J / P", "J 补全 P · 拥抱计划外", "P 补全 J · 学会做计划", "规划中"],
-    ["S / N", "S 补全 N · 看见可能性", "N 补全 S · 落到细节", "规划中"],
+    ["T / F", "T 解锁 F · 读懂人心", "F 解锁 T · 冷静解题", "✅ 已上线"],
+    ["E / I", "E 解锁 I · 安静地听", "I 解锁 E · 迈出第一句", "下一组"],
+    ["J / P", "J 解锁 P · 拥抱计划外", "P 解锁 J · 学会做计划", "规划中"],
+    ["S / N", "S 解锁 N · 看见可能性", "N 解锁 S · 落到细节", "规划中"],
   ];
   const hdr = t => ({ text: t, options: { bold: true, color: "FFFFFF", fill: { color: "3A3760" } } });
-  s.addTable([[hdr("维度"), hdr("这一边补全…"), hdr("那一边补全…"), hdr("状态")],
+  s.addTable([[hdr("维度"), hdr("这一边解锁…"), hdr("那一边解锁…"), hdr("状态")],
     ...rows.map((r, k) => r.map((t, i) => ({ text: t, options: { color: i === 3 ? (k ? "B9B4D6" : C.gold) : "FFFFFF", bold: i === 0 || (i === 3 && !k) } })))],
     { x: 0.5, y: 1.5, w: 9, colW: [1.2, 3.1, 3.1, 1.6], fontFace: FONT, fontSize: 12.5, border: { pt: 0.75, color: "4A4770" }, fill: { color: "2C2A4A" }, rowH: 0.55, valign: "middle" });
-  s.addText("每一维都用同一套方法：找到两边各自「那一刻」的卡点 → 写一个双视角故事 → 配一组 3 分钟日常练习。测试结果页已经给出另外三维的补全方向。", { x: 0.5, y: 4.45, w: 9, h: 0.6, fontFace: FONT, fontSize: 12, color: "E6E3F3", margin: 0 });
+  s.addText("每一维都用同一套方法：找到两边各自「那一刻」的卡点 → 写一个双视角故事 → 配一组 3 分钟日常练习。测试结果页已经给出另外三维的解锁方向。", { x: 0.5, y: 4.45, w: 9, h: 0.6, fontFace: FONT, fontSize: 12, color: "E6E3F3", margin: 0 });
 }
 
 // 13 落地 + 现状 ---------------------------------------------------------
@@ -279,7 +279,7 @@ const darkS = () => { const s = pres.addSlide(); s.background = { color: C.night
   };
   block(0.5, "怎么用", ["个人：测完 MBTI 直接进故事，一章约 15 分钟", "朋友 / 情侣 / 团队：T 和 F 各玩一边，再交换「你听到的那一句」", "班会、新人培训：按 T/F 分组选视角"]);
   block(3.55, "在验证", ["测完之后，愿不愿意继续玩故事", "镜面那一刻，有没有那一声「啊」", "一周后，有没有用上「本周小任务」"]);
-  block(6.6, "下一步", ["E/I 补全故事", "小范围试玩", "测试结果分享卡，带来新玩家"]);
+  block(6.6, "下一步", ["E/I 解锁故事", "小范围试玩", "测试结果分享卡，带来新玩家"]);
 }
 
 // 14 结尾 ---------------------------------------------------------------
@@ -288,7 +288,7 @@ const darkS = () => { const s = pres.addSlide(); s.background = { color: C.night
   duo(s, 0.7, 1.6, 1.2, 0.1);
   s.addText("你学会了另一面。\n不是变成对方——是你们之间，多了一种语言。", { x: 0.7, y: 1.85, w: 8.6, h: 1.4, fontFace: FONT, fontSize: 24, bold: true, color: "FFFFFF", margin: 0, valign: "top" });
   s.addText("——校园篇结局「追光」", { x: 0.7, y: 3.25, w: 8, h: 0.35, fontFace: FONT, fontSize: 12, color: C.gold, margin: 0 });
-  s.addText("Overself · MBTI 性格补全游戏", { x: 0.7, y: 4.3, w: 8, h: 0.35, fontFace: FONT, fontSize: 14, bold: true, color: "FFFFFF", margin: 0 });
+  s.addText("Overself · MBTI 性格解锁游戏", { x: 0.7, y: 4.3, w: 8, h: 0.35, fontFace: FONT, fontSize: 14, bold: true, color: "FFFFFF", margin: 0 });
   s.addText("在线试玩：yuyuyuzero.github.io/overself-ai-edu-game", { x: 0.7, y: 4.68, w: 8, h: 0.3, fontFace: FONT, fontSize: 11, color: "C9C4E6", margin: 0 });
 }
 

@@ -40,16 +40,16 @@ window.ART = (function () {
   function P(c) {
     const teen = c.age === "teen", elder = c.age === "elder", mid = c.age === "mid", f = c.sex === "f";
     return {
-      hs: teen ? 1.3 : elder ? 1.14 : 1.2,        // 头部缩放（少年头身比更"Q"）
-      hy: teen ? 196 : 190,                       // 头部中心 y
+      hs: teen ? 1.2 : elder ? 1.06 : 1.1,         // 头部缩放（少年头身比更"Q"）
+      hy: teen ? 190 : 184,                       // 头部中心 y
       w: f ? (teen ? 76 : 74) : (teen ? 79 : 82),   // 脸半宽
-      h2: teen ? 94 : elder ? 102 : 106,          // 下巴
-      jaw: !f && (mid || elder) ? 0.66 : f ? 0.42 : 0.52, // 下颌宽度
-      ew: teen ? 50 : elder ? 40 : 46,            // 眼宽
-      eh: teen ? (f ? 54 : 44) : elder ? 22 : mid ? (f ? 32 : 26) : (f ? 44 : 34), // 眼高（越大越"少年感"）
-      ey: teen ? 24 : 20,
-      my: teen ? 70 : 76,
-      sw: f ? (teen ? 118 : 124) : (teen ? 134 : elder ? 140 : 150), // 肩半宽
+      h2: teen ? 96 : elder ? 104 : 108,          // 下巴
+      jaw: !f && (mid || elder) ? 0.6 : f ? 0.3 : 0.4, // 下颌宽度（越小越尖）
+      ew: teen ? 46 : elder ? 38 : 42,            // 眼宽
+      eh: teen ? (f ? 52 : 44) : elder ? 22 : mid ? (f ? 32 : 26) : (f ? 42 : 34), // 眼高（越大越"少年感"）
+      ey: teen ? 30 : 26,
+      my: teen ? 74 : 78,
+      sw: f ? (teen ? 104 : 110) : (teen ? 118 : elder ? 128 : 134), // 肩半宽
       blush: f ? (teen ? 0.5 : 0.32) : teen ? 0.22 : 0.08,
       lash: f ? 1 : 0,
       wrinkle: elder ? 2 : mid ? 1 : 0
@@ -66,22 +66,25 @@ window.ART = (function () {
   // ---------- 头发 ----------
   // 刘海：从左鬓沿头顶到右鬓，再沿发梢从右往左回来（每缕用二次曲线，发梢尖、发根圆）
   function fringe(tips, opt = {}) {
-    const L = opt.l || -96, R = opt.r || 96, sy = opt.sy || 10, top = opt.top || -128;
+    const L = opt.l || -96, R = opt.r || 96, sy = opt.sy || 10, top = opt.top || -128, sw = opt.sweep ?? 7;
     let d = `M ${L},${sy} C ${L - 6},${top * 0.62} ${L * 0.62},${top} 0,${top} C ${R * 0.62},${top} ${R + 6},${top * 0.62} ${R},${sy}`;
     const pts = [[R - 4, sy - 4], ...tips.slice().sort((a, b) => b[0] - a[0]), [L + 4, sy - 4]];
+    let strands = "";
     for (let i = 1; i < pts.length; i++) {
       const [x0, y0] = pts[i - 1], [x1, y1] = pts[i];
-      const depth = opt.depth || 30;
-      const mx = (x0 + x1) / 2 + (x0 + x1) * 0.04, my = Math.min(y0, y1) - depth;
-      // 发梢尖、发缝尖，中间是饱满的一绺
-      d += ` Q ${mx + (x0 - mx) * 0.12},${my + (y0 - my) * 0.75} ${mx},${my} Q ${mx + (x1 - mx) * 0.12},${my + (y1 - my) * 0.75} ${x1},${y1}`;
+      const depth = (opt.depth || 30) * (i % 2 ? 1 : 0.78);
+      const mx = (x0 + x1) / 2 + sw, my = Math.min(y0, y1) - depth;
+      // 一缕头发：发梢略向 sweep 方向勾，发缝处收窄成尖
+      d += ` C ${x0 - 2},${y0 - (y0 - my) * 0.45} ${mx + (x0 - mx) * 0.3},${my + 4} ${mx},${my} C ${mx + (x1 - mx) * 0.3},${my + 4} ${x1 + sw * 0.6},${y1 - (y1 - my) * 0.5} ${x1},${y1}`;
+      if (i < pts.length - 1) strands += `M ${x1 * 0.5 + sw},${top * 0.62} Q ${x1 * 0.92 + sw},${(top * 0.4 + y1) / 2} ${x1 + sw * 0.4},${y1 - 14} `;
     }
-    return d + " Z";
+    const out = new String(d + " Z"); out.strands = strands;
+    return out;
   }
   const capBack = (bottom, wide = 100, top = -134) => `M ${-wide},${bottom} C ${-wide - 16},${top * 0.6} ${-wide * 0.64},${top} 0,${top} C ${wide * 0.64},${top} ${wide + 16},${top * 0.6} ${wide},${bottom} Z`;
   // 鬓发：上宽下尖，略向内收（x 为靠脸一侧的边）
-  const lock = (x, y0, y1, w = 16, curl = 0) => { const s = Math.sign(x) || 1, top = y0 - 24, ix = s * 74, ox = s * 99, tip = s * (82 + w * 0.4) + curl;
-    return `M ${ix},${top} C ${ix},${(top + y1) / 2} ${tip - s * 6},${y1 - 30} ${tip},${y1} C ${ox + s * 6},${y1 - 50} ${ox + s * 4},${(top + y1) / 2} ${ox},${top} Z`; };
+  const lock = (x, y0, y1, w = 16, curl = 0) => { const s = Math.sign(x) || 1, ix = s * 72, ox = s * 95, tin = y0 - 44, tout = y0 - 6, tip = s * (82 + w * 0.4) + curl;
+    return `M ${ix},${tin} C ${ix},${(tin + y1) / 2} ${tip - s * 6},${y1 - 30} ${tip},${y1} C ${ox + s * 6},${y1 - 50} ${ox + s * 4},${(tout + y1) / 2} ${ox},${tout} Q ${s * 90},${tin - 2} ${ix},${tin} Z`; };
 
   function hairDef(style) {
     switch (style) {
@@ -153,7 +156,7 @@ window.ART = (function () {
         }
         return {
           back: [capBack(56, 104, -136), curls],
-          front: [fringe([[-84, -44], [-58, -76], [-24, -86], [12, -80], [46, -84], [76, -66], [88, -40]], { depth: 20 })],
+          front: [fringe([[-86, -24], [-62, -44], [-30, -58], [6, -54], [40, -46], [70, -34], [88, -16]], { depth: 26, sweep: 10 })],
           gray: true
         };
       }
@@ -176,23 +179,27 @@ window.ART = (function () {
     let out = "", brows = "";
     for (const s of [-1, 1]) {
       const cx = s * ex, cid = `e${id}${s > 0 ? "r" : "l"}`;
-      // 眼形（局部坐标，外眼角在 +x，镜像到左眼）
-      const shape = `M ${-ew / 2},0 C ${-ew * 0.32},${-t * 1.32} ${ew * 0.34},${-t * 1.32} ${ew / 2},${-tilt} C ${ew * 0.32},${b * 1.25} ${-ew * 0.3},${b * 1.25} ${-ew / 2},0 Z`;
+      // 眼形（局部坐标，外眼角在 +x，镜像到左眼）：上缘较平、外眼角微微上挑
+      const shape = `M ${-ew / 2},${t * 0.05} C ${-ew * 0.3},${-t * 1.12} ${ew * 0.3},${-t * 1.16} ${ew / 2},${-t * 0.3 - tilt} C ${ew * 0.46},${b * 0.9} ${-ew * 0.18},${b * 1.22} ${-ew / 2},${t * 0.05} Z`;
       const tf = `translate(${cx},${ey}) scale(${s},1)`;
-      const irx = ew * 0.32 * irisK, iry = Math.max(8, eh * 0.56) * irisK, ix = cx + lookX - s * 1, iy = ey + 2 + lookY;
+      const irx = ew * 0.34 * irisK, iry = Math.max(8, eh * 0.6) * irisK, ix = cx + lookX - s * 1, iy = ey + 1 + lookY;
       out += `<clipPath id="${cid}"><path d="${shape}" transform="${tf}"/></clipPath>`;
       out += `<path d="${shape}" transform="${tf}" fill="#fff"/>`;
       out += `<g clip-path="url(#${cid})">
-        <ellipse cx="${ix}" cy="${iy}" rx="${irx}" ry="${iry}" fill="url(#ir${id})"/>
-        <ellipse cx="${ix}" cy="${iy + iry * 0.1}" rx="${irx * 0.48}" ry="${iry * 0.52}" fill="${shade(c.eye, -0.6)}"/>
-        <circle cx="${ix - irx * 0.36}" cy="${iy - iry * 0.42}" r="${Math.max(2.5, eh * 0.12)}" fill="#fff"/>
-        <circle cx="${ix + irx * 0.4}" cy="${iy + iry * 0.36}" r="${Math.max(1.5, eh * 0.06)}" fill="#fff" opacity=".85"/>
-        <path d="M ${cx - ew},${ey - t * 1.4} L ${cx + ew},${ey - t * 1.4} L ${cx + ew},${ey - t * 0.25} Q ${cx},${ey - t * 0.9} ${cx - ew},${ey - t * 0.25} Z" fill="${shade(c.skin, -0.35)}" opacity=".18"/>
+        <ellipse cx="${ix}" cy="${iy}" rx="${irx}" ry="${iry}" fill="url(#ir${id})" stroke="${shade(c.eye, -0.55)}" stroke-width="1.6"/>
+        <ellipse cx="${ix}" cy="${iy + iry * 0.08}" rx="${irx * 0.44}" ry="${iry * 0.5}" fill="${shade(c.eye, -0.65)}"/>
+        <ellipse cx="${ix}" cy="${iy + iry * 0.55}" rx="${irx * 0.7}" ry="${iry * 0.28}" fill="${shade(c.eye, 0.5)}" opacity=".45"/>
+        <ellipse cx="${ix - irx * 0.34}" cy="${iy - iry * 0.4}" rx="${Math.max(3, eh * 0.13)}" ry="${Math.max(3.5, eh * 0.16)}" fill="#fff"/>
+        <circle cx="${ix + irx * 0.38}" cy="${iy + iry * 0.3}" r="${Math.max(1.6, eh * 0.06)}" fill="#fff" opacity=".9"/>
+        <path d="M ${cx - ew},${ey - t * 1.4} L ${cx + ew},${ey - t * 1.4} L ${cx + ew},${ey - t * 0.3} Q ${cx},${ey - t * 0.75} ${cx - ew},${ey - t * 0.3} Z" fill="${shade(c.skin, -0.4)}" opacity=".2"/>
       </g>`;
-      // 上睫毛（女生加眼尾）
-      const lash = `M ${-ew / 2 - 2},${1} C ${-ew * 0.32},${-t * 1.36} ${ew * 0.34},${-t * 1.36} ${ew / 2 + 2},${-tilt}` + (p.lash ? ` l 7,${-6}` : "");
-      out += `<path d="${lash}" transform="${tf}" fill="none" stroke="#2a1d1d" stroke-width="${p.lash ? 6 : 5}" stroke-linecap="round"/>`;
-      out += `<path d="M ${-ew * 0.28},${b * 0.95} Q 0,${b * 1.12} ${ew * 0.34},${b * 0.86}" transform="${tf}" fill="none" stroke="#5a3b35" stroke-width="2" stroke-linecap="round" opacity=".7"/>`;
+      // 上睫毛：一条外粗内细的实心带，外眼角带一笔眼尾；下睫毛只在外侧一小段
+      const lw = p.lash ? 6.5 : 5;
+      const upper = `M ${-ew / 2 - 1},${t * 0.05 + 1} C ${-ew * 0.3},${-t * 1.12} ${ew * 0.3},${-t * 1.16} ${ew / 2 + 2},${-t * 0.3 - tilt}` + (p.lash ? ` l 6,-5` : "") +
+        ` C ${ew * 0.3},${-t * 1.16 - lw} ${-ew * 0.3},${-t * 1.12 - lw * 0.6} ${-ew / 2 - 1},${t * 0.05 - 1} Z`;
+      out += `<path d="${upper}" transform="${tf}" fill="#2a1d1d" stroke="#2a1d1d" stroke-width="2" stroke-linejoin="round"/>`;
+      out += `<path d="M ${ew * 0.02},${b * 1.08} Q ${ew * 0.3},${b * 1.02} ${ew * 0.47},${b * 0.55}" transform="${tf}" fill="none" stroke="#4a302b" stroke-width="2.4" stroke-linecap="round" opacity=".8"/>`;
+      if (p.lash) out += `<path d="M ${-ew * 0.12},${-t * 1.12 - 6} q ${ew * 0.25},-6 ${ew * 0.42},-2" transform="${tf}" fill="none" stroke="${shade(c.skin, -0.35)}" stroke-width="1.8" stroke-linecap="round" opacity=".7"/>`;
       if (p.wrinkle >= 2) out += `<path d="M ${ew / 2 + 6},-2 l 8,-4 M ${ew / 2 + 6},4 l 9,1 M ${-ew * 0.2},${b * 1.6} q ${ew * 0.3},5 ${ew * 0.6},0" transform="${tf}" fill="none" stroke="${shade(c.skin, -0.32)}" stroke-width="2" stroke-linecap="round"/>`;
       // 眉毛
       let inner = 0, outer = 0;
@@ -200,7 +207,7 @@ window.ART = (function () {
       if (expr === "sad" || expr === "cry" || expr === "worry") { inner = -9; outer = 3; }
       if (expr === "surprise") { inner = -10; outer = -8; }
       if (expr === "think") { inner = s > 0 ? -6 : 3; }
-      const by = ey - t * 1.3 - 10;
+      const by = ey - t * 1.3 - 14;
       const bi = ew * 0.08, bo = ew * 0.5, bw = c.sex === "m" ? 5.5 : 3.6;
       brows += `<path d="M ${-bo + ew * 0.1},${-inner} Q ${0},${-6 - (inner + outer) / 2} ${bo},${-outer + 2}" transform="translate(${cx + s * bi},${by}) scale(${s},1)" fill="none" stroke="${shade(c.hair[1], -0.25)}" stroke-width="${bw}" stroke-linecap="round"/>`;
     }
@@ -243,9 +250,14 @@ window.ART = (function () {
   function outfit(c, p, SY, id) {
     const [type, c1, c2] = c.outfit, W = p.sw, X = 200;
     const L = X - W, R = X + W;
-    const body = `M ${L - 4},${SY + 46} C ${L},${SY + 4} ${X - 54},${SY - 8} ${X},${SY - 10} C ${X + 54},${SY - 8} ${R},${SY + 4} ${R + 4},${SY + 46} C ${R + 10},${SY + 200} ${R + 2},${SY + 330} ${R - 4},780 L ${L + 4},780 C ${L - 2},${SY + 330} ${L - 10},${SY + 200} ${L - 4},${SY + 46} Z`;
-    const st = `stroke="${LINE}" stroke-width="3" stroke-linejoin="round"`;
-    const arms = `<path d="M ${L + 30},${SY + 90} C ${L + 22},${SY + 200} ${L + 18},${SY + 320} ${L + 14},780 M ${R - 30},${SY + 90} C ${R - 22},${SY + 200} ${R - 18},${SY + 320} ${R - 14},780" fill="none" stroke="${shade(c1, -0.35)}" stroke-width="3" opacity=".55"/>`;
+    // 溜肩 + 手臂：领口 → 肩头圆弧 → 手臂外沿；手臂与躯干之间画一道折线和阴影
+    const body = `M ${X - 34},${SY - 14} C ${X - 82},${SY - 8} ${L + 8},${SY + 4} ${L - 2},${SY + 62} C ${L - 10},${SY + 200} ${L - 8},${SY + 330} ${L - 6},780 L ${R + 6},780 C ${R + 8},${SY + 330} ${R + 10},${SY + 200} ${R + 2},${SY + 62} C ${R - 8},${SY + 4} ${X + 82},${SY - 8} ${X + 34},${SY - 14} Q ${X},${SY - 20} ${X - 34},${SY - 14} Z`;
+    const st = `stroke="${LINE}" stroke-width="2.6" stroke-linejoin="round"`;
+    const armShade = s => { const o = s < 0 ? L : R, k = s; // k=-1 左臂
+      return `M ${o + k * 2},${SY + 62} C ${o + k * 10},${SY + 200} ${o + k * 8},${SY + 330} ${o + k * 6},780 L ${o - k * 30},780 C ${o - k * 32},${SY + 330} ${o - k * 33},${SY + 210} ${o - k * 32},${SY + 118} C ${o - k * 26},${SY + 96} ${o - k * 12},${SY + 74} ${o + k * 2},${SY + 62} Z`; };
+    const arms = `<path d="${armShade(-1)} ${armShade(1)}" fill="${shade(c1, -0.3)}" opacity=".32"/>
+      <path d="M ${L + 32},${SY + 118} C ${L + 33},${SY + 210} ${L + 32},${SY + 330} ${L + 30},780 M ${R - 32},${SY + 118} C ${R - 33},${SY + 210} ${R - 32},${SY + 330} ${R - 30},780" fill="none" stroke="${shade(c1, -0.45)}" stroke-width="2.4" opacity=".7"/>
+      <path d="M ${X - 26},${SY - 10} Q ${X},${SY + 6} ${X + 26},${SY - 10}" fill="none" stroke="${shade(c1, -0.4)}" stroke-width="10" opacity=".18"/>`;
     const grad = `<linearGradient id="cl${id}" x1="0" x2="1"><stop offset="0" stop-color="${shade(c1, -0.12)}"/><stop offset=".45" stop-color="${c1}"/><stop offset="1" stop-color="${shade(c1, -0.22)}"/></linearGradient>`;
     const base = `<path d="${body}" fill="url(#cl${id})" ${st}/>`;
     const vneck = (fill, depth = 110, half = 34) => `<path d="M ${X - half},${SY - 6} L ${X},${SY + depth} L ${X + half},${SY - 6} Z" fill="${fill}" ${st}/>`;
@@ -332,7 +344,7 @@ window.ART = (function () {
         break;
     }
     const pre = type === "plaid" || type === "gown" ? "" : base;
-    return `<defs>${grad}</defs>${pre}${extra}${type === "plaid" || type === "gown" ? "" : arms}`;
+    return `<defs>${grad}</defs>${pre}${extra}${arms}`;
   }
 
   // ======================= 立绘 =======================
@@ -344,9 +356,9 @@ window.ART = (function () {
     const n = ++uid, p = P(c);
     const hd = hairDef(c.hair[0]), hc = c.hair[1], hl = shade(hc, 0.32), hdk = shade(hc, -0.35);
     const skinS = shade(c.skin, -0.12);
-    const HY = p.hy, hs = p.hs, SY = HY + (p.h2 + 26) * hs;
+    const HY = p.hy, hs = p.hs, SY = HY + (p.h2 + 14) * hs;
     const face = `M ${-p.w},-20 C ${-p.w},-124 ${p.w},-124 ${p.w},-20 C ${p.w},28 ${p.w * 0.86},62 ${p.w * p.jaw},${p.h2 * 0.86} Q 0,${p.h2 * 1.04} ${-p.w * p.jaw},${p.h2 * 0.86} C ${-p.w * 0.86},62 ${-p.w},28 ${-p.w},-20 Z`;
-    const hst = `stroke="${hdk}" stroke-width="3" stroke-linejoin="round"`;
+    const hst = `stroke="${hdk}" stroke-width="2.6" stroke-linejoin="round"`;
     const backs = hd.back.map(d => `<path d="${d}" fill="${shade(hc, -0.12)}" ${hst}/>`).join("");
     const fronts = hd.front.slice().reverse().map(d => `<path d="${d}" fill="url(#hg${n})" ${hst}/>`).join("");
     const shadowFr = hd.front.map(d => `<path d="${d}" transform="translate(0,9)" fill="${skinS}"/>`).join("");
@@ -374,6 +386,7 @@ window.ART = (function () {
       ${tears}
       ${c.glasses ? glasses(c.glasses, p) : ""}
       ${fronts}
+      <g clip-path="url(#hf${n})"><path d="${hd.front.map(d => d.strands || "").join(" ")}" fill="none" stroke="${hdk}" stroke-width="2" stroke-linecap="round" opacity=".55"/></g>
       <g opacity=".85">${e.brows}</g>
       <g clip-path="url(#hf${n})"><path d="M -76,-84 Q 0,-122 76,-84" fill="none" stroke="${hl}" stroke-width="9" opacity=".55" stroke-linecap="round"/><path d="M -46,-96 Q 0,-112 46,-96" fill="none" stroke="#fff" stroke-width="3" opacity=".35" stroke-linecap="round"/></g>
       ${gray}${hd.acc || ""}${cap}${sweat}
