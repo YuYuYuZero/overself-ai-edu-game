@@ -1,5 +1,5 @@
 // 职场篇《第一次带项目》剧情数据 —— 逐节点对应 docs/06-职场篇剧本.md（节点 id 一致）。
-// 节点类型与字段说明见 docs/03-开发说明.md §2。A = 赵总监（偏理性），B = 许诺（偏感性）。
+// 节点类型与字段说明见 docs/03-开发说明.md §2。A = 赵总监（ENTJ，T 型），B = 许诺（INFP，F 型）。
 (function () {
   const N = (text, x) => ({ t: "say", who: "旁白", text, ...x });
   const S = (who, text, x) => ({ t: "say", who, text, ...x });
@@ -288,11 +288,11 @@
   window.STORIES.work = {
     id: "work", title: "第一次带项目", key: "complement.work.v1",
     blurb: "上线前一周客户改需求，周会上总监当众问：「这个排期是谁拍的脑袋？」她有两天时间，交一个可以执行的方案。",
-    minutes: 30, tag: "职场 · 理性与感性互学", order: 3,
+    minutes: 30, tag: "职场 · T 与 F 互相补全", order: 3,
     relLabel: "信任度",
     POV: {
-      A: { name: "赵总监", short: "赵总监", tag: "偏理性", color: "#4a8fe0", bgm: "cool", char: "zhao" },
-      B: { name: "许诺", short: "许诺", tag: "偏感性", color: "#f07c5a", bgm: "warm", char: "xunuo" }
+      A: { name: "赵总监", short: "赵总监", tag: "ENTJ", color: "#4a8fe0", bgm: "cool", char: "zhao" },
+      B: { name: "许诺", short: "许诺", tag: "INFP", color: "#f07c5a", bgm: "warm", char: "xunuo" }
     },
     defaultStart: "B", cover: "meeting_room",
     cast: { "老周": "laozhou", "何女士": "client", "赵总监": "zhao", "许诺": "xunuo" },

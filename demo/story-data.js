@@ -475,10 +475,10 @@
   window.STORIES.week = {
     id: "week", title: "那一周", key: "complement.story.v1",
     blurb: "妈妈摔倒骨折，一对性格相反的姐弟在医院里的七天。同一件事，你先当说的人，再当听的人。",
-    minutes: 60, tag: "家庭 · 理性与感性互学", order: 2, relLabel: "姐弟关系", cover: "hospital_corridor",
+    minutes: 60, tag: "家庭 · T 与 F 互相补全", order: 2, relLabel: "姐弟关系", cover: "hospital_corridor",
     POV: {
-      A: { name: "林朗", short: "弟弟", tag: "偏理性", color: "#4a8fe0", bgm: "cool", char: "linlang" },
-      B: { name: "林晚", short: "姐姐", tag: "偏感性", color: "#f07c5a", bgm: "warm", char: "linwan" }
+      A: { name: "林朗", short: "弟弟", tag: "ISTP", color: "#4a8fe0", bgm: "cool", char: "linlang" },
+      B: { name: "林晚", short: "姐姐", tag: "ESFJ", color: "#f07c5a", bgm: "warm", char: "linwan" }
     },
     defaultStart: "A",
     cast: { "妈妈": "mom", "爸爸": "dad", "王医生": "drwang", "护士": "nurse", "姐姐": "linwan", "弟弟": "linlang", "林晚": "linwan", "林朗": "linlang" },

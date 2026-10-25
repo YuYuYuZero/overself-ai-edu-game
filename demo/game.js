@@ -40,9 +40,11 @@
   function setRouteColor(c) { document.documentElement.style.setProperty("--route", c || "#6b5bd2"); }
 
   // ---------- 首页 ----------
+  const TYPE_KEY = "overself.mbti.v1";
+  function savedType() { try { return JSON.parse(localStorage.getItem(TYPE_KEY)); } catch (e) { return null; } }
   function home() {
     setRouteColor();
-    const ART = window.ART;
+    const ART = window.ART, M = window.MBTI, mine = savedType();
     const routes = Object.values(window.ROUTES).map(r => {
       const done = r.levels.filter(l => progress.stars[l.id]).length;
       return el("button", { class: "card route-card", style: `--c:${r.color}`, onclick: () => routeScreen(r.id) },
@@ -51,8 +53,10 @@
         el("div", { class: "muted" }, r.subtitle),
         el("div", { class: "progress-dots" }, `${r.levels.length} 关 · 每关 3 分钟 · 已完成 ${done}`));
     });
-    const coming = [["学会做计划", "给随性、爱拖延的你"], ["拥抱计划外", "给凡事都要按计划来的你"], ["迈出第一句", "给不敢开口的你"], ["安静地听", "给急着表达的你"]]
-      .map(([t, s]) => el("div", { class: "coming-chip" }, el("b", {}, t), el("span", {}, s)));
+    const coming = ["E", "I", "S", "N", "J", "P"].map(k => {
+      const c = M.complement[k];
+      return el("div", { class: "coming-chip" }, el("b", {}, `${k} 补全 ${c.to} · ${c.title}`), el("span", {}, c.desc.split(" → ")[0]));
+    });
     AU.bgm("home"); AU.amb(null); AU.heart(0);
     const cardCount = Object.keys(progress.cards).length + window.Story.cards().length;
     const stories = window.Story.list().map(st => {
@@ -85,84 +89,125 @@
         el("div", { class: "hero-shade" }),
         el("div", { class: "hero-chars" }, ["chenyu", "xiaoman"].map(c => el("div", { class: "hero-char", html: ART.char(c, c === "xiaoman" ? "smile" : "normal") }))),
         el("div", { class: "hero-text" },
-          el("div", { class: "hero-kicker" }, "AI for 人格成长 · 不做应试，做成长"),
+          el("div", { class: "hero-kicker" }, "MBTI 性格补全游戏"),
           el("h1", {}, "Over", el("span", {}, "self")),
-          el("p", { class: "hero-lead" }, "分数之外，也要长成更好的人。"),
-          el("p", { class: "hero-sub" }, "高考和刷题之间，人格的成长常常被搁在一边。我们把那些真实的「那一刻」做成互动故事：先用你习惯的方式做一遍，再从对方的眼睛里看回来，然后倒带重来。"),
+          el("p", { class: "hero-lead" }, "测出你的 MBTI，", el("br"), "体验另一面，补全你自己。"),
+          el("p", { class: "hero-sub" }, "测试告诉你「你是哪一型」。在 Overself 里，你先以同型的角色走进一个真实故事，再切到相反类型的人身上，把同一件事重新经历一遍。"),
+          mine ? el("div", { class: "hero-type" }, "你的类型：", el("b", {}, mine.type), ` · ${M.names[mine.type]}`) : null,
           el("div", { class: "row hero-cta" },
-            el("button", { class: "btn", onclick: quiz }, "先测一测我的倾向"),
-            el("button", { class: "btn light", onclick: () => window.Story.start("campus", "B") }, "直接开始《汇演前三天》"),
+            el("button", { class: "btn", onclick: quiz }, mine ? "重新测一次" : "测我的 MBTI（22 题 · 约 3 分钟）"),
+            mine ? el("button", { class: "btn light", onclick: () => quizResult(mine) }, "查看我的补全方向")
+              : el("button", { class: "btn light", onclick: () => window.Story.start("campus", "B") }, "直接开始《汇演前三天》"),
             el("button", { class: "btn link", onclick: collection }, `我的技能卡（${cardCount}）`)))),
       el("section", { class: "home-sec" },
-        el("h3", { class: "sec-title" }, "两种人，两个方向"),
+        el("h3", { class: "sec-title" }, "三步：测 → 体验 → 补全"),
+        el("div", { class: "loop-grid three" },
+          step("测", "测出你的类型", "22 道情境题，得到你的四个字母，以及每个维度偏向多少"),
+          step("验", "体验另一面", "在故事里先用你习惯的方式做选择，再切到相反类型的人身上，听见「对方听到的」"),
+          step("补", "补全你自己", "倒带重来，换一种做法；带走技能卡和本周小任务，把另一面也练出来"))),
+      el("section", { class: "home-sec" },
+        el("h3", { class: "sec-title" }, "第一组补全：T 与 F"),
         el("div", { class: "side-grid" },
-          side("rational", "chenyu", "偏理性的你", "道理都对，却常常读不懂人心", "学会读懂人心", "在讲道理之前，先看见对方的情绪、接住对方"),
-          side("emotional", "xiaoman", "偏感性的你", "感受很深，却容易被情绪带着走", "学会稳住情绪", "情绪是警报不是导航：先停一下，再把问题拆开解决")),
-        el("p", { class: "muted small center" }, "不是把一种人变成另一种人。每个人都有两面，我们只是帮你把不常用的那一面，也长出来。")),
+          side("rational", "chenyu", "T 型（思考）的你", "道理都对，却常常读不懂人心", "补全 F：读懂人心", "在讲道理之前，先看见对方的情绪、接住对方"),
+          side("emotional", "xiaoman", "F 型（情感）的你", "感受很深，却容易被情绪带着走", "补全 T：冷静解题", "情绪是警报不是导航：先停一下，再把问题拆开解决")),
+        el("p", { class: "muted small center" }, "字母只说明你更常用哪一面。T 型的人也有感受，F 型的人也会讲道理——补全，是把不常用的那一面也练出来。")),
       el("section", { class: "home-sec" },
         el("h3", { class: "sec-title" }, "每一章，都是同一个循环"),
         el("div", { class: "loop-grid" },
-          step("1", "经历", "用你习惯的方式做选择"),
-          step("2", "镜面", "切到对方身上，听见「对方听到的」"),
+          step("1", "经历", "以和你同型的角色，用习惯的方式做选择"),
+          step("2", "镜面", "切到相反类型的人身上，听见「对方听到的」"),
           step("3", "倒带", "回到那一刻，换一种做法"),
           step("4", "复盘", "看见自己的习惯，带走一个小任务"))),
       el("section", { class: "home-sec" },
-        el("h3", { class: "sec-title" }, "故事"),
+        el("h3", { class: "sec-title" }, "故事 · 每个角色都有自己的 MBTI"),
         el("div", { class: "story-grid" }, stories)),
       el("section", { class: "home-sec" },
         el("h3", { class: "sec-title" }, "日常练习"),
         el("div", { class: "route-grid" }, routes)),
       el("section", { class: "home-sec" },
-        el("h3", { class: "sec-title" }, "更多成长方向 · 敬请期待"),
+        el("h3", { class: "sec-title" }, "更多维度的补全 · 即将上线"),
         el("div", { class: "coming-grid" }, coming)),
       el("p", { class: "muted small center foot" },
-        "「偏理性 / 偏感性」只是帮助理解的说法，不是性格诊断。每个人都同时拥有两面，只是习惯用其中一面更多。")
+        "MBTI 是理解自己的一种语言，不是给人定性的标签，也不是心理诊断。每个人都同时拥有两面，只是习惯用其中一面更多。")
     );
     document.body.classList.add("home");
   }
 
-  // ---------- 倾向测验 ----------
+  // ---------- MBTI 测试 ----------
   function quiz() {
     setRouteColor();
-    const qs = window.QUIZ; let i = 0, t = 0;
+    const qs = window.QUIZ; let i = 0;
+    const score = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
     const order = qs.map(() => Math.random() < 0.5); // 随机左右顺序，避免位置偏好
     function show() {
-      if (i >= qs.length) return quizResult(t, qs.length);
+      if (i >= qs.length) return quizResult(typeOf(score), true);
       const q = qs[i];
-      const a = { text: q.t, v: 1 }, b = { text: q.f, v: 0 };
+      const a = { text: q.a, v: q.dim[0] }, b = { text: q.b, v: q.dim[1] };
       const opts = order[i] ? [a, b] : [b, a];
       screen(
         el("div", { class: "topbar" }, el("button", { class: "back", onclick: home }, "‹ 返回")),
         el("div", { class: "quiz-bar" }, el("div", { style: `width:${i / qs.length * 100}%` })),
-        el("div", { class: "muted small", style: "margin-top:8px" }, `${i + 1} / ${qs.length}　凭第一反应选`),
+        el("div", { class: "muted small", style: "margin-top:8px" }, `${i + 1} / ${qs.length}　凭第一反应选，没有对错`),
         el("div", { class: "quiz-q" }, q.q),
-        ...opts.map(o => el("button", { class: "opt", onclick: () => { t += o.v; i++; show(); } }, o.text)));
+        ...opts.map(o => el("button", { class: "opt", onclick: () => { score[o.v]++; i++; show(); } }, o.text)));
     }
     show();
   }
-  function quizResult(t, n) {
-    const f = n - t;
-    const rec = t >= f ? window.ROUTES.t2f : window.ROUTES.f2t;
-    const lean = t === f ? "理性和感受两种方式都挺常用" : t > f ? "更习惯用道理看问题（偏理性）" : "更习惯用感受看问题（偏感性）";
+  function typeOf(score) {
+    // 每个维度都是奇数道题，不会打平；保留平局兜底（取首字母）
+    const type = ["EI", "SN", "TF", "JP"].map(d => score[d[0]] >= score[d[1]] ? d[0] : d[1]).join("");
+    return { type, score };
+  }
+  function quizResult(res, fresh) {
+    if (fresh) { try { localStorage.setItem(TYPE_KEY, JSON.stringify(res)); } catch (e) {} }
+    setRouteColor();
+    const M = window.MBTI, { type, score } = res, tf = type[2];
+    const main = M.complement[tf], rec = tf === "T" ? window.ROUTES.t2f : window.ROUTES.f2t;
+    const dimRow = d => {
+      const a = score[d[0]], b = score[d[1]], n = a + b || 1;
+      return el("div", { class: "dim-row" },
+        el("div", { class: "dim-labels" },
+          el("span", { class: type.includes(d[0]) ? "on" : "" }, `${M.dims[d][d[0]]} ${a}`),
+          el("span", { class: type.includes(d[1]) ? "on" : "" }, `${b} ${M.dims[d][d[1]]}`)),
+        el("div", { class: "spectrum" },
+          el("div", { style: `width:${a / n * 100}%;background:#4a8fe0` }),
+          el("div", { style: `width:${b / n * 100}%;background:#f07c5a` })),
+        Math.abs(a - b) <= 1 ? el("div", { class: "muted small" }, "这一维两边很接近，两种方式你都常用") : null);
+    };
+    // 在同一侧（T 或 F）的角色里，找和你字母重合最多的那一位
+    const cands = [];
+    for (const st of window.Story.list()) for (const p of ["A", "B"]) {
+      const t = st.POV[p].tag;
+      if (t && t[2] === tf) cands.push({ st, p, t, same: [...t].filter((c, k) => c === type[k]).length });
+    }
+    cands.sort((x, y) => y.same - x.same || x.st.order - y.st.order);
+    const best = cands[0], campus = cands.find(c => c.st.id === "campus");
+    const others = ["EI", "SN", "JP"].map(d => {
+      const k = type["EI SN TF JP".split(" ").indexOf(d)], c = M.complement[k];
+      return el("div", { class: "coming-chip" }, el("b", {}, `${k} 补全 ${c.to} · ${c.title}`), el("span", {}, c.desc), el("span", { class: "soon" }, "即将上线"));
+    });
     screen(
       el("div", { class: "topbar" }, el("button", { class: "back", onclick: home }, "‹ 返回")),
-      el("div", { class: "card" },
-        el("h2", { style: "margin-top:0" }, `在这些情境里，你${lean}`),
-        el("div", { class: "spectrum" },
-          el("div", { style: `width:${t / n * 100}%;background:#4a8fe0` }),
-          el("div", { style: `width:${f / n * 100}%;background:#f07c5a` })),
-        el("div", { class: "row muted small", style: "justify-content:space-between" },
-          el("span", {}, `偏理性 ${t}`), el("span", {}, `偏感性 ${f}`)),
-        el("p", { style: "line-height:1.7" }, t >= f
-          ? "你擅长分析和解决问题。可以练一练的是：在讲道理之前，先读懂并接住对方的情绪。"
-          : "你对人和情绪很敏锐。可以练一练的是：情绪上头时，先停一下，把事实和感受分开。"),
-        el("p", { class: "muted small" }, "这不是性格诊断，只反映你在这 8 个情境里的习惯。主线里，你会先从和你相像的那个人开始——先用你习惯的方式做一遍，再从另一个人的眼睛里看回来。"),
+      el("div", { class: "card mbti-result" },
+        el("div", { class: "muted small" }, "你的 MBTI"),
+        el("div", { class: "mbti-type" }, [...type].map(c => el("span", {}, c))),
+        el("div", { class: "mbti-name" }, M.names[type]),
+        ["EI", "SN", "TF", "JP"].map(dimRow),
+        el("p", { class: "muted small" }, "这不是心理诊断，只反映你在这 22 个情境里的第一反应。字母说明你更常用哪一面，另一面一样可以练。")),
+      el("div", { class: "card", style: `border-left:5px solid ${rec.color}` },
+        el("div", { class: "tag" }, `现在就能玩 · ${tf} 补全 ${main.to}`),
+        el("h2", { style: "margin:6px 0" }, `你的补全方向：${main.title}`),
+        el("p", { style: "line-height:1.7" }, main.desc),
+        best ? el("p", { class: "muted small" }, `和你最像的角色是 ${best.st.POV[best.p].name}（${best.t}），和你有 ${best.same} 个字母相同。你会先以 TA 的身份经历，再切到相反类型的那个人身上。`) : null,
         el("div", { class: "row" },
-          t >= f ? el("button", { class: "btn", onclick: () => window.Story.start("campus", "A") }, "推荐：从班长陈屿开始《汇演前三天》")
-            : el("button", { class: "btn", onclick: () => window.Story.start("campus", "B") }, "推荐：从苏小满开始《汇演前三天》"),
-          t >= f ? el("button", { class: "btn ghost", onclick: () => window.Story.start("week", "A") }, "或：从弟弟林朗开始《那一周》")
-            : el("button", { class: "btn ghost", onclick: () => window.Story.start("work", "B") }, "或：从许诺开始《第一次带项目》"),
-          el("button", { class: "btn plain", style: `color:${rec.color}`, onclick: () => routeScreen(rec.id) }, `日常练习：${rec.title}`),
+          best ? el("button", { class: "btn", onclick: () => window.Story.start(best.st.id, best.p) }, `从${best.st.POV[best.p].name}（${best.t}）开始《${best.st.title}》`) : null,
+          campus && best && best.st.id !== "campus" ? el("button", { class: "btn ghost", onclick: () => window.Story.start("campus", campus.p) }, `或：推荐首玩《汇演前三天》`) : null,
+          el("button", { class: "btn plain", style: `color:${rec.color}`, onclick: () => routeScreen(rec.id) }, `日常练习：${rec.title}`))),
+      el("div", { class: "card" },
+        el("h3", { style: "margin-top:0" }, "你的另外三个维度"),
+        el("div", { class: "coming-grid" }, others),
+        el("div", { class: "row", style: "margin-top:14px" },
+          el("button", { class: "btn plain", onclick: quiz }, "重新测一次"),
           el("button", { class: "btn plain", onclick: home }, "回首页"))));
   }
 

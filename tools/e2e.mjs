@@ -63,8 +63,9 @@ for (const [route, n] of [["t2f", 3], ["f2t", 3]]) {
     await ev(`document.querySelector(".back")?.click()`); await sleep(200);
   }
 }
-await ev(`[...document.querySelectorAll("button")].find(b=>b.textContent.includes("先测一测"))?.click()`); await sleep(200);
-for (let i = 0; i < 8; i++) { await ev(`document.querySelectorAll(".opt")[0].click()`); await sleep(120); }
+await ev(`[...document.querySelectorAll("button")].find(b=>b.textContent.includes("测我的 MBTI")||b.textContent.includes("重新测一次"))?.click()`); await sleep(200);
+for (let i = 0; i < 22; i++) { await ev(`document.querySelectorAll(".opt")[0].click()`); await sleep(120); }
+report.push("quiz: " + await ev(`document.querySelector(".mbti-type")?.textContent + " | " + document.querySelector(".mbti-name")?.textContent + " | " + [...document.querySelectorAll(".mbti-result ~ .card .btn")].map(b=>b.textContent).join(" / ")`));
 await shot("90-quiz-result");
 await ev(`location.reload()`); await sleep(600); await shot("91-home-after");
 console.log(report.join("\n")); console.log("JS errors:", errors.length ? errors : "none");
