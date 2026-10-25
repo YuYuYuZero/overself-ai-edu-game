@@ -38,22 +38,22 @@ window.ART = (function () {
 
   // 年龄 × 性别 → 比例
   function P(c) {
+    // 五官比例只随年龄变化，男女一致；性别只影响肩宽、腮红、发型和服装
     const teen = c.age === "teen", elder = c.age === "elder", mid = c.age === "mid", f = c.sex === "f";
     return {
       hs: teen ? 1.2 : elder ? 1.06 : 1.1,         // 头部缩放（少年头身比更"Q"）
       hy: teen ? 190 : 184,                       // 头部中心 y
-      w: f ? (teen ? 72 : 70) : (teen ? 78 : 81),   // 脸半宽
+      w: teen ? 75 : 76,                          // 脸半宽
       h2: teen ? 96 : elder ? 104 : 108,          // 下巴
-      jaw: !f && (mid || elder) ? 0.6 : f ? 0.3 : 0.4, // 下颌宽度（越小越尖）
-      ew: teen ? 46 : elder ? 38 : 42,            // 眼宽
-      eh: teen ? (f ? 52 : 44) : elder ? 22 : mid ? (f ? 32 : 26) : (f ? 42 : 34), // 眼高（越大越"少年感"）
+      jaw: mid || elder ? 0.5 : 0.38,             // 下颌宽度（越小越尖）
+      ew: teen ? 44 : elder ? 38 : 42,            // 眼宽
+      eh: teen ? 44 : elder ? 22 : mid ? 28 : 36, // 眼高（越大越"少年感"）
       ey: teen ? 30 : 26,
       my: teen ? 74 : 78,
       sw: f ? (teen ? 104 : 110) : (teen ? 118 : elder ? 128 : 134), // 肩半宽
       blush: f ? (teen ? 0.5 : 0.32) : teen ? 0.22 : 0.08,
-      lash: f ? 1 : 0,
       wrinkle: elder ? 2 : mid ? 1 : 0,
-      ex: f ? 0.41 : 0.43                         // 眼距（占脸半宽）
+      ex: 0.42                                    // 眼距（占脸半宽）
     };
   }
 
@@ -183,7 +183,7 @@ window.ART = (function () {
       // 眼形（局部坐标，外眼角在 +x，镜像到左眼）：上缘较平、外眼角微微上挑
       const shape = `M ${-ew / 2},${t * 0.05} C ${-ew * 0.3},${-t * 1.12} ${ew * 0.3},${-t * 1.16} ${ew / 2},${-t * 0.3 - tilt} C ${ew * 0.46},${b * 0.9} ${-ew * 0.18},${b * 1.22} ${-ew / 2},${t * 0.05} Z`;
       const tf = `translate(${cx},${ey}) scale(${s},1)`;
-      const irx = ew * (p.lash ? 0.38 : 0.35) * irisK, iry = Math.max(8, eh * (p.lash ? 0.66 : 0.6)) * irisK, ix = cx + lookX - s * 1, iy = ey + 1 + lookY;
+      const irx = ew * 0.36 * irisK, iry = Math.max(8, eh * 0.62) * irisK, ix = cx + lookX - s * 1, iy = ey + 1 + lookY;
       out += `<clipPath id="${cid}"><path d="${shape}" transform="${tf}"/></clipPath>`;
       out += `<path d="${shape}" transform="${tf}" fill="#fff"/>`;
       out += `<g clip-path="url(#${cid})">
@@ -195,8 +195,8 @@ window.ART = (function () {
         <path d="M ${cx - ew},${ey - t * 1.4} L ${cx + ew},${ey - t * 1.4} L ${cx + ew},${ey - t * 0.3} Q ${cx},${ey - t * 0.75} ${cx - ew},${ey - t * 0.3} Z" fill="${shade(c.skin, -0.4)}" opacity=".2"/>
       </g>`;
       // 上睫毛：一条外粗内细的实心带，外眼角带一笔眼尾
-      const lw = p.lash ? 6.5 : 5;
-      const upper = `M ${-ew / 2 - 1},${t * 0.05 + 1} C ${-ew * 0.3},${-t * 1.12} ${ew * 0.3},${-t * 1.16} ${ew / 2 + 2},${-t * 0.3 - tilt}` + (p.lash ? ` l 6,-5` : "") +
+      const lw = 5.5;
+      const upper = `M ${-ew / 2 - 1},${t * 0.05 + 1} C ${-ew * 0.3},${-t * 1.12} ${ew * 0.3},${-t * 1.16} ${ew / 2 + 2},${-t * 0.3 - tilt}` +
         ` C ${ew * 0.3},${-t * 1.16 - lw} ${-ew * 0.3},${-t * 1.12 - lw * 0.6} ${-ew / 2 - 1},${t * 0.05 - 1} Z`;
       out += `<path d="${upper}" transform="${tf}" fill="#2a1d1d" stroke="#2a1d1d" stroke-width="2" stroke-linejoin="round"/>`;
       // 下眼线只给长辈（配合眼角皱纹），年轻角色保持干净
@@ -209,7 +209,7 @@ window.ART = (function () {
       if (expr === "surprise") { inner = -10; outer = -8; }
       if (expr === "think") { inner = s > 0 ? -6 : 3; }
       const by = ey - t * 1.3 - 14;
-      const bi = ew * 0.08, bo = ew * 0.5, bw = c.sex === "m" ? 5.5 : 3.6;
+      const bi = ew * 0.08, bo = ew * 0.5, bw = 4.4;
       brows += `<path d="M ${-bo + ew * 0.1},${-inner} Q ${0},${-6 - (inner + outer) / 2} ${bo},${-outer + 2}" transform="translate(${cx + s * bi},${by}) scale(${s},1)" fill="none" stroke="${shade(c.hair[1], -0.25)}" stroke-width="${bw}" stroke-linecap="round"/>`;
     }
     // 闭眼（眨眼用）
@@ -358,9 +358,7 @@ window.ART = (function () {
     const hd = hairDef(c.hair[0]), hc = c.hair[1], hl = shade(hc, 0.32), hdk = shade(hc, -0.35);
     const skinS = shade(c.skin, -0.12);
     const HY = p.hy, hs = p.hs, SY = HY + (p.h2 + 14) * hs;
-    const face = c.sex === "f"
-      ? `M ${-p.w},-20 C ${-p.w},-124 ${p.w},-124 ${p.w},-20 C ${p.w},34 ${p.w * 0.78},70 ${p.w * 0.36},${p.h2 * 0.9} Q 0,${p.h2 * 1.04} ${-p.w * 0.36},${p.h2 * 0.9} C ${-p.w * 0.78},70 ${-p.w},34 ${-p.w},-20 Z`
-      : `M ${-p.w},-20 C ${-p.w},-124 ${p.w},-124 ${p.w},-20 C ${p.w},28 ${p.w * 0.86},62 ${p.w * p.jaw},${p.h2 * 0.86} Q 0,${p.h2 * 1.04} ${-p.w * p.jaw},${p.h2 * 0.86} C ${-p.w * 0.86},62 ${-p.w},28 ${-p.w},-20 Z`;
+    const face = `M ${-p.w},-20 C ${-p.w},-124 ${p.w},-124 ${p.w},-20 C ${p.w},32 ${p.w * 0.8},68 ${p.w * p.jaw},${p.h2 * 0.89} Q 0,${p.h2 * 1.04} ${-p.w * p.jaw},${p.h2 * 0.89} C ${-p.w * 0.8},68 ${-p.w},32 ${-p.w},-20 Z`;
     const hst = `stroke="${hdk}" stroke-width="2.6" stroke-linejoin="round"`;
     const backs = hd.back.map(d => `<path d="${d}" fill="${shade(hc, -0.12)}" ${hst}/>`).join("");
     const fronts = hd.front.slice().reverse().map(d => `<path d="${d}" fill="url(#hg${n})" ${hst}/>`).join("");
@@ -376,12 +374,12 @@ window.ART = (function () {
     const wr = p.wrinkle >= 1 ? `<path d="M ${-p.w * 0.36},${p.my - 20} q -8,14 -2,24 M ${p.w * 0.36},${p.my - 20} q 8,14 2,24" fill="none" stroke="${shade(c.skin, -0.25)}" stroke-width="2" stroke-linecap="round" opacity="${p.wrinkle >= 2 ? .8 : .45}"/>` : "";
     const gray = hd.gray && c.hair[2] ? `<g clip-path="url(#hf${n})" opacity=".85"><path d="M -110,-70 L -60,-70 L -70,40 L -110,40 Z M 110,-70 L 60,-70 L 70,40 L 110,40 Z" fill="${c.hair[2]}"/></g>` : "";
     const cap = c.cap === "nurse" ? `<path d="M -54,-124 Q 0,-150 54,-124 L 46,-96 Q 0,-110 -46,-96 Z" fill="#fff" stroke="${LINE}" stroke-width="2.5"/><path d="M -6,-128 h 12 M 0,-134 v 12" stroke="#e46" stroke-width="4"/>` : "";
-    const nose = c.sex === "f" && !p.wrinkle ? `<path d="M 2,${p.ey + 34} q 2,3 -2,4" fill="none" stroke="${shade(c.skin, -0.3)}" stroke-width="2" stroke-linecap="round"/>` : p.wrinkle ? `<path d="M -1,${p.ey + 26} q 5,10 -1,16 q 4,2 7,-1" fill="none" stroke="${shade(c.skin, -0.38)}" stroke-width="2.4" stroke-linecap="round"/>` : `<path d="M 1,${p.ey + 32} q 4,5 -2,7" fill="none" stroke="${shade(c.skin, -0.38)}" stroke-width="2.4" stroke-linecap="round"/>`;
+    const nose = !p.wrinkle ? `<path d="M 2,${p.ey + 33} q 3,4 -2,5" fill="none" stroke="${shade(c.skin, -0.32)}" stroke-width="2.2" stroke-linecap="round"/>` : p.wrinkle ? `<path d="M -1,${p.ey + 26} q 5,10 -1,16 q 4,2 7,-1" fill="none" stroke="${shade(c.skin, -0.38)}" stroke-width="2.4" stroke-linecap="round"/>` : `<path d="M 1,${p.ey + 32} q 4,5 -2,7" fill="none" stroke="${shade(c.skin, -0.38)}" stroke-width="2.4" stroke-linecap="round"/>`;
     const backBehindBody = c.hair[0] === "long" || c.hair[0] === "shoulder";
     const head = `<g transform="translate(200,${HY}) scale(${hs})">
       ${backBehindBody ? "" : backs}
       ${ears}
-      <path d="${face}" fill="url(#sk${n})" stroke="${shade(c.skin, -0.38)}" stroke-width="${c.sex === "f" ? 2.2 : 2.6}"/>
+      <path d="${face}" fill="url(#sk${n})" stroke="${shade(c.skin, -0.38)}" stroke-width="2.4"/>
       <g clip-path="url(#fc${n})">${shadowFr}</g>
       ${blush}${wr}
       <g class="eo">${e.open}</g><g class="ec">${e.closed}</g>
