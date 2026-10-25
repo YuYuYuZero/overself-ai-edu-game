@@ -5,13 +5,13 @@ const pptxgen = require(path.join(process.env.NPM_ROOT || "", "pptxgenjs"));
 const A = f => path.join(__dirname, "assets", f);
 
 const C = {
-  night: "1B1A33", ink: "26243A", cream: "F7F4EE", card: "FFFFFF", muted: "6E6A80",
+  night: "281C5C", ink: "26243A", cream: "F7F4EE", card: "FFFFFF", muted: "6E6A80",
   T: "4A8FE0", F: "F07C5A", violet: "6B5BD2", line: "E4DFD6", gold: "F2C14E",
 };
 const FONT = "PingFang SC";
 const pres = new pptxgen();
 pres.layout = "LAYOUT_16x9"; // 10 × 5.625
-pres.title = "Overself —— MBTI 性格解锁游戏";
+pres.title = "MBTI 性格修炼手册（Overself）";
 pres.author = "Overself";
 
 const shadow = () => ({ type: "outer", color: "000000", blur: 8, offset: 3, angle: 135, opacity: 0.22 });
@@ -54,10 +54,11 @@ const darkS = () => { const s = pres.addSlide(); s.background = { color: C.night
   const s = pres.addSlide(); N++;
   s.background = { path: A("c-stage.png") };
   s.addShape(pres.shapes.RECTANGLE, { x: 0, y: 0, w: 10, h: 5.625, fill: { color: C.night, transparency: 8 }, line: { color: C.night, width: 0 } });
-  duo(s, 0.7, 1.35, 1.2, 0.1);
-  s.addText("Overself", { x: 0.7, y: 1.55, w: 7, h: 1.1, fontFace: FONT, fontSize: 60, bold: true, color: "FFFFFF", margin: 0, charSpacing: 2 });
-  s.addText("MBTI 性格解锁游戏", { x: 0.7, y: 2.75, w: 7, h: 0.5, fontFace: FONT, fontSize: 26, bold: true, color: C.gold, margin: 0 });
-  s.addText("测出你的 MBTI，体验另一面，解锁另一个你。", { x: 0.7, y: 3.3, w: 7, h: 0.4, fontFace: FONT, fontSize: 15, color: "FFFFFF", margin: 0 });
+  s.addImage({ path: path.join(__dirname, "..", "demo", "img", "logo-icon.png"), x: 0.7, y: 1.0, w: 1.1, h: 1.1, rounding: true });
+  s.addText("Overself", { x: 1.95, y: 1.3, w: 4, h: 0.5, fontFace: FONT, fontSize: 18, bold: true, color: "D9CDFA", margin: 0, charSpacing: 4 });
+  s.addText([{ text: "MBTI ", options: { color: "FFFFFF" } }, { text: "性格修炼手册", options: { color: "C9B2FF" } }],
+    { x: 0.7, y: 2.3, w: 8.5, h: 0.95, fontFace: FONT, fontSize: 48, bold: true, margin: 0 });
+  s.addText("测出你的 MBTI，体验另一面，解锁另一个你。", { x: 0.7, y: 3.35, w: 7, h: 0.45, fontFace: FONT, fontSize: 18, color: C.gold, bold: true, margin: 0 });
   s.addText("yuyuyuzero.github.io/overself-ai-edu-game", { x: 0.7, y: 4.85, w: 6, h: 0.3, fontFace: FONT, fontSize: 11, color: "B9B4D6", margin: 0 });
 }
 
@@ -71,10 +72,10 @@ const darkS = () => { const s = pres.addSlide(); s.background = { color: C.night
     { text: "你知道自己是 T，却从没从 F 的眼睛里看过自己说的那句话。", options: { bold: true, color: C.gold } },
   ], { x: 0.5, y: 1.45, w: 4.3, h: 3.4, fontFace: FONT, fontSize: 14, color: "E6E3F3", margin: 0, valign: "top", paraSpaceAfter: 14, lineSpacingMultiple: 1.2 });
   const rows = [["测出类型", "✓", "✓"], ["体验另一型怎么想", "只能读描述", "✓ 换到对方身上重走一遍"], ["把另一面练出来", "—", "✓ 倒带重来 + 本周小任务"]];
-  const hdr = t => ({ text: t, options: { bold: true, color: "FFFFFF", fill: { color: "3A3760" } } });
-  s.addTable([[hdr(""), hdr("一般的 MBTI 测试"), { text: "Overself", options: { bold: true, color: C.night, fill: { color: C.gold } } }],
+  const hdr = t => ({ text: t, options: { bold: true, color: "FFFFFF", fill: { color: "4D3C8F" } } });
+  s.addTable([[hdr(""), hdr("一般的 MBTI 测试"), { text: "MBTI 性格修炼手册", options: { bold: true, color: C.night, fill: { color: C.gold } } }],
     ...rows.map(r => r.map((t, i) => ({ text: t, options: { color: i === 2 ? C.gold : i === 0 ? "FFFFFF" : "B9B4D6", bold: i === 0 } })))],
-    { x: 5.05, y: 1.5, w: 4.45, colW: [1.35, 1.35, 1.75], fontFace: FONT, fontSize: 11.5, border: { pt: 0.75, color: "4A4770" }, fill: { color: "2C2A4A" }, rowH: 0.62, valign: "middle" });
+    { x: 5.05, y: 1.5, w: 4.45, colW: [1.35, 1.35, 1.75], fontFace: FONT, fontSize: 11.5, border: { pt: 0.75, color: "5A4A9C" }, fill: { color: "3A2B78" }, rowH: 0.62, valign: "middle" });
 }
 
 // 3 产品概念：测 → 体验 → 解锁 ---------------------------------------------
@@ -145,11 +146,11 @@ const darkS = () => { const s = pres.addSlide(); s.background = { color: C.night
     const x = 0.5 + i * 2.3, w = 2.1;
     s.addShape(pres.shapes.OVAL, { x, y: 1.6, w: 0.7, h: 0.7, fill: { color: c }, line: { color: c, width: 0 } });
     s.addText(n, { x, y: 1.6, w: 0.7, h: 0.7, fontFace: FONT, fontSize: 22, bold: true, color: "FFFFFF", align: "center", valign: "middle", margin: 0 });
-    if (i < 3) s.addShape(pres.shapes.LINE, { x: x + 0.85, y: 1.95, w: 1.3, h: 0, line: { color: "4A4770", width: 1.5, dashType: "dash" } });
+    if (i < 3) s.addShape(pres.shapes.LINE, { x: x + 0.85, y: 1.95, w: 1.3, h: 0, line: { color: "5A4A9C", width: 1.5, dashType: "dash" } });
     s.addText(t, { x, y: 2.5, w, h: 0.45, fontFace: FONT, fontSize: 20, bold: true, color: c, margin: 0 });
     s.addText(d, { x, y: 3.0, w, h: 1.0, fontFace: FONT, fontSize: 12, color: "E6E3F3", margin: 0, valign: "top" });
   });
-  s.addShape(pres.shapes.RECTANGLE, { x: 0.5, y: 4.3, w: 9, h: 0.75, fill: { color: "2C2A4A" }, line: { color: "2C2A4A", width: 0 } });
+  s.addShape(pres.shapes.RECTANGLE, { x: 0.5, y: 4.3, w: 9, h: 0.75, fill: { color: "3A2B78" }, line: { color: "3A2B78", width: 0 } });
   s.addText([
     { text: "倒带不扣分。", options: { bold: true, color: C.gold } },
     { text: "第一次的自然反应只用来看见\"你这一型的习惯\"；倒带后的那个选择，是你解锁出来的一种。" },
@@ -256,10 +257,10 @@ const darkS = () => { const s = pres.addSlide(); s.background = { color: C.night
     ["J / P", "J 解锁 P · 拥抱计划外", "P 解锁 J · 学会做计划", "规划中"],
     ["S / N", "S 解锁 N · 看见可能性", "N 解锁 S · 落到细节", "规划中"],
   ];
-  const hdr = t => ({ text: t, options: { bold: true, color: "FFFFFF", fill: { color: "3A3760" } } });
+  const hdr = t => ({ text: t, options: { bold: true, color: "FFFFFF", fill: { color: "4D3C8F" } } });
   s.addTable([[hdr("维度"), hdr("这一边解锁…"), hdr("那一边解锁…"), hdr("状态")],
     ...rows.map((r, k) => r.map((t, i) => ({ text: t, options: { color: i === 3 ? (k ? "B9B4D6" : C.gold) : "FFFFFF", bold: i === 0 || (i === 3 && !k) } })))],
-    { x: 0.5, y: 1.5, w: 9, colW: [1.2, 3.1, 3.1, 1.6], fontFace: FONT, fontSize: 12.5, border: { pt: 0.75, color: "4A4770" }, fill: { color: "2C2A4A" }, rowH: 0.55, valign: "middle" });
+    { x: 0.5, y: 1.5, w: 9, colW: [1.2, 3.1, 3.1, 1.6], fontFace: FONT, fontSize: 12.5, border: { pt: 0.75, color: "5A4A9C" }, fill: { color: "3A2B78" }, rowH: 0.55, valign: "middle" });
   s.addText("每一维都用同一套方法：找到两边各自「那一刻」的卡点 → 写一个双视角故事 → 配一组 3 分钟日常练习。测试结果页已经给出另外三维的解锁方向。", { x: 0.5, y: 4.45, w: 9, h: 0.6, fontFace: FONT, fontSize: 12, color: "E6E3F3", margin: 0 });
 }
 
@@ -288,7 +289,7 @@ const darkS = () => { const s = pres.addSlide(); s.background = { color: C.night
   duo(s, 0.7, 1.6, 1.2, 0.1);
   s.addText("你学会了另一面。\n不是变成对方——是你们之间，多了一种语言。", { x: 0.7, y: 1.85, w: 8.6, h: 1.4, fontFace: FONT, fontSize: 24, bold: true, color: "FFFFFF", margin: 0, valign: "top" });
   s.addText("——校园篇结局「追光」", { x: 0.7, y: 3.25, w: 8, h: 0.35, fontFace: FONT, fontSize: 12, color: C.gold, margin: 0 });
-  s.addText("Overself · MBTI 性格解锁游戏", { x: 0.7, y: 4.3, w: 8, h: 0.35, fontFace: FONT, fontSize: 14, bold: true, color: "FFFFFF", margin: 0 });
+  s.addText("MBTI 性格修炼手册 · Overself", { x: 0.7, y: 4.3, w: 8, h: 0.35, fontFace: FONT, fontSize: 14, bold: true, color: "FFFFFF", margin: 0 });
   s.addText("在线试玩：yuyuyuzero.github.io/overself-ai-edu-game", { x: 0.7, y: 4.68, w: 8, h: 0.3, fontFace: FONT, fontSize: 11, color: "C9C4E6", margin: 0 });
 }
 

@@ -1,4 +1,4 @@
-// Overself —— 游戏引擎（数据在 scenarios.js）
+// MBTI 性格修炼手册（Overself）—— 游戏引擎（数据在 scenarios.js）
 (function () {
   const app = document.getElementById("app");
   // 练习关的角色立绘（art.js）与默认背景
@@ -89,10 +89,12 @@
         el("div", { class: "hero-shade" }),
         el("div", { class: "hero-chars" }, ["chenyu", "xiaoman"].map(c => el("div", { class: "hero-char", html: ART.char(c, c === "xiaoman" ? "smile" : "normal") }))),
         el("div", { class: "hero-text" },
-          el("div", { class: "hero-kicker" }, "MBTI 性格解锁游戏"),
-          el("h1", {}, "Over", el("span", {}, "self")),
+          el("div", { class: "brand" },
+            el("img", { class: "brand-logo", src: "img/logo-icon.png", alt: "MBTI 性格修炼手册" }),
+            el("div", { class: "brand-en" }, "Overself")),
+          el("h1", {}, "MBTI ", el("span", {}, "性格修炼手册")),
           el("p", { class: "hero-lead" }, "测出你的 MBTI，", el("br"), "体验另一面，解锁另一个你。"),
-          el("p", { class: "hero-sub" }, "测试告诉你「你是哪一型」。在 Overself 里，你先以同型的角色走进一个真实故事，再切到相反类型的人身上，把同一件事重新经历一遍。"),
+          el("p", { class: "hero-sub" }, "测试告诉你「你是哪一型」。在这本修炼手册里，你先以同型的角色走进一个真实故事，再切到相反类型的人身上，把同一件事重新经历一遍。"),
           mine ? el("div", { class: "hero-type" }, "你的类型：", el("b", {}, mine.type), ` · ${M.names[mine.type]}`) : null,
           el("div", { class: "row hero-cta" },
             el("button", { class: "btn", onclick: quiz }, mine ? "重新测一次" : "测我的 MBTI（22 题 · 约 3 分钟）"),

@@ -488,7 +488,7 @@ body.home #app { max-width: 1100px; padding: 16px 20px 90px; }
   display: flex; align-items: center; box-shadow: 0 18px 50px rgba(30, 25, 60, .25); }
 .hero-bg, .hero-shade { position: absolute; inset: 0; }
 .hero-bg svg { width: 100%; height: 100%; display: block; }
-.hero-shade { background: linear-gradient(90deg, rgba(22,20,44,.92) 0%, rgba(22,20,44,.78) 42%, rgba(22,20,44,.2) 75%, rgba(22,20,44,.05) 100%); }
+.hero-shade { background: linear-gradient(90deg, rgba(40,26,92,.94) 0%, rgba(40,26,92,.8) 42%, rgba(40,26,92,.22) 75%, rgba(40,26,92,.05) 100%); }
 .hero-chars { position: absolute; right: 2%; bottom: 0; height: 100%; display: flex; align-items: flex-end; pointer-events: none; }
 .hero-char { height: 108%; aspect-ratio: 400 / 800; margin: 0 -3%; transform: translateY(16%); filter: drop-shadow(0 10px 18px rgba(0,0,0,.35)); }
 .hero-char svg { width: 100%; height: 100%; }
@@ -496,8 +496,8 @@ body.home #app { max-width: 1100px; padding: 16px 20px 90px; }
 .hero-text { position: relative; z-index: 2; max-width: 490px; }
 .hero-kicker { display: inline-block; font-size: 13px; letter-spacing: 1px; color: #ffd98a; background: rgba(255,255,255,.12);
   border: 1px solid rgba(255,217,138,.45); border-radius: 999px; padding: 4px 14px; margin-bottom: 18px; }
-.hero h1 { font-size: 60px; line-height: 1; margin: 0 0 18px; letter-spacing: 1px; color: #fff; }
-.hero h1 span { color: #f2c14e; }
+.hero h1 { font-size: 46px; line-height: 1.15; margin: 0 0 16px; letter-spacing: 1px; color: #fff; }
+.hero h1 span { background: linear-gradient(90deg, #d9bcff, #a9dcff); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .hero .hero-lead { font-size: 26px; font-weight: 700; margin: 0 0 12px; color: #fff; }
 .hero .hero-sub { font-size: 15px; line-height: 1.85; margin: 0 0 26px; color: rgba(255,255,255,.82); }
 .hero-cta { gap: 12px; }
@@ -552,7 +552,7 @@ body.home #app { max-width: 1100px; padding: 16px 20px 90px; }
 @media (max-width: 720px) {
   body.home #app { padding: 10px 12px 80px; }
   .hero { flex-direction: column; align-items: stretch; min-height: 0; padding: 30px 22px 0; border-radius: 20px; }
-  .hero-shade { background: linear-gradient(180deg, rgba(22,20,44,.9) 0%, rgba(22,20,44,.75) 60%, rgba(22,20,44,.3) 100%); }
+  .hero-shade { background: linear-gradient(180deg, rgba(40,26,92,.92) 0%, rgba(40,26,92,.76) 60%, rgba(40,26,92,.3) 100%); }
   .hero h1 { font-size: 44px; }
   .hero .hero-lead { font-size: 21px; }
   .hero .hero-sub { font-size: 14px; margin-bottom: 18px; }
@@ -585,4 +585,13 @@ body.home #app { max-width: 1100px; padding: 16px 20px 90px; }
 @media (max-width: 720px) {
   .loop-grid.three, .coming-grid { grid-template-columns: 1fr; }
   .mbti-type span { width: 52px; height: 62px; font-size: 34px; }
+}
+
+/* ---------- 品牌（logo 来自 img/brand.jpg 裁出的图标） ---------- */
+.brand { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+.brand-logo { width: 60px; height: 60px; border-radius: 16px; box-shadow: 0 6px 18px rgba(0,0,0,.3); }
+.brand-en { font-size: 15px; font-weight: 700; letter-spacing: 3px; color: #d9cdfa; }
+@media (max-width: 720px) {
+  .hero h1 { font-size: 34px; }
+  .brand-logo { width: 48px; height: 48px; border-radius: 12px; }
 }

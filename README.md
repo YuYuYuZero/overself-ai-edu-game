@@ -1,4 +1,6 @@
-# Overself —— MBTI 性格解锁游戏
+<img src="demo/img/logo-icon.png" width="96" alt="logo">
+
+# MBTI 性格修炼手册（Overself）
 
 **在线试玩**：https://yuyuyuzero.github.io/overself-ai-edu-game/
 
