@@ -193,12 +193,13 @@ window.ART = (function () {
         <circle cx="${ix + irx * 0.38}" cy="${iy + iry * 0.3}" r="${Math.max(1.6, eh * 0.06)}" fill="#fff" opacity=".9"/>
         <path d="M ${cx - ew},${ey - t * 1.4} L ${cx + ew},${ey - t * 1.4} L ${cx + ew},${ey - t * 0.3} Q ${cx},${ey - t * 0.75} ${cx - ew},${ey - t * 0.3} Z" fill="${shade(c.skin, -0.4)}" opacity=".2"/>
       </g>`;
-      // 上睫毛：一条外粗内细的实心带，外眼角带一笔眼尾；下睫毛只在外侧一小段
+      // 上睫毛：一条外粗内细的实心带，外眼角带一笔眼尾
       const lw = p.lash ? 6.5 : 5;
       const upper = `M ${-ew / 2 - 1},${t * 0.05 + 1} C ${-ew * 0.3},${-t * 1.12} ${ew * 0.3},${-t * 1.16} ${ew / 2 + 2},${-t * 0.3 - tilt}` + (p.lash ? ` l 6,-5` : "") +
         ` C ${ew * 0.3},${-t * 1.16 - lw} ${-ew * 0.3},${-t * 1.12 - lw * 0.6} ${-ew / 2 - 1},${t * 0.05 - 1} Z`;
       out += `<path d="${upper}" transform="${tf}" fill="#2a1d1d" stroke="#2a1d1d" stroke-width="2" stroke-linejoin="round"/>`;
-      out += `<path d="M ${ew * 0.02},${b * 1.08} Q ${ew * 0.3},${b * 1.02} ${ew * 0.47},${b * 0.55}" transform="${tf}" fill="none" stroke="#4a302b" stroke-width="2.4" stroke-linecap="round" opacity=".8"/>`;
+      // 下眼线只给长辈（配合眼角皱纹），年轻角色保持干净
+      if (p.wrinkle >= 2) out += `<path d="M ${ew * 0.02},${b * 1.08} Q ${ew * 0.3},${b * 1.02} ${ew * 0.47},${b * 0.55}" transform="${tf}" fill="none" stroke="#4a302b" stroke-width="2.2" stroke-linecap="round" opacity=".6"/>`;
       if (p.lash) out += `<path d="M ${-ew * 0.12},${-t * 1.12 - 6} q ${ew * 0.25},-6 ${ew * 0.42},-2" transform="${tf}" fill="none" stroke="${shade(c.skin, -0.35)}" stroke-width="1.8" stroke-linecap="round" opacity=".7"/>`;
       if (p.wrinkle >= 2) out += `<path d="M ${ew / 2 + 6},-2 l 8,-4 M ${ew / 2 + 6},4 l 9,1 M ${-ew * 0.2},${b * 1.6} q ${ew * 0.3},5 ${ew * 0.6},0" transform="${tf}" fill="none" stroke="${shade(c.skin, -0.32)}" stroke-width="2" stroke-linecap="round"/>`;
       // 眉毛
