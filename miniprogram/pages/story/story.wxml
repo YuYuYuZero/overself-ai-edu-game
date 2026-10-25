@@ -1,0 +1,106 @@
+<view class="root" style="{{rv}}">
+  <block wx:if="{{mode === 'stage'}}"><include src="../../templates/stage.wxml"/></block>
+
+  <!-- 舞台外的页面：章首、复盘、结局（背景铺一层虚化的场景） -->
+  <block wx:if="{{mode === 'page'}}">
+    <image wx:if="{{pageBg}}" class="page-bg" src="{{pageBg}}" mode="aspectFill"></image>
+    <view class="page-shade"></view>
+    <scroll-view wx:for="{{[pageK]}}" wx:key="*this" scroll-y class="page-scroll">
+      <view class="page" style="padding-top:{{lay.capB + 30}}px;padding-bottom:{{lay.safeB + 40}}px;">
+        <view wx:if="{{view.type === 'intro'}}" class="chapter-intro">
+          <view class="muted">{{view.story}}</view>
+          <view class="h1">{{view.title}}</view>
+          <view wx:if="{{view.goals}}" class="goal">
+            <view wx:for="{{view.goals}}" wx:key="index" class="goal-row">
+              <view class="portrait" style="border-color:{{item.color}};"><image src="{{item.av}}"></image></view>
+              <view class="goal-txt"><view class="b" style="color:{{item.color}};">{{item.who}}</view><view>{{item.text}}</view></view>
+            </view>
+          </view>
+          <view class="muted small p">{{view.note}}</view>
+          <view class="btn wide" hover-class="pressed" data-id="{{view.go.id}}" catchtap="onTap">{{view.go.text}}</view>
+        </view>
+
+        <block wx:elif="{{view.type === 'review'}}">
+          <view class="card result"><view class="muted small">复盘</view><view class="h2">{{view.title}}</view></view>
+          <view wx:if="{{view.react}}" class="card">
+            <view class="muted small">你的自然反应</view>
+            <view wx:if="{{view.react.first}}" class="p">第一次：<text class="b">{{view.react.first.text}}</text><text class="muted">{{view.react.first.type}}</text></view>
+            <view wx:else class="p">第一次：{{view.react.firstType}}</view>
+            <view wx:if="{{view.react.rw}}" class="p">倒带后：<text class="b">{{view.react.rw.text}}</text><text class="muted">{{view.react.rw.type}}</text></view>
+            <view class="muted small p">第一次的反应没有对错——那是你习惯的方式。倒带后的选择，是你多出来的那一种。</view>
+          </view>
+          <view wx:for="{{view.cards}}" wx:key="index" class="card takeaway" style="border-left:5px solid {{item.color}};">
+            <view class="card-head">
+              <view class="portrait" style="border-color:{{item.color}};"><image src="{{item.av}}"></image></view>
+              <view><view class="muted small">{{item.who}}</view><view class="h3">{{item.title}}</view></view>
+            </view>
+            <view class="ul"><view wx:for="{{item.points}}" wx:key="index" wx:for-item="pt" class="li">{{pt}}</view></view>
+          </view>
+          <view class="feedback info"><view class="ft">📌 本周小任务</view>{{view.task}}</view>
+          <view wx:if="{{view.questions.length}}" class="card">
+            <view class="summary" data-id="{{view.qToggle.id}}" catchtap="onTap">{{view.qOpen ? '▾' : '▸'}} 讨论题（课堂 / 小组用）</view>
+            <view wx:if="{{view.qOpen}}" class="ol"><view wx:for="{{view.questions}}" wx:key="index" class="li">{{index + 1}}. {{item}}</view></view>
+          </view>
+          <view class="row center"><view class="btn wide" hover-class="pressed" data-id="{{view.go.id}}" catchtap="onTap">{{view.go.text}}</view></view>
+        </block>
+
+        <block wx:elif="{{view.type === 'ending'}}">
+          <view class="card result ending">
+            <view class="muted small">{{view.story}}</view>
+            <view class="h1">{{view.title}}</view>
+            <view class="p">{{view.text}}</view>
+            <view class="ending-pair"><view wx:for="{{view.pair}}" wx:key="index" class="portrait big" style="border-color:{{item.color}};"><image src="{{item.av}}"></image></view></view>
+          </view>
+          <view class="card">
+            <view class="muted small">这一路</view>
+            <view class="p">{{view.stats}}</view>
+            <view wx:if="{{view.finalMsg}}" class="p">你最后发出的消息：<text class="b">{{view.finalMsg}}</text></view>
+          </view>
+          <view class="card">
+            <view class="muted small">🎴 收集的技能卡（{{view.cards.length}}）</view>
+            <view class="ul"><view wx:for="{{view.cards}}" wx:key="index" class="li">{{item.title}}<text class="muted small">{{item.who}}</text></view></view>
+          </view>
+          <view class="card reveal"><view class="closing">{{view.closing}}</view></view>
+          <view class="end-btns"><view wx:for="{{view.btns}}" wx:key="index" class="{{item.c}}" hover-class="pressed" data-id="{{item.id}}" catchtap="onTap">{{item.text}}</view></view>
+        </block>
+      </view>
+    </scroll-view>
+    <view class="page-bar" style="top:{{lay.capTop}}px;height:{{lay.capH}}px;margin-right:{{lay.capW}}px;">
+      <view class="hbtn" catchtap="onExit">‹ 存档退出</view>
+      <view class="hbtn" catchtap="onToc">☰ 目录 {{prog.pct}}</view>
+      <view class="hbtn" catchtap="onMute">{{muted ? '🔇' : '🔊'}}</view>
+    </view>
+    <view class="page-prog" style="top:{{lay.capB + 8}}px;"><include src="../../templates/prog.wxml"/></view>
+  </block>
+
+  <!-- 转场：镜面、倒带、结局标题 / 关键旁白黑屏 -->
+  <view wx:if="{{inter}}" class="interstitial {{inter.cls}}"><view class="it">{{inter.title}}</view><view wx:if="{{inter.sub}}" class="is">{{inter.sub}}</view></view>
+  <view wx:if="{{tcard}}" class="title-card {{tcard.out ? 'out' : ''}}"><view class="tt">{{tcard.text}}</view></view>
+
+  <!-- 章节目录 -->
+  <view wx:if="{{toc}}" class="toc" data-id="{{toc.close.id}}" catchtap="onTap">
+    <view class="toc-card" catchtap="noop">
+      <view class="toc-head">
+        <view><view class="muted small">目录</view><text class="b toc-name">{{toc.title}}</text></view>
+        <view class="btn plain sm" data-id="{{toc.close.id}}" catchtap="onTap">关闭</view>
+      </view>
+      <view class="toc-pov">
+        <text class="muted small">视角</text>
+        <view wx:for="{{toc.povs}}" wx:key="index" class="toc-pov-btn {{item.c}}" style="{{item.c ? 'border-color:' + item.color + ';color:' + item.color : ''}}" data-id="{{item.id}}" catchtap="onTap">
+          <view class="pav-round"><image src="{{item.av}}"></image></view>{{item.text}}
+        </view>
+      </view>
+      <scroll-view scroll-y class="toc-list" style="height:{{toc.listH}}px;">
+        <view wx:for="{{toc.rows}}" wx:key="k" wx:for-item="r" class="toc-row {{r.cur ? 'cur' : ''}}">
+          <image class="toc-thumb" src="{{r.thumb}}" mode="aspectFill"></image>
+          <view class="toc-info">
+            <view class="toc-title">{{r.title}}<text wx:if="{{r.cur}}" class="toc-now">当前</text></view>
+            <view class="muted small">{{r.sub}}</view>
+            <view class="toc-chips"><view wx:for="{{r.chips}}" wx:key="index" class="toc-chip {{item.c}}" data-id="{{item.id}}" catchtap="onTap">{{item.text}}</view></view>
+          </view>
+        </view>
+      </scroll-view>
+      <view class="muted small toc-note">跳转后从所选位置开始。玩过的章节会恢复到你当时进入这一章的状态；没玩过的章节用默认状态。</view>
+    </view>
+  </view>
+</view>

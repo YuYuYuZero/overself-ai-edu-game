@@ -1,0 +1,100 @@
+<view class="home" bindtouchstart="unlock">
+  <view class="hero" style="padding-top:{{lay.capB + 18}}px;">
+    <image class="hero-bg" src="{{hero.bg}}" mode="aspectFill"></image>
+    <view class="hero-shade"></view>
+    <view class="hero-text">
+      <view class="brand">
+        <image class="brand-logo" src="/img/logo-icon.png" mode="aspectFill"></image>
+        <view class="brand-en">Overself</view>
+      </view>
+      <view class="hero-h1">MBTI <text class="grad">性格修炼手册</text></view>
+      <view class="hero-lead"><view>测出你的 MBTI，</view><view>体验另一面，解锁另一个你。</view></view>
+      <view class="hero-sub">测试告诉你「你是哪一型」。在这本修炼手册里，你先以同型的角色走进一个真实故事，再切到相反类型的人身上，把同一件事重新经历一遍。</view>
+      <view wx:if="{{mine}}" class="hero-type">你的类型：<text class="b gold">{{mine.type}}</text> · {{mine.name}}</view>
+      <view class="hero-cta">
+        <view class="btn" hover-class="pressed" data-url="/pages/quiz/quiz" bindtap="go">{{mine ? '重新测一次' : '测我的 MBTI（22 题 · 约 3 分钟）'}}</view>
+        <view wx:if="{{mine}}" class="btn light" hover-class="pressed" data-url="/pages/quiz/quiz?view=result" bindtap="go">查看我的解锁方向</view>
+        <view wx:else class="btn light" hover-class="pressed" data-url="/pages/story/story?id=campus&pov=B" bindtap="go">直接开始《汇演前三天》</view>
+        <view class="btn link" data-url="/pages/cards/cards" bindtap="go">我的技能卡（{{cardCount}}）</view>
+      </view>
+    </view>
+    <view class="hero-chars">
+      <image wx:for="{{hero.chars}}" wx:key="index" class="hero-char" src="{{item}}"></image>
+    </view>
+  </view>
+
+  <view class="wrap">
+    <view class="home-sec">
+      <view class="sec-title">三步：测 → 体验 → 解锁</view>
+      <view class="loop-step"><view class="loop-n">测</view><view class="ls-t">测出你的类型</view><view class="muted small">22 道情境题，得到你的四个字母，以及每个维度偏向多少</view></view>
+      <view class="loop-step"><view class="loop-n">验</view><view class="ls-t">体验另一面</view><view class="muted small">在故事里先用你习惯的方式做选择，再切到相反类型的人身上，听见「对方听到的」</view></view>
+      <view class="loop-step"><view class="loop-n">解</view><view class="ls-t">解锁另一个你</view><view class="muted small">倒带重来，换一种做法；带走技能卡和本周小任务，把另一面也练出来</view></view>
+    </view>
+
+    <view class="home-sec">
+      <view class="sec-title">第一组解锁：T 与 F</view>
+      <view wx:for="{{sides}}" wx:key="index" class="side-card" style="border-top-color:{{item.c}};">
+        <view class="side-av" style="background:{{item.tint}};"><image src="{{item.av}}"></image></view>
+        <view class="side-info">
+          <view class="side-who" style="color:{{item.c}};">{{item.who}}</view>
+          <view class="side-pain">{{item.pain}}</view>
+          <view class="side-grow" style="color:{{item.c}};">→ {{item.grow}}</view>
+          <view class="muted small">{{item.how}}</view>
+        </view>
+      </view>
+      <view class="muted small center note">字母只说明你更常用哪一面。T 型的人也有感受，F 型的人也会讲道理——解锁，是把不常用的那一面也练出来。</view>
+    </view>
+
+    <view class="home-sec">
+      <view class="sec-title">每一章，都是同一个循环</view>
+      <view class="loop-grid">
+        <view class="loop-step"><view class="loop-n">1</view><view class="ls-t">经历</view><view class="muted small">以和你同型的角色，用习惯的方式做选择</view></view>
+        <view class="loop-step"><view class="loop-n">2</view><view class="ls-t">镜面</view><view class="muted small">切到相反类型的人身上，听见「对方听到的」</view></view>
+        <view class="loop-step"><view class="loop-n">3</view><view class="ls-t">倒带</view><view class="muted small">回到那一刻，换一种做法</view></view>
+        <view class="loop-step"><view class="loop-n">4</view><view class="ls-t">复盘</view><view class="muted small">看见自己的习惯，带走一个小任务</view></view>
+      </view>
+    </view>
+
+    <view class="home-sec">
+      <view class="sec-title">故事 · 每个角色都有自己的 MBTI</view>
+      <view wx:for="{{stories}}" wx:key="id" wx:for-item="st" class="story-card">
+        <view class="story-cover">
+          <image class="cover-bg" src="{{st.cover}}" mode="aspectFill"></image>
+          <view class="cover-chars"><image wx:for="{{st.chars}}" wx:key="index" class="cover-char" src="{{item}}"></image></view>
+          <view wx:if="{{st.badge}}" class="cover-badge">推荐首玩</view>
+        </view>
+        <view class="story-info">
+          <view class="tag">{{st.tag}}</view>
+          <view class="h2">{{st.title}}</view>
+          <view class="muted blurb">{{st.blurb}}</view>
+          <view class="story-actions">
+            <view wx:if="{{st.resume}}" class="btn sm" hover-class="pressed" data-url="/pages/story/story?id={{st.id}}&act=resume" bindtap="go">{{st.resume}}</view>
+            <view wx:for="{{st.povs}}" wx:key="p" class="btn ghost sm" style="border-color:{{item.color}};color:{{item.color}};" hover-class="pressed" data-url="/pages/story/story?id={{st.id}}&pov={{item.p}}" bindtap="go">{{item.text}}</view>
+            <view class="btn plain sm" hover-class="pressed" data-url="/pages/story/story?id={{st.id}}&act=toc" bindtap="go">☰ 章节目录</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="home-sec">
+      <view class="sec-title">日常练习</view>
+      <view wx:for="{{routes}}" wx:key="id" class="card route-card" style="border-left-color:{{item.color}};" hover-class="pressed" data-url="/pages/route/route?id={{item.id}}" bindtap="go">
+        <view class="rtag" style="background:{{item.tint}};color:{{item.color}};">{{item.dir}}</view>
+        <view class="h2">{{item.title}}</view>
+        <view class="muted">{{item.subtitle}}</view>
+        <view class="muted small dots">{{item.info}}</view>
+      </view>
+    </view>
+
+    <view class="home-sec">
+      <view class="sec-title">更多维度的解锁 · 即将上线</view>
+      <view class="coming-grid">
+        <view wx:for="{{coming}}" wx:key="index" class="coming-chip"><text class="b">{{item.title}}</text><text class="s">{{item.desc}}</text></view>
+      </view>
+    </view>
+
+    <view class="muted small center foot">MBTI 是理解自己的一种语言，不是给人定性的标签，也不是心理诊断。每个人都同时拥有两面，只是习惯用其中一面更多。</view>
+  </view>
+
+  <view class="mute" style="bottom:{{lay.safeB + 16}}px;" catchtap="onMute">{{muted ? '🔇' : '🔊'}}</view>
+</view>

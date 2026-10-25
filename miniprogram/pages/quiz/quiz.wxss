@@ -1,0 +1,18 @@
+.quiz-bar { height: 6px; background: #e7e1d7; border-radius: 3px; overflow: hidden; margin-top: 6px; }
+.quiz-fill { height: 100%; background: var(--accent); transition: width .3s; }
+.qn { margin-top: 8px; }
+.quiz-q { font-size: 18px; font-weight: 600; margin: 12px 0 14px; line-height: 1.5; }
+.qopt { background: var(--card); padding: 14px 16px; margin: 10px 0; border-radius: 12px; border: 1.5px solid var(--line); line-height: 1.55; font-size: 15px; }
+.qopt-hover { border-color: var(--route); background: var(--route-6); }
+
+.mbti-result { text-align: center; }
+.mbti-type { display: flex; justify-content: center; gap: 10px; margin: 10px 0 4px; }
+.mbti-type .L { width: 52px; height: 62px; display: flex; align-items: center; justify-content: center; border-radius: 14px; font-size: 34px; font-weight: 800; color: #fff;
+  background: linear-gradient(160deg, #4a8fe0, #6b5bd2 55%, #f07c5a); }
+.mbti-name { font-size: 18px; font-weight: 700; margin-bottom: 14px; }
+.dim-row { text-align: left; margin: 8px 0; }
+.dim-labels { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); }
+.dim-labels .on { color: var(--ink); font-weight: 700; }
+.spectrum { display: flex; height: 10px; border-radius: 5px; overflow: hidden; margin: 4px 0; }
+.col { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+.others { display: flex; flex-direction: column; gap: 10px; }

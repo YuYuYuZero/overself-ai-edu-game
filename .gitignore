@@ -1,3 +1,6 @@
 .DS_Store
 tools/shots/
 node_modules/
+# 小程序代码上传密钥、开发者工具的本地配置
+*.key
+miniprogram/project.private.config.json

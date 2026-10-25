@@ -1,0 +1,13 @@
+<view class="wrap" style="{{rv}}">
+  <view class="level-head"><view class="skill">{{r.dir}}</view><view class="h2">{{r.title}}</view></view>
+  <view class="muted">{{r.subtitle}}</view>
+  <view wx:for="{{levels}}" wx:key="i" class="card level-item" hover-class="pressed" data-i="{{item.i}}" bindtap="play">
+    <view>
+      <view class="muted small">{{item.n}}</view>
+      <view class="h3 lt">{{item.title}}</view>
+      <view class="small" style="color:{{r.color}};">{{item.skill}}</view>
+    </view>
+    <view class="stars"><text wx:for="{{item.stars}}" wx:key="index" wx:for-item="s" class="{{s}}">★</text></view>
+  </view>
+  <view class="feedback info"><view class="ft">写给你</view>{{r.otherView}}</view>
+</view>

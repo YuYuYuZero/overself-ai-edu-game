@@ -1,0 +1,59 @@
+<!-- 交互面板的各类区块（core/story.js、core/level.js 拼出 panel.blocks；可点的条目带 id，统一回调 onTap） -->
+<block wx:for="{{panel.blocks}}" wx:key="bid" wx:for-item="b">
+  <view wx:if="{{b.k === 'prompt'}}" class="prompt">{{b.text}}</view>
+  <view wx:elif="{{b.k === 'tip'}}" class="tipbox">{{b.text}}</view>
+  <view wx:elif="{{b.k === 'muted'}}" class="muted small hint {{b.center ? 'center' : ''}}">{{b.text}}</view>
+  <view wx:elif="{{b.k === 'timer'}}" class="timer"><view wx:for="{{[b.key]}}" wx:key="*this" class="t" style="animation-duration:{{b.secs}}s;"></view></view>
+  <block wx:elif="{{b.k === 'opts'}}">
+    <view wx:for="{{b.items}}" wx:key="index" class="opt {{item.c}} {{item.dis ? 'dis' : ''}}" hover-class="opt-hover" data-id="{{item.id}}" catchtap="onTap"><text wx:if="{{item.lock}}" class="lock">🔍 </text>{{item.text}}</view>
+  </block>
+  <view wx:elif="{{b.k === 'chips'}}" class="chips">
+    <view wx:for="{{b.items}}" wx:key="index" class="chip {{item.c}}" data-id="{{item.id}}" catchtap="onTap">{{item.text}}</view>
+  </view>
+  <block wx:elif="{{b.k === 'sort'}}">
+    <view wx:for="{{b.rows}}" wx:key="index" wx:for-item="r" class="sort-row {{r.c}}">
+      <view class="txt">{{r.text}}</view>
+      <view class="bins"><view wx:for="{{r.bins}}" wx:key="index" class="bin {{item.on ? 'on' : ''}}" data-id="{{item.id}}" catchtap="onTap">{{item.text}}</view></view>
+      <view wx:if="{{r.ans}}" class="ans">{{r.ans}}</view>
+    </view>
+  </block>
+  <view wx:elif="{{b.k === 'rank'}}" class="rank-list">
+    <view wx:for="{{b.items}}" wx:key="index" class="rank-item {{item.c}}" data-id="{{item.id}}" catchtap="onTap">
+      <view class="rn">{{item.n}}</view><view class="rt">{{item.text}}<text wx:if="{{item.ans}}" class="ans">{{item.ans}}</text></view>
+    </view>
+  </view>
+  <view wx:elif="{{b.k === 'body'}}" class="body-panel">
+    <image class="figure" src="{{b.fig}}"></image>
+    <view class="parts">
+      <block wx:for="{{b.parts}}" wx:key="index" wx:for-item="p">
+        <view class="part {{p.c}}" data-id="{{p.id}}" catchtap="onTap"><text class="pn">{{p.name}}</text><text class="pd">{{p.desc}}</text><text wx:if="{{p.em}}" class="pe">{{p.em}}</text></view>
+        <view wx:if="{{p.words}}" class="chips words"><view wx:for="{{p.words}}" wx:key="index" class="chip" data-id="{{item.id}}" catchtap="onTap">{{item.text}}</view></view>
+      </block>
+    </view>
+  </view>
+  <block wx:elif="{{b.k === 'compose'}}">
+    <view class="compose">
+      <view wx:for="{{b.slots}}" wx:key="index" wx:for-item="s" class="cslot">
+        <view class="muted small cl">{{s.label}}</view>
+        <view wx:for="{{s.opts}}" wx:key="index" class="chip {{item.on ? 'on' : ''}}" data-id="{{item.id}}" catchtap="onTap">{{item.text}}</view>
+      </view>
+    </view>
+    <view class="compose-preview">{{b.preview}}</view>
+  </block>
+  <view wx:elif="{{b.k === 'flips'}}" class="flip-grid">
+    <view wx:for="{{b.items}}" wx:key="index" class="flip {{item.open ? 'open' : ''}}" data-id="{{item.id}}" catchtap="onTap">
+      <block wx:if="{{item.open}}"><view class="fb">{{item.front}}</view><view>{{item.back}}</view></block>
+      <block wx:else><view class="f">{{item.front}}</view><view class="muted small">点开想一想</view></block>
+    </view>
+  </view>
+  <view wx:elif="{{b.k === 'breathe'}}" class="breathe">
+    <view class="muted">跟着圆圈呼吸</view>
+    <view class="circle {{b.inn ? 'in' : ''}}"></view>
+    <view class="phase">{{b.phase}}</view>
+    <view class="btn plain {{b.skip ? '' : 'hidden'}}" data-id="{{b.skip.id}}" catchtap="onTap">我平静下来了</view>
+  </view>
+  <view wx:elif="{{b.k === 'feedback'}}" id="pend" class="feedback {{b.c}}"><view wx:if="{{b.title}}" class="ft">{{b.title}}</view>{{b.text}}</view>
+  <view wx:elif="{{b.k === 'btns'}}" class="next-row {{b.center ? 'center' : ''}}">
+    <view wx:for="{{b.items}}" wx:key="index" class="{{item.c}} {{item.dis ? 'disabled' : ''}}" hover-class="pressed" data-id="{{item.id}}" catchtap="onTap">{{item.text}}</view>
+  </view>
+</block>

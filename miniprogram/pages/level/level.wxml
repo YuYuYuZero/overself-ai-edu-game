@@ -1,0 +1,23 @@
+<view class="root" style="{{rv}}">
+  <block wx:if="{{mode === 'stage'}}"><include src="../../templates/stage.wxml"/></block>
+
+  <!-- 结算 -->
+  <scroll-view wx:if="{{mode === 'result'}}" scroll-y class="result-scroll">
+    <view class="wrap" style="padding-top:{{lay.capB + 8}}px;padding-bottom:{{lay.safeB + 40}}px;">
+      <view class="topbar"><view class="back" catchtap="onExit">‹ 关卡列表</view></view>
+      <view class="card result">
+        <view class="muted small">{{result.head}}</view>
+        <view class="big-stars"><text wx:for="{{result.stars}}" wx:key="index" class="{{item}}">★</text></view>
+        <view class="muted">{{result.got}}</view>
+        <view class="small meters-line">{{result.meters}}</view>
+      </view>
+      <view class="card takeaway" style="border-left:5px solid {{result.color}};">
+        <view class="muted small">🎴 获得技能卡</view>
+        <view class="h3">{{result.card.title}}</view>
+        <view class="ul"><view wx:for="{{result.card.points}}" wx:key="index" class="li">{{item}}</view></view>
+      </view>
+      <view class="feedback info"><view class="ft">写给你</view>{{result.note}}</view>
+      <view class="row center"><view wx:for="{{result.btns}}" wx:key="index" class="{{item.c}}" hover-class="pressed" data-id="{{item.id}}" catchtap="onTap">{{item.text}}</view></view>
+    </view>
+  </scroll-view>
+</view>

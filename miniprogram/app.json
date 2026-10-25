@@ -1,0 +1,20 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/story/story",
+    "pages/quiz/quiz",
+    "pages/route/route",
+    "pages/level/level",
+    "pages/cards/cards"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#f6f3ee",
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "MBTI 性格修炼手册",
+    "backgroundColor": "#f6f3ee",
+    "backgroundTextStyle": "dark"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

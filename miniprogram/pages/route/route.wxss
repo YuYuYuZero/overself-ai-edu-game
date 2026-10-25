@@ -1,0 +1,4 @@
+.level-head { margin: 6px 0 4px; }
+.level-head .skill { color: var(--route); font-size: 14px; }
+.level-item { display: flex; justify-content: space-between; align-items: center; }
+.lt { margin: 2px 0 4px; }

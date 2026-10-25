@@ -1,0 +1,114 @@
+<!-- 视觉小说舞台（故事页、练习关页共用，<include> 进页面，直接读页面数据）。对应网页版 vn.js 的 DOM 结构。 -->
+<view class="stage {{vn.fx}} {{vn.crowd ? 'crowd' : ''}} {{panel ? 'has-panel' : ''}} {{hot ? 'hot' : ''}} {{veryHot ? 'very-hot' : ''}}"
+  style="--top:{{hudB}}px;--sw:{{lay.sw}}px;--swc:{{lay.swc}}px;--safe-b:{{lay.safeB}}px;" bindtap="onStage">
+  <image wx:if="{{vn.bg0}}" class="bg {{vn.bgOn === 0 ? 'on' : ''}}" src="{{vn.bg0}}" mode="aspectFill"></image>
+  <image wx:if="{{vn.bg1}}" class="bg {{vn.bgOn === 1 ? 'on' : ''}}" src="{{vn.bg1}}" mode="aspectFill"></image>
+  <view class="bg-shade"></view>
+
+  <!-- 立绘：idle 图常驻（眨眼），说话时叠一张 talk 图（口型） -->
+  <view class="chars">
+    <view wx:for="{{vn.sprites}}" wx:key="u" class="sprite {{item.c}}" style="left:{{item.l}}%;z-index:{{item.z}};">
+      <view class="sp-body" style="animation-delay:{{item.d}}s;">
+        <image class="sp-img" src="{{vn.img[item.k]}}"></image>
+        <image wx:if="{{item.kt}}" class="sp-img" src="{{vn.img[item.kt]}}"></image>
+      </view>
+    </view>
+  </view>
+
+  <view wx:for="{{[vn.place.k]}}" wx:key="*this" class="place {{vn.place.on ? 'on' : ''}}">{{vn.place.text}}</view>
+
+  <view class="caption {{vn.cap.on ? 'on' : ''}} {{vn.cap.kind}}">
+    <view wx:for="{{[vn.cap.k]}}" wx:key="*this" class="txt"><text wx:for="{{vn.cap.s}}" wx:key="index" wx:for-item="sg" class="{{sg.c}}">{{sg.t}}</text></view>
+  </view>
+
+  <view class="phone {{vn.phone.on ? 'on' : ''}}">
+    <view class="phone-notch"></view>
+    <view class="phone-head">{{vn.phone.head}}</view>
+    <view class="phone-body">
+      <view wx:for="{{vn.phone.msgs}}" wx:key="k" class="pmsg {{item.me ? 'me' : ''}}">
+        <view class="pav"><image wx:if="{{item.av}}" class="pav-img" src="{{vn.img[item.av]}}"></image><text wx:else>💬</text></view>
+        <view class="pcol">
+          <view class="pname">{{item.name}}</view>
+          <view class="pb"><text wx:for="{{item.s}}" wx:key="index" wx:for-item="sg" class="{{sg.c}}">{{sg.t}}</text><view wx:if="{{item.voice}}" class="voice {{item.voice.playing ? 'playing' : ''}}" catchtap="onVoice"><text>▶</text><text class="wave">▁▂▃▅▃▂▁▂▅▆▃▂▁▂▃</text><text>{{item.voice.secs}}″</text></view></view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 信号、解码：贴在对话框上方，新的在上 -->
+  <view class="sig-layer">
+    <view class="sigs">
+      <view wx:for="{{vn.sigs}}" wx:key="k" class="sig {{item.c}}" data-id="{{item.id}}" catchtap="onTap">{{item.t}}</view>
+    </view>
+    <view wx:for="{{vn.decodes}}" wx:key="k" class="decode">
+      <view class="dl">对方听到的</view>
+      <view class="dt">「{{item.text}}」</view>
+      <view wx:if="{{item.inner}}" class="di">心里：{{item.inner}}</view>
+    </view>
+  </view>
+
+  <view class="coach">
+    <view wx:for="{{vn.coach}}" wx:key="k" class="feedback {{item.kind}}"><view wx:if="{{item.title}}" class="ft">{{item.title}}</view>{{item.text}}</view>
+  </view>
+
+  <view wx:if="{{vn.board}}" class="board">
+    <view class="dtable">
+      <view wx:for="{{vn.board.rows}}" wx:key="i" wx:for-item="r" class="tr">
+        <view wx:for="{{r.cells}}" wx:key="index" class="{{r.i ? 'td' : 'th'}}">{{item}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="dialog {{vn.dialog.on ? 'on' : ''}} {{vn.dialog.c}}">
+    <view class="nameplate" style="{{vn.dialog.bg ? 'background:' + vn.dialog.bg : ''}}">{{vn.dialog.name}}</view>
+    <view class="dtext {{vn.dialog.filtered ? 'filtered' : ''}} {{vn.dialog.replayed ? 'replayed' : ''}}">
+      <view wx:for="{{[vn.dialog.k]}}" wx:key="*this" class="txt"><text wx:for="{{vn.dialog.s}}" wx:key="index" wx:for-item="sg" class="{{sg.c}}">{{sg.t}}</text></view>
+    </view>
+  </view>
+
+  <view wx:if="{{vn.reveal}}" class="reveal-card"><view class="rt">{{vn.reveal.title}}</view><view class="handwrite">{{vn.reveal.text}}</view></view>
+
+  <view class="vignette"></view>
+
+  <!-- 交互面板：普通面板贴在对话框上方；big 面板占满中间，可滚动 -->
+  <view wx:if="{{panel}}" class="action-layer {{panel.big ? 'has-big' : ''}}" catchtap="noop">
+    <scroll-view wx:if="{{panel.big}}" scroll-y class="action big" scroll-into-view="{{panel.to}}" scroll-with-animation>
+      <view class="big-in"><include src="panel-blocks.wxml"/></view>
+    </scroll-view>
+    <view wx:else class="action"><include src="panel-blocks.wxml"/></view>
+  </view>
+
+  <view wx:if="{{vn.adv}}" class="advance" catchtap="onAdv"><view class="btn adv">▼</view></view>
+
+  <!-- HUD：让开状态栏和右上角胶囊 -->
+  <view class="hud" catchtap="noop" style="padding-top:{{lay.capTop}}px;">
+    <view class="hud-row" style="height:{{lay.capH}}px;margin-right:{{lay.capW}}px;">
+      <view class="hbtn" catchtap="onExit">‹ {{isStory ? '存档退出' : '退出本关'}}</view>
+      <view wx:if="{{isStory}}" class="hbtn" catchtap="onToc">☰ {{prog.pct}}</view>
+      <view class="hbtn" catchtap="onLog">回看</view>
+      <view class="hbtn" catchtap="onMute">{{muted ? '🔇' : '🔊'}}</view>
+    </view>
+    <block wx:if="{{isStory}}"><include src="prog.wxml"/></block>
+    <view class="hud-row2">
+      <view class="hud-title">{{hud.title}}</view>
+      <view class="pov-badge" style="background:{{hud.color}};">{{hud.pov}}<text wx:if="{{hud.phase}}" class="phase-tag">{{hud.phase}}</text></view>
+    </view>
+    <view wx:if="{{meters.length}}" class="meters">
+      <view wx:for="{{meters}}" wx:key="k" class="meter {{pulse ? 'pulse' : ''}}">
+        <view class="lbl"><text>{{item.label}}</text><text>{{item.v}}</text></view>
+        <view class="bar"><view class="fill" style="width:{{item.v}}%;background:{{item.color}};"></view></view>
+      </view>
+      <text wx:if="{{caught}}" class="caught">{{caught}}</text>
+    </view>
+  </view>
+
+  <view wx:if="{{vn.log}}" class="backlog" catchtap="onLogClose">
+    <view class="bl-card" catchtap="noop">
+      <view class="bl-head"><text class="b">回看</text><view class="btn plain sm" catchtap="onLogClose">关闭</view></view>
+      <scroll-view scroll-y class="bl-list" scroll-into-view="{{vn.logTo}}">
+        <view wx:for="{{vn.log}}" wx:key="i" class="bl-row {{item.n ? '' : 'narr'}}"><text wx:if="{{item.n}}" class="b">{{item.n}}：</text>{{item.t}}</view>
+        <view id="bl-end" class="bl-end"></view>
+      </scroll-view>
+    </view>
+  </view>
+</view>

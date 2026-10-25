@@ -1,0 +1,28 @@
+{
+  "description": "MBTI 性格修炼手册（Overself）微信小程序版。剧情数据与网页版 demo/ 共用，见 README.md",
+  "projectname": "overself-miniprogram",
+  "appid": "wx34e4c1801e438c80",
+  "compileType": "miniprogram",
+  "packOptions": {
+    "ignore": [{ "type": "file", "value": "README.md" }],
+    "include": []
+  },
+  "setting": {
+    "urlCheck": true,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": true,
+    "minifyWXML": true,
+    "minifyWXSS": true,
+    "uglifyFileName": false,
+    "uploadWithSourceMap": true,
+    "checkInvalidKey": true,
+    "checkSiteMap": true,
+    "showShadowRootInWxmlPanel": true,
+    "compileHotReLoad": false,
+    "babelSetting": { "ignore": [], "disablePlugins": [], "outputPath": "" }
+  },
+  "condition": {},
+  "editorSetting": { "tabIndent": "insertSpaces", "tabSize": 2 }
+}

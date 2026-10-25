@@ -1,0 +1,5 @@
+@import "../../templates/stage.wxss";
+
+.root { min-height: 100vh; }
+.result-scroll { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: var(--bg); }
+.meters-line { margin-top: 10px; }

@@ -1,0 +1,8 @@
+<view class="wrap">
+  <view wx:for="{{items}}" wx:key="index" class="card takeaway" style="border-left:5px solid {{item.color}};">
+    <view class="muted small">{{item.sub}}</view>
+    <view class="h3 ct">{{item.title}}</view>
+    <view class="ul"><view wx:for="{{item.points}}" wx:key="index" wx:for-item="pt" class="li">{{pt}}</view></view>
+  </view>
+  <view wx:if="{{!items.length}}" class="muted empty">还没有技能卡。完成一关就能收集一张。</view>
+</view>

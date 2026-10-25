@@ -1,0 +1,7 @@
+<!-- 全局进度条：每章一段，有镜面的章用两道刻度分成「经历 / 镜面 / 倒带」；点击打开目录 -->
+<view class="prog" catchtap="onToc">
+  <view wx:for="{{prog.segs}}" wx:key="k" class="seg {{item.c}}">
+    <view class="fill" style="width:{{item.c === 'done' ? 100 : item.c === 'cur' ? prog.w : 0}}%;"></view>
+    <block wx:if="{{item.ticks}}"><view class="tick" style="left:33.3%;"></view><view class="tick" style="left:66.6%;"></view></block>
+  </view>
+</view>

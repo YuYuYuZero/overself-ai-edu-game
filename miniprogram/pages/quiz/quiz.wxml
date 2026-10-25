@@ -1,0 +1,45 @@
+<view class="wrap">
+  <block wx:if="{{mode === 'quiz'}}">
+    <view class="quiz-bar"><view class="quiz-fill" style="width:{{pct}}%;"></view></view>
+    <view class="muted small qn">{{i}} / {{total}}　凭第一反应选，没有对错</view>
+    <view class="quiz-q">{{q}}</view>
+    <view wx:for="{{opts}}" wx:key="index" class="qopt" hover-class="qopt-hover" data-i="{{index}}" data-q="{{i}}" bindtap="pick">{{item}}</view>
+  </block>
+
+  <block wx:elif="{{mode === 'result'}}">
+    <view class="card mbti-result">
+      <view class="muted small">你的 MBTI</view>
+      <view class="mbti-type"><view wx:for="{{res.letters}}" wx:key="index" class="L">{{item}}</view></view>
+      <view class="mbti-name">{{res.name}}</view>
+      <view wx:for="{{res.dims}}" wx:key="index" class="dim-row">
+        <view class="dim-labels"><text class="{{item.lOn ? 'on' : ''}}">{{item.l}}</text><text class="{{item.rOn ? 'on' : ''}}">{{item.r}}</text></view>
+        <view class="spectrum"><view style="width:{{item.wa}}%;background:#4a8fe0;"></view><view style="width:{{item.wb}}%;background:#f07c5a;"></view></view>
+        <view wx:if="{{item.close}}" class="muted small">这一维两边很接近，两种方式你都常用</view>
+      </view>
+      <view class="muted small p">这不是心理诊断，只反映你在这 22 个情境里的第一反应。字母说明你更常用哪一面，另一面一样可以练。</view>
+    </view>
+
+    <view class="card" style="border-left:5px solid {{res.color}};">
+      <view class="tag">{{res.recTag}}</view>
+      <view class="h2">{{res.title}}</view>
+      <view class="p">{{res.desc}}</view>
+      <view wx:if="{{res.best}}" class="muted small p">{{res.best.text}}</view>
+      <view class="col">
+        <view wx:if="{{res.best}}" class="btn" hover-class="pressed" data-url="{{res.best.url}}" bindtap="go">{{res.best.btn}}</view>
+        <view wx:if="{{res.campus}}" class="btn ghost" hover-class="pressed" data-url="{{res.campus}}" bindtap="go">或：推荐首玩《汇演前三天》</view>
+        <view class="btn plain" style="color:{{res.color}};" hover-class="pressed" data-url="{{res.route.url}}" bindtap="go">{{res.route.text}}</view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="h3">你的另外三个维度</view>
+      <view class="others">
+        <view wx:for="{{res.others}}" wx:key="index" class="coming-chip"><text class="b">{{item.title}}</text><text class="s">{{item.desc}}</text><view><text class="soon">即将上线</text></view></view>
+      </view>
+      <view class="row" style="margin-top:14px;">
+        <view class="btn plain" hover-class="pressed" bindtap="startQuiz">重新测一次</view>
+        <view class="btn plain" hover-class="pressed" bindtap="home">回首页</view>
+      </view>
+    </view>
+  </block>
+</view>
