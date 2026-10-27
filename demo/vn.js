@@ -14,6 +14,16 @@ window.VN = (function () {
     return n;
   }
 
+  // 手机竖屏第一次进舞台时提示可以横过来（只提示一次，和小程序共用同一个说法）
+  const HINT_KEY = "overself.rotateHint.v1";
+  function rotateHint(stage) {
+    try {
+      if (!matchMedia("(orientation: portrait) and (pointer: coarse)").matches || localStorage.getItem(HINT_KEY)) return;
+      localStorage.setItem(HINT_KEY, "1");
+      setTimeout(() => stage.isConnected && stage.append(el("div", { class: "rotate-tip", onanimationend: e => e.target.remove() }, "横过手机，舞台更大")), 1600);
+    } catch (e) {}
+  }
+
   // opts: { pov:{name, char, color}, cast:{名字:立绘id}, hud:元素, onBack }
   function mount(host, opts) {
     const bgA = el("div", { class: "bg" }), bgB = el("div", { class: "bg" });
@@ -31,6 +41,7 @@ window.VN = (function () {
     const backlog = el("div", { class: "backlog" });
     const stage = el("div", { class: "stage" }, bgA, bgB, el("div", { class: "bg-shade" }), chars, place, caption, phone, sigLayer, coach, dialog, action, advance, backlog);
     host.append(stage);
+    rotateHint(stage);
 
     const S = { sprites: new Map(), order: [], bgFront: bgA, bgId: null, history: [], phoneOn: false };
     const pov = opts.pov || {};

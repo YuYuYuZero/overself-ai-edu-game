@@ -15,6 +15,7 @@ Page(Object.assign({}, stage, {
   onLoad(q) {
     this.ui = createUI(this);
     this.setData({ lay: lay(), muted: AU.isMuted() });
+    this.rotateHint();
     this.engine = createStory(this, this.ui);
     const id = q.id || "campus";
     if (q.act === "resume") { if (!this.engine.resume(id)) this.engine.start(id); }

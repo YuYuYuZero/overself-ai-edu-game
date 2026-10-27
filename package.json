@@ -1,0 +1,19 @@
+{
+  "name": "overself",
+  "version": "4.0.0",
+  "private": true,
+  "description": "MBTI 性格修炼手册（Overself）：网页版（demo/）+ 微信小程序版（miniprogram/），共用剧情、题库、立绘、音频",
+  "scripts": {
+    "build:mp": "node tools/build-miniprogram.mjs",
+    "portraits": "node tools/render-portraits.mjs",
+    "test": "node tools/mp-e2e.mjs && node tools/e2e.mjs && node tools/e2e-toc.mjs",
+    "test:mp": "node tools/mp-e2e.mjs",
+    "test:web": "node tools/e2e.mjs",
+    "test:toc": "node tools/e2e-toc.mjs",
+    "test:story": "node tools/e2e-story.mjs",
+    "export:script": "node tools/export-script.mjs",
+    "pitch": "node pitch/build.js",
+    "pitch:shots": "node tools/pitch-shots.mjs"
+  },
+  "engines": { "node": ">=22" }
+}

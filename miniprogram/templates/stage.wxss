@@ -251,3 +251,41 @@
   background: repeating-linear-gradient(0deg, rgba(255,255,255,.08) 0, rgba(255,255,255,.08) 2px, transparent 2px, transparent 5px); animation: scan .25s linear infinite; }
 @keyframes scan { to { background-position: 0 10px; } }
 .stage.underwater .bg, .stage.underwater .chars { filter: blur(4px) saturate(.5) hue-rotate(160deg) brightness(.7); transition: filter 1.2s; }
+
+/* ======== 横屏（.land，lay.js 判断 W > H）：对应网页版宽屏舞台 ========
+   手机横过来以后高度只有 360~430px：立绘站满舞台，对话框压在腿上、左右收窄；
+   选项面板挪到右半边，不挡住说话的人；HUD 压成两行。 */
+.stage.land .hud { padding-left: calc(12px + env(safe-area-inset-left)); padding-right: calc(12px + env(safe-area-inset-right)); padding-bottom: 4px; }
+.stage.land .hud-row2 { margin-top: 4px; }
+.stage.land .hud .meters { margin-top: 4px; padding: 4px 10px; max-width: 46%; }
+.stage.land .prog { margin-top: 5px; }
+.stage.land .chars { bottom: 0; height: 92%; }
+.stage.land .sprite { bottom: -3%; height: 100%; }
+.stage.land.crowd .sprite { height: 88%; }
+.stage.land .dialog { left: calc(12% + env(safe-area-inset-left)); right: calc(12% + env(safe-area-inset-right)); bottom: 8px; min-height: 92px; padding: 18px 20px 12px; }
+.stage.land .dialog .dtext { font-size: 16px; line-height: 1.7; }
+.stage.land .advance { right: calc(12% + 14px); bottom: 16px; }
+.stage.land .caption { top: calc(var(--top) + 6px); left: calc(4% + env(safe-area-inset-left)); max-width: 46%; font-size: 15px; padding: 10px 14px; }
+.stage.land .caption.pause, .stage.land .caption.breath { top: 42%; left: 50%; width: 52%; max-width: 52%; font-size: 20px; }
+.stage.land .place { top: calc(var(--top) + 4px); left: auto; right: calc(4% + env(safe-area-inset-right)); max-width: 40%; }
+.stage.land .phone { left: auto; right: calc(6% + env(safe-area-inset-right)); top: calc(var(--top) + 4px); width: 280px; transform: translateY(30px) rotate(2deg); }
+.stage.land .phone.on { transform: rotate(2deg); }
+.stage.land .phone-body { min-height: 0; max-height: calc(100vh - var(--top) - 150px); }
+.stage.land.has-panel .phone { right: auto; left: calc(4% + env(safe-area-inset-left)); }
+.stage.land.has-panel .phone-body { max-height: calc(100vh - var(--top) - 150px); }
+.stage.land .sig-layer { left: 18%; right: 18%; bottom: 112px; }
+.stage.land .decode .dt { font-size: 18px; }
+.stage.land .coach { left: auto; right: calc(3% + env(safe-area-inset-right)); width: 46%; top: calc(var(--top) + 4px); }
+.stage.land .action-layer { left: auto; right: calc(3% + env(safe-area-inset-right)); width: 48%; bottom: 108px; max-height: calc(100% - var(--top) - 116px); }
+/* 有选项时：对话框让到左半边，选项占满右半边的高度；地点条先收起来（网页版同款） */
+.stage.land.has-panel .dialog { left: calc(3% + env(safe-area-inset-left)); right: 51%; }
+.stage.land.has-panel .action-layer { bottom: 8px; max-height: calc(100% - var(--top) - 16px); }
+.stage.land.has-panel .place { opacity: 0; }
+.stage.land .action-layer.has-big { left: calc(14% + env(safe-area-inset-left)); right: calc(14% + env(safe-area-inset-right)); width: auto; top: var(--top); bottom: 8px; }
+.stage.land .opt { padding: 9px 14px; margin: 6px 0; font-size: 14px; }
+.stage.land .board { top: calc(var(--top) + 40px); }
+.stage.land .reveal-card { width: 56%; top: 44%; }
+.stage.land .bl-list { height: 64vh; }
+.stage.land .bl-card { width: 70%; }
+.stage.land .breathe { padding: 10px 0; }
+.stage.land .circle { width: 90px; height: 90px; margin: 10px auto; }

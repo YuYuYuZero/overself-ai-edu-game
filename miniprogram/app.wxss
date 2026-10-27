@@ -1,9 +1,13 @@
-/* 全局样式（对应网页版 style.css 的「通用组件」）。--route-* 是 color-mix 的预计算版本，见 core/color.js */
+/* 全局样式（对应网页版 style.css 开头的设计规范与「通用组件」）：纸张底色 + 墨色文字 + T 蓝 / F 橙，标题用宋体，红色印章。
+   --route-* 是 color-mix 的预计算版本，见 core/color.js */
 page {
-  --bg: #f6f3ee; --card: #ffffff; --ink: #2b2a28; --muted: #8a857c; --line: #e7e1d7;
-  --good: #3aa676; --bad: #e0823d; --accent: #6b5bd2; --radius: 14px;
-  --route: #6b5bd2; --route-6: rgb(246,245,252); --route-8: rgb(243,242,251); --route-12: rgb(236,234,249); --route-15: rgb(233,230,248);
-  --route-45: rgb(188,177,233); --route-55: rgb(174,162,228); --route-a25: rgba(107,91,210,.25); --route-a50: rgba(107,91,210,.5); --route-a70: rgba(107,91,210,.7);
+  --bg: #f6f1e7; --paper-2: #efe7d8; --card: #fffdf8; --ink: #24223a; --ink-2: #4e4b63; --muted: #8b8698; --line: #e5ddcd;
+  --brand: #5a48c2; --brand-soft: #efecfa; --t: #3f86de; --f: #ef7550; --gold: #e9b44c; --seal: #c8372d;
+  --good: #3aa676; --bad: #e0823d; --accent: #5a48c2; --radius: 16px;
+  --shadow: 0 1px 2px rgba(36,34,58,.04), 0 8px 24px rgba(36,34,58,.06);
+  --serif: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "STSong", serif;
+  --route: #5a48c2; --route-6: rgb(246,245,252); --route-8: rgb(242,240,250); --route-12: rgb(235,233,248); --route-15: rgb(231,228,246);
+  --route-45: rgb(181,172,227); --route-55: rgb(167,157,222); --route-a25: rgba(90,72,194,.25); --route-a50: rgba(90,72,194,.5); --route-a70: rgba(90,72,194,.7);
   background: var(--bg); color: var(--ink); font-size: 15px; line-height: 1.5;
   font-family: -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
 }
@@ -21,10 +25,11 @@ view, scroll-view, image, text { box-sizing: border-box; }
 .ul .li { padding-left: 16px; }
 .ul .li::before { content: "•"; position: absolute; left: 3px; color: var(--muted); }
 
-.card { background: var(--card); border-radius: var(--radius); padding: 16px 18px; margin: 12px 0; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+.paper { background-color: var(--bg); background-image: radial-gradient(rgba(36,34,58,.07) 1px, transparent 1.3px); background-size: 22px 22px; min-height: 100vh; }
+.card { background: var(--card); border-radius: var(--radius); padding: 16px 18px; margin: 12px 0; border: 1px solid var(--line); box-shadow: var(--shadow); }
 .btn { display: inline-block; background: var(--route); color: #fff; padding: 11px 20px; border-radius: 999px; font-size: 15px; line-height: 1.35; text-align: center; transition: transform .1s, opacity .2s; }
 .btn.ghost { background: transparent; color: var(--route); border: 1.5px solid var(--route); }
-.btn.plain { background: #ece7de; color: var(--ink); }
+.btn.plain { background: var(--paper-2); color: var(--ink); }
 .btn.light { background: #fff; color: var(--ink); }
 .btn.link { background: transparent; color: rgba(255,255,255,.85); text-decoration: underline; padding-left: 6px; padding-right: 6px; }
 .btn.sm { padding: 6px 14px; font-size: 13px; }
@@ -55,3 +60,10 @@ view, scroll-view, image, text { box-sizing: border-box; }
 .portrait { width: 64px; height: 64px; border-radius: 50%; overflow: hidden; border: 3px solid var(--route); background: #e8edf3; flex-shrink: 0; }
 .portrait image { width: 100%; height: 100%; display: block; }
 .portrait.big { width: 90px; height: 90px; }
+
+/* 章节序号（壹贰叁…）与印章 */
+.sec-no { flex-shrink: 0; width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px;
+  font-family: var(--serif); background: linear-gradient(135deg, var(--t), var(--brand) 55%, var(--f)); box-shadow: 0 3px 8px rgba(90,72,194,.25); transform: rotate(-4deg); }
+.seal { width: 42px; height: 42px; border-radius: 7px; background: var(--seal); color: #fff; font-family: var(--serif); font-weight: 900; font-size: 14px; line-height: 1.05;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; transform: rotate(-6deg);
+  box-shadow: inset 0 0 0 2px rgba(255,255,255,.65), inset 0 0 0 4px var(--seal), 0 4px 10px rgba(0,0,0,.25); }

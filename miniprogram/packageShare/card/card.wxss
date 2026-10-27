@@ -1,0 +1,8 @@
+.tip { margin: 6px 0 12px; }
+.poster { display: block; width: 100%; border-radius: 14px; box-shadow: 0 10px 30px rgba(36,34,58,.18); }
+.poster.ph { height: 0; padding-bottom: 160%; background: var(--paper-2); }
+.acts { display: flex; gap: 10px; margin: 16px 0 10px; }
+.acts .btn { flex: 1; }
+.share-btn { margin: 0; line-height: 1.35; font-size: 15px; padding: 11px 20px; border-radius: 999px; font-weight: normal; }
+.share-btn::after { border: 0; }
+.off { position: fixed; left: -2000px; top: 0; }

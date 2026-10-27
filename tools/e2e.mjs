@@ -63,9 +63,18 @@ for (const [route, n] of [["t2f", 3], ["f2t", 3]]) {
     await ev(`document.querySelector(".back")?.click()`); await sleep(200);
   }
 }
-await ev(`[...document.querySelectorAll("button")].find(b=>b.textContent.includes("测我的 MBTI")||b.textContent.includes("重新测一次"))?.click()`); await sleep(200);
-for (let i = 0; i < 22; i++) { await ev(`document.querySelectorAll(".opt")[0].click()`); await sleep(120); }
-report.push("quiz: " + await ev(`document.querySelector(".mbti-type")?.textContent + " | " + document.querySelector(".mbti-name")?.textContent + " | " + [...document.querySelectorAll(".mbti-result ~ .card .btn")].map(b=>b.textContent).join(" / ")`));
+// MBTI 测试：首页 → 说明页 → 快速版 → 逐题点圆圈 → 逐页翻 → 结果页 → 分享卡片
+await ev(`[...document.querySelectorAll("button")].find(b=>b.textContent.includes("开始 MBTI 测试")||b.textContent.includes("重新测一次"))?.click()`); await sleep(200);
+await ev(`[...document.querySelectorAll(".mode-card")].find(b=>b.textContent.includes("快速版"))?.click()`); await sleep(200);
+for (let pg = 0; pg < 10; pg++) {
+  const n = await ev(`document.querySelectorAll(".qi").length`); if (!n) break;
+  for (let k = 0; k < n; k++) { await ev(`document.querySelectorAll(".qi")[${k}].querySelectorAll(".dot")[${(pg + k) % 7}].click()`); await sleep(60); }
+  await ev(`document.querySelector(".qnav .btn:last-child").click()`); await sleep(250);
+}
+report.push("quiz: " + await ev(`document.querySelector(".rh-type")?.textContent + " | " + document.querySelector(".rh-name")?.textContent + " | " + [...document.querySelectorAll(".dim2-desc b")].map(b=>b.textContent).join(" ") + " | " + [...document.querySelectorAll(".unlock-card .btn")].map(b=>b.textContent).join(" / ")`));
+await ev(`document.querySelector(".share-btn").click()`); await sleep(1500);
+report.push("share card: " + await ev(`(document.querySelector(".share-card img")?.naturalWidth || 0) + "px"`));
+await ev(`document.querySelector(".share-modal")?.remove()`);
 await shot("90-quiz-result");
 await ev(`location.reload()`); await sleep(600); await shot("91-home-after");
 console.log(report.join("\n")); console.log("JS errors:", errors.length ? errors : "none");

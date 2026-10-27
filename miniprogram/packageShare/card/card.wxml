@@ -1,0 +1,13 @@
+<view class="wrap paper">
+  <view class="tip muted small center">{{loading ? '正在生成你的 ' + type + ' 卡片…' : failed ? '生成失败，请返回重试' : '点图片可放大，长按可保存或转发'}}</view>
+  <image wx:if="{{img}}" class="poster" src="{{img}}" mode="widthFix" bindtap="preview" show-menu-by-longpress></image>
+  <view wx:elif="{{!failed}}" class="poster ph"></view>
+  <view class="acts">
+    <view class="btn" hover-class="pressed" bindtap="save">保存 / 分享图片</view>
+    <button class="btn ghost share-btn" open-type="share" hover-class="pressed">发给微信好友</button>
+  </view>
+  <view class="muted small center">想换成男生 / 女生形象，回到结果页切换后再生成</view>
+  <!-- 离屏画布：海报 750×1200、转发封面 500×400 -->
+  <canvas type="2d" id="poster" class="off" style="width:750px;height:1200px;"></canvas>
+  <canvas type="2d" id="cover" class="off" style="width:500px;height:400px;"></canvas>
+</view>

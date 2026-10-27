@@ -45,7 +45,10 @@ Page({
     }));
     this.setData({
       muted: AU.isMuted(),
-      mine: mine ? { type: mine.type, name: M.names[mine.type] } : null,
+      mine: mine ? (() => {
+        const g = M.groups[M.groupOf(mine.type)];
+        return { type: mine.type, name: M.names[mine.type], soft: g.soft, av: SVG.head(env.ART.typeChar(mine.type, store.avatarSex()), "smile") };
+      })() : null,
       cardCount: Object.keys(progress.cards).length + store.storyCards().length,
       stories, routes
     });

@@ -1,45 +1,122 @@
-<view class="wrap">
-  <block wx:if="{{mode === 'quiz'}}">
-    <view class="quiz-bar"><view class="quiz-fill" style="width:{{pct}}%;"></view></view>
-    <view class="muted small qn">{{i}} / {{total}}　凭第一反应选，没有对错</view>
-    <view class="quiz-q">{{q}}</view>
-    <view wx:for="{{opts}}" wx:key="index" class="qopt" hover-class="qopt-hover" data-i="{{index}}" data-q="{{i}}" bindtap="pick">{{item}}</view>
+<view class="wrap paper">
+  <!-- 说明页 -->
+  <block wx:if="{{mode === 'intro'}}">
+    <view class="qi-kicker">MBTI 性格测试</view>
+    <view class="qi-title">了解你习惯用的那一面</view>
+    <view class="qi-lead">接下来是一些描述日常想法和做法的句子。读完每一句，选出它和你有多像——从「非常同意」到「非常不同意」共 7 级。</view>
+    <view class="qi-dims">
+      <view wx:for="{{intro.dims}}" wx:key="name" class="qi-dim">
+        <view class="qi-dim-n">{{item.name}}</view>
+        <view class="qi-dim-ab"><text class="ta">{{item.a}}</text><text class="muted"> · </text><text class="tb">{{item.b}}</text></view>
+        <view class="muted small">{{item.desc}}</view>
+      </view>
+    </view>
+    <view class="qi-tips">
+      <view class="li">凭第一反应作答，想想你<text class="b">平时</text>通常怎么做，而不是「应该」怎么做</view>
+      <view class="li">尽量少选中间的「说不准」，它不计入任何一边</view>
+      <view class="li">答案只保存在你的手机上，可以随时退出，下次接着答</view>
+    </view>
+    <view wx:if="{{intro.draft}}" class="btn wide" hover-class="pressed" bindtap="resume">{{intro.draft}}</view>
+    <view wx:for="{{intro.modes}}" wx:key="k" class="mode-card {{item.rec ? 'rec' : ''}}" hover-class="pressed" data-k="{{item.k}}" bindtap="startMode">
+      <view wx:if="{{item.rec}}" class="mode-rec">推荐</view>
+      <view class="mode-t">{{item.t}}</view>
+      <view class="mode-n">{{item.n}}</view>
+      <view class="muted small">{{item.d}}</view>
+    </view>
+    <view class="muted small center note">这是基于 MBTI 四维度理论的自评问卷，用于自我了解和成长练习，不是心理诊断，也不代表官方 MBTI® 测评。</view>
   </block>
 
-  <block wx:elif="{{mode === 'result'}}">
-    <view class="card mbti-result">
-      <view class="muted small">你的 MBTI</view>
-      <view class="mbti-type"><view wx:for="{{res.letters}}" wx:key="index" class="L">{{item}}</view></view>
-      <view class="mbti-name">{{res.name}}</view>
-      <view wx:for="{{res.dims}}" wx:key="index" class="dim-row">
-        <view class="dim-labels"><text class="{{item.lOn ? 'on' : ''}}">{{item.l}}</text><text class="{{item.rOn ? 'on' : ''}}">{{item.r}}</text></view>
-        <view class="spectrum"><view style="width:{{item.wa}}%;background:#4a8fe0;"></view><view style="width:{{item.wb}}%;background:#f07c5a;"></view></view>
-        <view wx:if="{{item.close}}" class="muted small">这一维两边很接近，两种方式你都常用</view>
+  <!-- 作答 -->
+  <block wx:elif="{{mode === 'quiz'}}">
+    <view class="quiz-head">
+      <view class="qbar"><view class="qbar-fill" style="width:{{q.pct}}%;"></view></view>
+      <view class="qmeta"><text>{{q.label}}</text><text>{{q.count}}</text></view>
+    </view>
+    <view wx:for="{{q.items}}" wx:key="id" id="q{{item.id}}" class="qi {{item.done ? 'done' : ''}}">
+      <view class="qi-text"><text class="qi-no">{{item.no}}</text>{{item.text}}</view>
+      <view class="scale">
+        <view class="sc-l">同意</view>
+        <view class="sc-dots">
+          <view wx:for="{{item.dots}}" wx:key="i" wx:for-item="d" class="dot d{{d.i}} {{d.on ? 'on' : ''}}" style="width:{{d.size}}px;height:{{d.size}}px;"
+            data-id="{{item.id}}" data-v="{{d.v}}" bindtap="pick"></view>
+        </view>
+        <view class="sc-r">不同意</view>
       </view>
-      <view class="muted small p">这不是心理诊断，只反映你在这 22 个情境里的第一反应。字母说明你更常用哪一面，另一面一样可以练。</view>
+    </view>
+    <view id="qnav" class="qnav">
+      <view wx:if="{{!q.first}}" class="btn plain" hover-class="pressed" bindtap="prev">‹ 上一页</view>
+      <view wx:else class="btn plain" hover-class="pressed" bindtap="pause">‹ 暂停</view>
+      <view class="btn {{q.ready ? '' : 'disabled'}}" hover-class="pressed" bindtap="next">{{q.last ? '查看结果 ✓' : '下一页 ›'}}</view>
+    </view>
+  </block>
+
+  <!-- 结果 -->
+  <block wx:elif="{{mode === 'result'}}">
+    <view class="result-hero" style="background:linear-gradient(135deg, {{res.g.color}}, {{res.g.deep}});">
+      <view class="rh-circle"></view>
+      <view class="rh-text">
+        <view class="rh-k">你的 MBTI 人格类型</view>
+        <view class="rh-type">{{res.type}}</view>
+        <view class="rh-name">{{res.name}}</view>
+        <view class="rh-group"><text class="b">{{res.g.name}}</text> · {{res.g.desc}}</view>
+        <view class="rh-tag">「{{res.tagline}}」</view>
+        <view class="rh-sex">
+          <view class="sx {{sex === 'f' ? 'on' : ''}}" style="{{sex === 'f' ? 'color:' + res.g.deep : ''}}" data-s="f" bindtap="setSex">女生形象</view>
+          <view class="sx {{sex === 'm' ? 'on' : ''}}" style="{{sex === 'm' ? 'color:' + res.g.deep : ''}}" data-s="m" bindtap="setSex">男生形象</view>
+        </view>
+      </view>
+      <view class="rh-char"><image src="{{avatar}}" mode="widthFix"></image></view>
+    </view>
+    <view class="btn wide" style="background:{{res.g.color}};" hover-class="pressed" bindtap="shareCard">生成分享卡片</view>
+
+    <view class="card">
+      <view class="sec-title"><view class="sec-no">壹</view>四个维度</view>
+      <view wx:for="{{res.dims}}" wx:key="name" class="dim2">
+        <view class="dim2-head"><text class="b">{{item.name}}</text><text class="clar c{{item.ck}}">{{item.clar}}</text></view>
+        <view class="dim2-bar">
+          <text class="dim2-end {{item.left ? 'on' : ''}}">{{item.a}}</text>
+          <view class="dim2-track">
+            <view class="dim2-fill" style="{{item.left ? 'right' : 'left'}}:50%;width:{{item.w}}%;background:{{res.g.color}};"></view>
+            <view class="dim2-mid"></view>
+          </view>
+          <text class="dim2-end r {{item.left ? '' : 'on'}}">{{item.b}}</text>
+        </view>
+        <view class="dim2-desc"><text class="b" style="color:{{res.g.deep}};">{{item.p}}% {{item.letterName}}</text>　{{item.desc}}</view>
+      </view>
+      <view class="muted small p">百分比表示你在这一维上偏向哪一边、偏多少；50% 就是正中间。「偏好轻微」说明两种方式你都常用。{{res.termNote}}</view>
     </view>
 
-    <view class="card" style="border-left:5px solid {{res.color}};">
-      <view class="tag">{{res.recTag}}</view>
-      <view class="h2">{{res.title}}</view>
-      <view class="p">{{res.desc}}</view>
+    <view class="card">
+      <view class="sec-title"><view class="sec-no">贰</view>{{res.type}} 的画像</view>
+      <view class="lead-p">{{res.desc}}</view>
+      <view class="sw good"><view class="sw-t">你的优势</view><view class="ul"><view wx:for="{{res.strengths}}" wx:key="*this" class="li">{{item}}</view></view></view>
+      <view class="sw warn"><view class="sw-t">可能的盲点</view><view class="ul"><view wx:for="{{res.blind}}" wx:key="*this" class="li">{{item}}</view></view></view>
+    </view>
+
+    <view class="card unlock" style="border-left-color:{{res.color}};">
+      <view class="sec-title"><view class="sec-no">叁</view>你的解锁方向</view>
+      <view class="utag" style="color:{{res.color}};">{{res.recTag}}</view>
+      <view class="h2 serif">{{res.unlockTitle}}</view>
+      <view class="p">{{res.unlockDesc}}</view>
+      <view class="growth"><text class="b">成长建议　</text>{{res.growth}}</view>
       <view wx:if="{{res.best}}" class="muted small p">{{res.best.text}}</view>
       <view class="col">
-        <view wx:if="{{res.best}}" class="btn" hover-class="pressed" data-url="{{res.best.url}}" bindtap="go">{{res.best.btn}}</view>
-        <view wx:if="{{res.campus}}" class="btn ghost" hover-class="pressed" data-url="{{res.campus}}" bindtap="go">或：推荐首玩《汇演前三天》</view>
-        <view class="btn plain" style="color:{{res.color}};" hover-class="pressed" data-url="{{res.route.url}}" bindtap="go">{{res.route.text}}</view>
+        <view wx:if="{{res.best}}" class="btn" style="background:{{res.color}};" hover-class="pressed" data-url="{{res.best.url}}" bindtap="go">{{res.best.btn}}</view>
+        <view wx:if="{{res.campus}}" class="btn ghost" style="color:{{res.color}};border-color:{{res.color}};" hover-class="pressed" data-url="{{res.campus}}" bindtap="go">或：推荐首玩《汇演前三天》</view>
+        <view class="btn plain" hover-class="pressed" data-url="{{res.route.url}}" bindtap="go">{{res.route.text}}</view>
       </view>
     </view>
 
     <view class="card">
-      <view class="h3">你的另外三个维度</view>
+      <view class="sec-title"><view class="sec-no">肆</view>另外三个维度的解锁</view>
       <view class="others">
         <view wx:for="{{res.others}}" wx:key="index" class="coming-chip"><text class="b">{{item.title}}</text><text class="s">{{item.desc}}</text><view><text class="soon">即将上线</text></view></view>
       </view>
-      <view class="row" style="margin-top:14px;">
-        <view class="btn plain" hover-class="pressed" bindtap="startQuiz">重新测一次</view>
-        <view class="btn plain" hover-class="pressed" bindtap="home">回首页</view>
-      </view>
+    </view>
+    <view class="muted small center note">本次结果来自{{res.modeNote}}。这不是心理诊断，只反映你在这些情境里的习惯；字母说明你更常用哪一面，另一面一样可以练。</view>
+    <view class="row center end-row">
+      <view class="btn plain" hover-class="pressed" bindtap="retest">重新测一次</view>
+      <view class="btn plain" hover-class="pressed" bindtap="home">回首页</view>
     </view>
   </block>
 </view>

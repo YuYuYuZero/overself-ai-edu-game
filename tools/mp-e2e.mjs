@@ -1,7 +1,7 @@
 // 小程序版逻辑层自动通关测试：在 Node 里模拟 wx / Page / setData，用虚拟时钟把三个故事（两个视角）、
 // 目录跳章、读档、全部练习关、MBTI 测试和首页各跑一遍。不需要开发者工具，也不装任何 npm 包。
 //   node tools/mp-e2e.mjs            # 全部
-//   node tools/mp-e2e.mjs story      # 只跑故事（story / level / quiz / home / toc）
+//   node tools/mp-e2e.mjs story      # 只跑故事（story / level / quiz / land / home / toc）
 // 检查：流程能走到结局 / 结算；setData 里不能有函数、单次不能超过 1MB；没有未捕获的异常。
 // 画面（WXML/WXSS）要在微信开发者工具或真机上看，这里只验证逻辑层。
 import { createRequire } from "node:module";
@@ -49,7 +49,7 @@ globalThis.wx = {
   createSelectorQuery: () => { const q = { in: () => q, select: () => q, boundingClientRect: cb => { q.cb = cb; return q; }, exec: () => q.cb && q.cb({ bottom: 160, height: 110 }) }; return q; },
   navigateTo: o => nav.push(["navigateTo", o.url]), redirectTo: o => nav.push(["redirectTo", o.url]),
   navigateBack: () => nav.push(["navigateBack"]), reLaunch: o => nav.push(["reLaunch", o.url]),
-  setNavigationBarTitle: () => {}, pageScrollTo: () => {}
+  setNavigationBarTitle: () => {}, pageScrollTo: () => {}, showToast: () => {}, canvasToTempFilePath: o => o.fail && o.fail({})
 };
 let lastPageConfig = null;
 globalThis.Page = cfg => { lastPageConfig = cfg; };
@@ -68,7 +68,7 @@ function setPath(o, key, v) {
 }
 function makePage(file, query) {
   lastPageConfig = null;
-  require(path.join(root, "miniprogram/pages", file));
+  require(path.join(root, "miniprogram", file.startsWith("package") ? "" : "pages", file));
   const cfg = lastPageConfig;
   const page = Object.create(cfg);
   page.data = JSON.parse(JSON.stringify(cfg.data || {}));
@@ -87,7 +87,7 @@ function makePage(file, query) {
   return page;
 }
 // 每个测试独立：清空页面模块缓存（共享数据模块保留）
-function fresh() { for (const k of Object.keys(require.cache)) if (k.includes("/pages/")) delete require.cache[k]; }
+function fresh() { for (const k of Object.keys(require.cache)) if (k.includes("/pages/") || k.includes("/packageShare/")) delete require.cache[k]; }
 
 // ---------- 自动玩家 ----------
 function rng(seed) { let a = seed >>> 0; return () => { a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
@@ -205,11 +205,92 @@ if (!only || only === "level") {
   }
 }
 if (!only || only === "quiz") {
+  // 答完一整套：每道题按 pickV(题目) 作答，逐页翻到结果
+  const answerAll = (page, pickV) => {
+    for (let guard = 0; guard < 40 && page.data.mode === "quiz"; guard++) {
+      for (const it of page.data.q.items) page.pick({ currentTarget: { dataset: { id: it.id, v: pickV(it) } } });
+      page.next();
+    }
+  };
+  const M = env.MBTI;
+  const lean = { E: 2, N: 1, F: 3, P: 1, I: -1, S: -1, T: -2, J: 0 }; // 偏 E N F P
+  const byKey = it => lean[M.ITEMS.find(x => x.id === it.id).key];
+  for (const mode of ["full", "quick"]) {
+    fresh(); storage.clear();
+    const page = makePage("quiz/quiz.js", {});
+    const introOk = page.data.mode === "intro" && page.data.intro.modes.length === 2;
+    page.startMode({ currentTarget: { dataset: { k: mode } } });
+    answerAll(page, byKey);
+    const res = page.data.res, saved = JSON.parse(storage.get("overself.mbti.v1"));
+    const ok = introOk && page.data.mode === "result" && res.type === "ENFP" && res.dims.length === 4 && saved.v === 2 && saved.mode === mode && !!res.best && !!page.data.avatar;
+    results.push([`MBTI 测试（${M.MODES[mode].label}）`, ok, `${M.items(mode).length} 题 → ${res.type} ${res.name}（${res.g.name}）；${res.dims.map(d => d.p + "%" + d.letterName).join(" ")}；推荐：${res.best && res.best.btn}`]);
+  }
+  // 中途暂停 → 草稿 → 继续；全选「说不准」按官方规则得 INFP
   fresh(); storage.clear();
-  const page = makePage("quiz/quiz.js", {});
-  for (let i = 0; i < env.QUIZ.length; i++) page.pick({ currentTarget: { dataset: { i: i % 2, q: page.data.i } } });
-  const res = page.data.res;
-  results.push(["MBTI 测试", page.data.mode === "result" && res.letters.length === 4 && !!res.best, `结果 ${res.letters.join("")} ${res.name}；推荐：${res.best && res.best.btn}`]);
+  {
+    const page = makePage("quiz/quiz.js", {});
+    page.startMode({ currentTarget: { dataset: { k: "full" } } });
+    for (const it of page.data.q.items) page.pick({ currentTarget: { dataset: { id: it.id, v: 0 } } });
+    page.next(); page.pause();
+    const draft = JSON.parse(storage.get("overself.quiz.draft.v2"));
+    fresh();
+    const p2 = makePage("quiz/quiz.js", {});
+    const hasResume = !!p2.data.intro.draft;
+    p2.resume();
+    const resumedAt = p2.data.q.label;
+    answerAll(p2, () => 0);
+    results.push(["测试草稿与平分规则", draft.page === 1 && hasResume && /第 2 \/ 10 页/.test(resumedAt) && p2.data.res.type === "INFP" && !storage.has("overself.quiz.draft.v2"),
+      `暂停时已答 ${Object.keys(draft.answers).length} 题，从「${resumedAt}」继续；全中立 → ${p2.data.res.type}`]);
+  }
+  // 旧版存档（22 题二选一）能直接打开结果页
+  fresh(); storage.clear();
+  storage.set("overself.mbti.v1", JSON.stringify({ type: "ISTJ", score: { E: 1, I: 4, S: 4, N: 1, T: 5, F: 2, J: 4, P: 1 } }));
+  {
+    const page = makePage("quiz/quiz.js", { view: "result" });
+    results.push(["读取 v1 存档", page.data.mode === "result" && page.data.res.type === "ISTJ" && page.data.res.dims[0].p === 80, `ISTJ：${page.data.res.dims.map(d => d.p + "%").join(" / ")}；${page.data.res.modeNote}`]);
+    page.setSex({ currentTarget: { dataset: { s: "m" } } });
+  }
+  // 分享卡片：用记录调用的假画布把海报和封面各画一遍（真机绘制要在开发者工具 / 手机上看）
+  {
+    const calls = [];
+    const ctx = new Proxy({}, {
+      get(t, k) {
+        if (k in t) return t[k];
+        if (k === "measureText") return s => ({ width: String(s).length * 20 });
+        if (k === "createLinearGradient") return () => ({ addColorStop() {} });
+        return (...a) => { calls.push(k); };
+      },
+      set(t, k, v) { t[k] = v; return true; }
+    });
+    const SC = env.ShareCard, img = { width: 680, height: 1060 };
+    const d = SC.data(M.normalize(JSON.parse(storage.get("overself.mbti.v1"))), { footer: "微信搜索" });
+    SC.poster(ctx, d, { portrait: img, logo: img, qr: img });
+    SC.cover(ctx, d, { portrait: img });
+    const fs = await import("node:fs");
+    const missing = [];
+    for (const t of Object.keys(M.names)) for (const s of ["f", "m"]) if (!fs.existsSync(path.join(root, `miniprogram/packageShare/portraits/${t}-${s}.png`))) missing.push(`${t}-${s}`);
+    results.push(["分享卡片绘制", calls.includes("fillText") && calls.includes("drawImage") && !missing.length, `${calls.length} 次绘制调用；形象图 ${missing.length ? "缺 " + missing.join(",") : "32 张齐全"}`]);
+    fresh();
+    wx.createSelectorQuery = () => { const q = { in: () => q, select: () => q, fields: () => q, boundingClientRect: cb => { q.cb = cb; return q; }, exec: cb => (cb || q.cb) && (cb || q.cb)([null]) }; return q; };
+    const card = makePage("packageShare/card/card.js", {});
+    results.push(["分享卡片页", card.data.type === "ISTJ" && typeof card.onShareAppMessage().title === "string", card.onShareAppMessage().title]);
+  }
+}
+if (!only || only === "land") {
+  // 横屏：窗口改成横向后触发 onResize，lay 切到 land，立绘按舞台高度重新算；横着把一关练习打完
+  fresh(); storage.clear();
+  const page = makePage("level/level.js", { route: "f2t", i: "0" });
+  const portrait = page.data.lay;
+  const winInfo = wx.getWindowInfo, menu = wx.getMenuButtonBoundingClientRect;
+  wx.getWindowInfo = () => ({ windowWidth: 844, windowHeight: 390, statusBarHeight: 0, safeArea: { bottom: 390 } });
+  wx.getMenuButtonBoundingClientRect = () => ({ top: 8, height: 32, bottom: 40, left: 750, right: 837, width: 87 });
+  page.onResize();
+  const land = page.data.lay;
+  const r = await play(page, rng(5), "level f2t landscape");
+  wx.getWindowInfo = winInfo; wx.getMenuButtonBoundingClientRect = menu;
+  results.push(["横屏", !portrait.land && land.land && land.sw > 0 && land.sw !== portrait.sw && page.data.mode === "result",
+    `竖屏立绘宽 ${portrait.sw}px → 横屏 ${land.sw}px；横屏打完一关：${page.data.result && page.data.result.head}`]);
+  page.onUnload();
 }
 if (!only || only === "home") {
   fresh();

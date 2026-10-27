@@ -1,4 +1,4 @@
-<view class="wrap">
+<view class="wrap paper">
   <view wx:for="{{items}}" wx:key="index" class="card takeaway" style="border-left:5px solid {{item.color}};">
     <view class="muted small">{{item.sub}}</view>
     <view class="h3 ct">{{item.title}}</view>

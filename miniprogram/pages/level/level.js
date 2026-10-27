@@ -14,6 +14,7 @@ Page(Object.assign({}, stage, {
   onLoad(q) {
     this.ui = createUI(this);
     this.setData({ lay: lay(), muted: AU.isMuted() });
+    this.rotateHint();
     this.engine = createLevel(this, this.ui);
     this.engine.play(q.route, +q.i || 0);
   },

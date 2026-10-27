@@ -1,5 +1,5 @@
 <!-- 视觉小说舞台（故事页、练习关页共用，<include> 进页面，直接读页面数据）。对应网页版 vn.js 的 DOM 结构。 -->
-<view class="stage {{vn.fx}} {{vn.crowd ? 'crowd' : ''}} {{panel ? 'has-panel' : ''}} {{hot ? 'hot' : ''}} {{veryHot ? 'very-hot' : ''}}"
+<view class="stage {{lay.land ? 'land' : ''}} {{vn.fx}} {{vn.crowd ? 'crowd' : ''}} {{panel ? 'has-panel' : ''}} {{hot ? 'hot' : ''}} {{veryHot ? 'very-hot' : ''}}"
   style="--top:{{hudB}}px;--sw:{{lay.sw}}px;--swc:{{lay.swc}}px;--safe-b:{{lay.safeB}}px;" bindtap="onStage">
   <image wx:if="{{vn.bg0}}" class="bg {{vn.bgOn === 0 ? 'on' : ''}}" src="{{vn.bg0}}" mode="aspectFill"></image>
   <image wx:if="{{vn.bg1}}" class="bg {{vn.bgOn === 1 ? 'on' : ''}}" src="{{vn.bg1}}" mode="aspectFill"></image>
@@ -87,6 +87,7 @@
       <view wx:if="{{isStory}}" class="hbtn" catchtap="onToc">☰ {{prog.pct}}</view>
       <view class="hbtn" catchtap="onLog">回看</view>
       <view class="hbtn" catchtap="onMute">{{muted ? '🔇' : '🔊'}}</view>
+      <view class="hbtn rot" catchtap="onRotate">{{lay.land ? '竖屏' : '横屏'}}</view>
     </view>
     <block wx:if="{{isStory}}"><include src="prog.wxml"/></block>
     <view class="hud-row2">

@@ -39,6 +39,39 @@ window.ART = (function () {
     roommate: { name: "室友", sex: "f", age: "young", skin: "#fce4d4", hair: ["bob", "#5b3b2d"], eye: "#5a3b2b", outfit: ["sweater", "#a8c7a0", "#7fa476"] }
   };
 
+  // ---------- MBTI 16 型形象（测试结果页、分享卡用）----------
+  // 每型一男一女：服装颜色跟气质组走（NT 紫 / NF 绿 / SJ 蓝 / SP 橙），发型与服装款式按类型区分。
+  // ART.typeChar("ENFP", "f") 登记并返回人物 id（如 "mbti_ENFP_f"），之后照常用 ART.char(id, expr)。
+  const TYPE_LOOK = {
+    //        女：发型, 发色, 服装, 主色, 辅色, [眼镜]        男：发型, 发色, 服装, 主色, 辅色, [眼镜]
+    INTJ: [["long", "#1e1a26", "blazer_f", "#4e4380", "#f3f0fa"], ["short", "#1c1a22", "suit", "#363052", "#7a68c8", "rect"]],
+    INTP: [["bob", "#3a2a2a", "hoodie", "#8577b8", "#5d4f94", "round"], ["messy", "#2a2430", "hoodie", "#7d70ad", "#574a8a", "round"]],
+    ENTJ: [["shoulder", "#1e1a22", "client", "#3d3560", "#221d36"], ["neat", "#1f1d24", "suit", "#2f2a48", "#8a2f45"]],
+    ENTP: [["ponytail", "#4a2c22", "plaid", "#6c58b8", "#3b2f6e"], ["messy", "#3a2620", "plaid", "#6655a8", "#352a64"]],
+    INFJ: [["long", "#2e2220", "cardigan", "#a8d2bd", "#4f9a7c"], ["neat", "#2a2420", "sweater", "#6aa88c", "#3f7d62", "rect"]],
+    INFP: [["shoulder", "#6a4030", "sweater", "#bcdcc8", "#83b89c"], ["messy", "#4a3428", "cardigan", "#b0d4be", "#4f9a7c"]],
+    ENFJ: [["bun", "#3a2620", "teacher", "#3f9a76", "#e6f4ec"], ["short", "#2a2220", "plaid", "#4e9c7a", "#2c6b52"]],
+    ENFP: [["ponytail", "#7a4a33", "hoodie", "#7cc79f", "#3f9a74"], ["messy", "#5a3426", "hoodie", "#6fbf95", "#36916b"]],
+    ISTJ: [["bun", "#1e1a22", "blazer_f", "#34548a", "#ffffff"], ["neat", "#1f2230", "suit", "#2d3d5c", "#3474c8"]],
+    ISFJ: [["long", "#3a2620", "cardigan", "#cddcf0", "#6f93c8"], ["neat", "#2e2420", "sweater", "#a5bfe2", "#6f93c8"]],
+    ESTJ: [["shoulder", "#2a1d1c", "client", "#2f4f80", "#18233a"], ["neat", "#1f1e22", "suit", "#2a3a5a", "#b8332e", "rect"]],
+    ESFJ: [["ponytail", "#4a2c22", "sweater", "#a8c8ee", "#5b8fd0"], ["neat", "#3b2a24", "plaid", "#5b86c4", "#2f558f"]],
+    ISTP: [["bob", "#1e1a22", "hoodie", "#8a8f98", "#e0902a"], ["messy", "#2a2a33", "hoodie", "#7b7f87", "#d98a2a"]],
+    ISFP: [["shoulder", "#7a4a33", "sweater", "#f4cfa6", "#e3a050"], ["messy", "#4a3020", "cardigan", "#ecd0a4", "#c4873a"]],
+    ESTP: [["ponytail", "#2e2420", "sport", "#e5862a", "#ffffff"], ["spiky", "#1d1b1f", "sport", "#e07b2a", "#ffffff"]],
+    ESFP: [["long", "#8a5236", "sweater", "#f7bf63", "#e0902a"], ["neat", "#4a2e22", "hoodie", "#f0a23c", "#c4761a"]]
+  };
+  function typeChar(type, sex) {
+    const s = sex === "m" ? "m" : "f", id = `mbti_${type}_${s}`, look = TYPE_LOOK[type];
+    if (!look) return "";
+    if (!C[id]) {
+      const [hair, hc, outfit, c1, c2, gl] = look[s === "f" ? 0 : 1];
+      C[id] = { name: type, sex: s, age: "young", skin: s === "f" ? "#fde4d4" : "#f6dac6", hair: [hair, hc], eye: s === "f" ? "#6a3f2c" : "#3d3a40",
+        outfit: [outfit, c1, c2], glasses: gl, tie: c2 };
+    }
+    return id;
+  }
+
   // 年龄 × 性别 → 比例
   function P(c) {
     // 五官比例只随年龄变化，男女一致；性别只影响肩宽、腮红、发型和服装
@@ -256,11 +289,18 @@ window.ART = (function () {
     const L = X - W, R = X + W;
     // 溜肩 + 手臂：领口 → 肩头圆弧 → 手臂外沿；手臂与躯干之间画一道折线和阴影
     const body = `M ${X - 34},${SY - 14} C ${X - 82},${SY - 8} ${L + 8},${SY + 4} ${L - 2},${SY + 62} C ${L - 10},${SY + 200} ${L - 8},${SY + 330} ${L - 6},780 L ${R + 6},780 C ${R + 8},${SY + 330} ${R + 10},${SY + 200} ${R + 2},${SY + 62} C ${R - 8},${SY + 4} ${X + 82},${SY - 8} ${X + 34},${SY - 14} Q ${X},${SY - 20} ${X - 34},${SY - 14} Z`;
-    const st = `stroke="${LINE}" stroke-width="2.6" stroke-linejoin="round"`;
+    // 线稿用衣服本色压暗（彩色线稿），比统一的深棕线更柔和
+    const st = `stroke="${shade(c1, -0.62)}" stroke-width="2.4" stroke-linejoin="round"`;
     const armShade = s => { const o = s < 0 ? L : R, k = s; // k=-1 左臂
       return `M ${o + k * 2},${SY + 62} C ${o + k * 10},${SY + 200} ${o + k * 8},${SY + 330} ${o + k * 6},780 L ${o - k * 30},780 C ${o - k * 32},${SY + 330} ${o - k * 33},${SY + 210} ${o - k * 32},${SY + 118} C ${o - k * 26},${SY + 96} ${o - k * 12},${SY + 74} ${o + k * 2},${SY + 62} Z`; };
-    const arms = `<path d="${armShade(-1)} ${armShade(1)}" fill="${shade(c1, -0.3)}" opacity=".32"/>
-      <path d="M ${L + 32},${SY + 118} C ${L + 33},${SY + 210} ${L + 32},${SY + 330} ${L + 30},780 M ${R - 32},${SY + 118} C ${R - 33},${SY + 210} ${R - 32},${SY + 330} ${R - 30},780" fill="none" stroke="${shade(c1, -0.45)}" stroke-width="2.4" opacity=".7"/>
+    // 光从左上方来：右臂整条落在阴影里，左臂只压暗内侧；领口下方一道投影；左肩一笔轮廓光
+    const arms = `<g clip-path="url(#bd${id})">
+      <path d="${armShade(-1)}" fill="${shade(c1, -0.3)}" opacity=".22"/><path d="${armShade(1)}" fill="${shade(c1, -0.34)}" opacity=".42"/>
+      <path d="M ${R - 34},${SY + 40} C ${R - 30},${SY + 220} ${R - 40},${SY + 420} ${R - 52},780 L ${R + 20},780 L ${R + 20},${SY + 40} Z" fill="${shade(c1, -0.3)}" opacity=".18"/>
+      <path d="M ${X - 70},${SY - 4} C ${X - 40},${SY + 34} ${X + 40},${SY + 34} ${X + 70},${SY - 4} L ${X + 70},${SY - 30} L ${X - 70},${SY - 30} Z" fill="${shade(c1, -0.45)}" opacity=".2"/>
+      <path d="M ${L + 4},${SY + 120} C ${L + 2},${SY + 60} ${L + 30},${SY + 6} ${X - 70},${SY - 6}" fill="none" stroke="${shade(c1, 0.55)}" stroke-width="5" stroke-linecap="round" opacity=".55"/>
+    </g>
+      <path d="M ${L + 32},${SY + 118} C ${L + 33},${SY + 210} ${L + 32},${SY + 330} ${L + 30},780 M ${R - 32},${SY + 118} C ${R - 33},${SY + 210} ${R - 32},${SY + 330} ${R - 30},780" fill="none" stroke="${shade(c1, -0.5)}" stroke-width="2.2" opacity=".75"/>
       <path d="M ${X - 26},${SY - 10} Q ${X},${SY + 6} ${X + 26},${SY - 10}" fill="none" stroke="${shade(c1, -0.4)}" stroke-width="10" opacity=".18"/>`;
     const grad = `<linearGradient id="cl${id}" x1="0" x2="1"><stop offset="0" stop-color="${shade(c1, -0.12)}"/><stop offset=".45" stop-color="${c1}"/><stop offset="1" stop-color="${shade(c1, -0.22)}"/></linearGradient>`;
     const base = `<path d="${body}" fill="url(#cl${id})" ${st}/>`;
@@ -348,7 +388,17 @@ window.ART = (function () {
         break;
     }
     const pre = type === "plaid" || type === "gown" ? "" : base;
-    return `<defs>${grad}</defs>${pre}${extra}${arms}`;
+    return `<defs>${grad}<clipPath id="bd${id}"><path d="${body}"/></clipPath></defs>${pre}${extra}${arms}`;
+  }
+
+  // 头发高光（"天使环"）：沿头顶弧线的一圈锯齿光带，下缘一长一短，外加两点白色反光
+  function ring(hl) {
+    const y = x => -103 + 19 * (x / 76) * (x / 76);
+    let top = "", bot = "";
+    for (let x = -70; x <= 70; x += 10) top += `${top ? " L" : "M"} ${x},${(y(x) - 7).toFixed(1)}`;
+    for (let x = 70, i = 0; x >= -70; x -= 10, i++) bot += ` L ${x},${(y(x) + 3).toFixed(1)} L ${x - 5},${(y(x - 5) + (i % 2 ? 6 : 12)).toFixed(1)}`;
+    return `<path d="${top}${bot} Z" fill="${hl}" opacity=".5" stroke-linejoin="round"/>
+      <path d="M -38,${y(-38) - 3} q 6,4 12,0 M 22,${y(22) - 3} q 5,3 10,0" fill="none" stroke="#fff" stroke-width="3" opacity=".55" stroke-linecap="round"/>`;
   }
 
   // ======================= 立绘 =======================
@@ -392,7 +442,7 @@ window.ART = (function () {
       ${fronts}
       <g clip-path="url(#hf${n})"><path d="${hd.front.map(d => d.strands || "").join(" ")}" fill="none" stroke="${hdk}" stroke-width="2" stroke-linecap="round" opacity=".55"/></g>
       <g opacity=".85">${e.brows}</g>
-      <g clip-path="url(#hf${n})"><path d="M -76,-84 Q 0,-122 76,-84" fill="none" stroke="${hl}" stroke-width="9" opacity=".55" stroke-linecap="round"/><path d="M -46,-96 Q 0,-112 46,-96" fill="none" stroke="#fff" stroke-width="3" opacity=".35" stroke-linecap="round"/></g>
+      <g clip-path="url(#hf${n})">${ring(hl)}</g>
       ${gray}${hd.acc || ""}${cap}${sweat}
     </g>`;
     const neck = `<path d="M ${200 - 24 * hs},${HY + (p.h2 - 34) * hs} L ${200 - 26 * hs},${SY + 4} Q 200,${SY + 22} ${200 + 26 * hs},${SY + 4} L ${200 + 24 * hs},${HY + (p.h2 - 34) * hs} Z" fill="${c.skin}" stroke="${shade(c.skin, -0.42)}" stroke-width="2.5"/>
@@ -662,5 +712,5 @@ window.ART = (function () {
     return `<svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">${f()}</svg>`;
   }
 
-  return { char, bg, has: id => !!C[id], name: id => C[id] && C[id].name, list: () => Object.keys(C), bgs: () => Object.keys(BG), IMG };
+  return { char, bg, typeChar, has: id => !!C[id], name: id => C[id] && C[id].name, list: () => Object.keys(C).filter(k => !k.startsWith("mbti_")), bgs: () => Object.keys(BG), IMG };
 })();

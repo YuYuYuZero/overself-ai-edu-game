@@ -1,4 +1,4 @@
-<view class="wrap" style="{{rv}}">
+<view class="wrap paper" style="{{rv}}">
   <view class="level-head"><view class="skill">{{r.dir}}</view><view class="h2">{{r.title}}</view></view>
   <view class="muted">{{r.subtitle}}</view>
   <view wx:for="{{levels}}" wx:key="i" class="card level-item" hover-class="pressed" data-i="{{item.i}}" bindtap="play">

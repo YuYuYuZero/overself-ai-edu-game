@@ -1,4 +1,4 @@
-<view class="root" style="{{rv}}">
+<view class="root {{lay.land ? 'land' : ''}}" style="{{rv}}">
   <block wx:if="{{mode === 'stage'}}"><include src="../../templates/stage.wxml"/></block>
 
   <!-- 舞台外的页面：章首、复盘、结局（背景铺一层虚化的场景） -->

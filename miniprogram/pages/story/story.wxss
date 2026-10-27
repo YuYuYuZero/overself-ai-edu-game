@@ -61,3 +61,11 @@
 .toc-chip.seen { color: #2e8b57; border-color: #9fd3b4; }
 .toc-chip.here { background: #6b5bd2; color: #fff; border-color: #6b5bd2; }
 .toc-note { padding: 8px 16px 14px; line-height: 1.6; }
+
+/* 横屏：舞台外页面收窄居中；目录卡片限高 */
+.root.land .page { max-width: 640px; margin: 0 auto; }
+.root.land .chapter-intro { padding: 20px 18px; }
+.root.land .toc-card { width: 72%; }
+.root.land .toc-list { max-height: calc(100vh - 170px); }
+.root.land .interstitial .it { font-size: 28px; }
+.root.land .title-card { font-size: 18px; }

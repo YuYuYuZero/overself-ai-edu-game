@@ -1,5 +1,6 @@
 {
   "navigationStyle": "custom",
   "disableScroll": true,
-  "backgroundColor": "#111111"
+  "backgroundColor": "#111111",
+  "pageOrientation": "auto"
 }

@@ -8,13 +8,30 @@
     "pages/cards/cards"
   ],
   "window": {
-    "navigationBarBackgroundColor": "#f6f3ee",
+    "navigationBarBackgroundColor": "#f6f1e7",
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "MBTI 性格修炼手册",
-    "backgroundColor": "#f6f3ee",
+    "backgroundColor": "#f6f1e7",
     "backgroundTextStyle": "dark"
   },
   "style": "v2",
   "sitemapLocation": "sitemap.json",
-  "lazyCodeLoading": "requiredComponents"
+  "lazyCodeLoading": "requiredComponents",
+  "subpackages": [
+    {
+      "root": "packageShare",
+      "name": "share",
+      "pages": [
+        "card/card"
+      ]
+    }
+  ],
+  "preloadRule": {
+    "pages/quiz/quiz": {
+      "network": "all",
+      "packages": [
+        "share"
+      ]
+    }
+  }
 }

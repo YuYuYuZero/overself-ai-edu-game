@@ -4,7 +4,12 @@
   "appid": "wx34e4c1801e438c80",
   "compileType": "miniprogram",
   "packOptions": {
-    "ignore": [{ "type": "file", "value": "README.md" }],
+    "ignore": [
+      {
+        "value": "README.md",
+        "type": "file"
+      }
+    ],
     "include": []
   },
   "setting": {
@@ -21,8 +26,25 @@
     "checkSiteMap": true,
     "showShadowRootInWxmlPanel": true,
     "compileHotReLoad": false,
-    "babelSetting": { "ignore": [], "disablePlugins": [], "outputPath": "" }
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    },
+    "compileWorklet": false,
+    "packNpmManually": false,
+    "packNpmRelationList": [],
+    "localPlugins": false,
+    "disableUseStrict": false,
+    "useCompilerPlugins": false,
+    "condition": false,
+    "swc": false,
+    "disableSWC": true
   },
   "condition": {},
-  "editorSetting": { "tabIndent": "insertSpaces", "tabSize": 2 }
+  "editorSetting": {
+    "tabIndent": "insertSpaces",
+    "tabSize": 2
+  },
+  "simulatorPluginLibVersion": {}
 }

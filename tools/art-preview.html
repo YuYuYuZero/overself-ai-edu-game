@@ -7,5 +7,6 @@ const q=new URLSearchParams(location.search), mode=q.get("m")||"chars", g=docume
 if(mode==="chars"){ for(const id of ART.list()) g.insertAdjacentHTML("beforeend",`<div class="c">${ART.char(id,q.get("e")||"normal")}<b>${id}</b></div>`); }
 else if(mode==="expr"){ const id=q.get("id")||"xiaoman"; for(const e of ["normal","smile","sad","angry","surprise","worry","cry","think","shy"]) g.insertAdjacentHTML("beforeend",`<div class="c">${ART.char(id,e)}<b>${e}</b></div>`); }
 else if(mode==="big"){ g.innerHTML=`<div style="width:600px;height:1200px;background:#cdd">${ART.char(q.get("id")||"xiaoman",q.get("e")||"normal")}</div>`; g.querySelector("svg").style.cssText="width:100%;height:100%"; }
+else if(mode==="types"){ for(const t of ["INTJ","INTP","ENTJ","ENTP","INFJ","INFP","ENFJ","ENFP","ISTJ","ISFJ","ESTJ","ESFJ","ISTP","ISFP","ESTP","ESFP"]){ const id=ART.typeChar(t,q.get("sex")||"f"); g.insertAdjacentHTML("beforeend",`<div class="c">${ART.char(id,t[0]==="E"?"smile":"normal")}<b>${t}</b></div>`);} }
 else { for(const id of ART.bgs()) g.insertAdjacentHTML("beforeend",`<div class="b">${ART.bg(id)}<b>${id}</b></div>`); }
 </script></body></html>
